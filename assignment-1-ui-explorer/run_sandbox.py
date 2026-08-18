@@ -232,6 +232,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <title>AI-Sandbox -- Assignment 1</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+html{font-size:18px}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:#1e293b;display:flex;min-height:100vh;font-size:14px}
 
 /* ---- Sidebar ---- */
@@ -287,7 +288,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 .pipeline{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:20px;padding:14px 18px;background:white;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .pipe-step{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:80px}
-.pipe-step .p-icon{font-size:1.4rem}
+.pipe-step .p-icon{font-size:2rem}
 .pipe-step .p-name{font-size:.68rem;font-weight:700;color:#334155;text-align:center}
 .pipe-step .p-sub{font-size:.62rem;color:#94a3b8;text-align:center}
 .pipe-arrow{font-size:1.1rem;color:#94a3b8;padding:0 4px}
@@ -335,9 +336,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .stat-chip.amber .n{color:#f59e0b}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media(max-width:820px){.two-col{grid-template-columns:1fr}}
-.balance-bar{height:16px;border-radius:99px;overflow:hidden;display:flex;margin:8px 0}
-.balance-bar .bp{background:#4f46e5}.balance-bar .bn{background:#e2e8f0}
-.balance-lbl{display:flex;justify-content:space-between;font-size:.7rem;color:#64748b}
+.balance-chart{display:flex;align-items:flex-end;justify-content:center;gap:48px;height:190px;margin:16px 0 4px;padding:0 16px}
+.bal-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;flex:1;max-width:130px}
+.bal-bar-v{width:100%;border-radius:8px 8px 0 0;display:flex;align-items:flex-start;justify-content:center;padding-top:8px;transition:height .5s ease;min-height:26px;box-sizing:border-box}
+.bal-bar-v.bp{background:linear-gradient(180deg,#6366f1,#4f46e5)}
+.bal-bar-v.bn{background:linear-gradient(180deg,#cbd5e1,#94a3b8)}
+.bal-val{color:#fff;font-weight:800;font-size:1rem}
+.bal-col-lbl{margin-top:12px;font-size:.85rem;color:#334155;font-weight:700;text-align:center;line-height:1.5}
+.bal-col-lbl span{color:#64748b;font-weight:500;font-size:.78rem}
 .why-box{background:#eff6ff;border-left:3px solid #3b82f6;border-radius:0 7px 7px 0;padding:10px 12px;font-size:.78rem;color:#1d4ed8;line-height:1.55;margin-bottom:10px}
 .kw-tester textarea{width:100%;height:85px;padding:9px;border:1px solid #e2e8f0;border-radius:7px;font-size:.8rem;resize:vertical;font-family:inherit}
 .kw-tester button{margin-top:7px;padding:7px 16px;background:#4f46e5;color:white;border:none;border-radius:6px;cursor:pointer;font-size:.8rem;font-weight:600}
@@ -361,8 +367,13 @@ tbody td.first-col{position:sticky;left:0;background:inherit;z-index:1;font-weig
 
 /* ---- Training tab ---- */
 .reminder-banner{background:#fef9e7;border:1.5px solid #f59e0b;border-radius:8px;padding:10px 14px;font-size:.8rem;color:#92400e;margin-bottom:16px;display:none}
-.train-layout{display:grid;grid-template-columns:290px 1fr;gap:16px;align-items:start}
-@media(max-width:760px){.train-layout{grid-template-columns:1fr}}
+.train-layout{display:grid;grid-template-columns:290px 1fr;gap:16px;align-items:stretch}
+.train-layout>div{display:flex;flex-direction:column}
+.train-layout>div>.card{flex:1;display:flex;flex-direction:column}
+.train-layout>div>#metrics-panel{flex:1;display:flex;flex-direction:column}
+#metrics-panel>.card{flex:1;display:flex;flex-direction:column}
+#metric-bars{flex:1;justify-content:space-between}
+@media(max-width:760px){.train-layout{grid-template-columns:1fr}.train-layout>div{display:block}}
 .slider-row{margin-bottom:14px}
 .slider-row label{display:flex;justify-content:space-between;font-size:.8rem;font-weight:600;color:#334155;margin-bottom:4px}
 .slider-row label span{color:#4f46e5;font-weight:700;min-width:48px;text-align:right}
@@ -377,8 +388,8 @@ input[type=range]{width:100%;accent-color:#4f46e5;cursor:pointer}
 .prog-track{height:7px;background:#f1f5f9;border-radius:99px;overflow:hidden}
 .prog-fill{height:100%;background:#4f46e5;border-radius:99px;transition:width .4s}
 .prog-fill.good{background:#10b981}.prog-fill.warn{background:#f59e0b}
-.hint-box{background:#fef9e7;border-left:3px solid #f59e0b;border-radius:0 7px 7px 0;padding:9px 12px;font-size:.78rem;color:#92400e;margin-top:12px;line-height:1.5;display:none}
-.optimal-banner{background:#ecfdf5;border:2px solid #10b981;border-radius:10px;padding:16px;text-align:center;display:none;margin-top:14px}
+.hint-box{background:#fef9e7;border-left:3px solid #f59e0b;border-radius:0 7px 7px 0;padding:9px 12px;font-size:.78rem;color:#92400e;margin:16px 0;line-height:1.5;display:none}
+.optimal-banner{background:#ecfdf5;border:2px solid #10b981;border-radius:10px;padding:16px;text-align:center;display:none;margin:16px 0}
 .optimal-banner h3{color:#065f46;font-size:.95rem;margin-bottom:4px}
 .optimal-banner p{color:#047857;font-size:.78rem}
 .log-wrap{max-height:240px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:7px;font-size:.72rem}
@@ -600,13 +611,15 @@ body.has-completion-bar #sidebar{height:calc(100vh - 46px)}
     <div class="two-col">
       <div class="card">
         <div class="card-title">Class Balance</div>
-        <div class="balance-bar" id="bal-bar">
-          <div class="bp" id="bar-pos" style="width:40%"></div>
-          <div class="bn" id="bar-neg" style="width:60%"></div>
-        </div>
-        <div class="balance-lbl">
-          <span id="bal-pos-l">Pain=1: 40%</span>
-          <span id="bal-neg-l">Pain=0: 60%</span>
+        <div class="balance-chart" id="bal-chart">
+          <div class="bal-col">
+            <div class="bal-bar-v bp" id="bar-pos" style="height:40%"><span class="bal-val" id="bal-pos-val">40%</span></div>
+            <div class="bal-col-lbl">Pain=1<br><span id="bal-pos-n">--</span> patients</div>
+          </div>
+          <div class="bal-col">
+            <div class="bal-bar-v bn" id="bar-neg" style="height:60%"><span class="bal-val" id="bal-neg-val">60%</span></div>
+            <div class="bal-col-lbl">Pain=0<br><span id="bal-neg-n">--</span> patients</div>
+          </div>
         </div>
         <p style="font-size:.76rem;color:#64748b;margin-top:10px;line-height:1.5">
           <strong>Class imbalance:</strong> A model that always predicts
@@ -713,15 +726,17 @@ body.has-completion-bar #sidebar{height:calc(100vh - 46px)}
           <div class="card">
             <div class="card-title">Current vs Target</div>
             <div class="metric-bars" id="metric-bars"></div>
-            <div class="hint-box" id="hint-box"></div>
-          </div>
-          <div class="optimal-banner" id="opt-banner">
-            <h3>Optimal Performance Reached!</h3>
-            <p id="opt-msg">Your results match the oracle for your seed.</p>
-            <p style="font-size:.73rem;color:#047857;margin-top:4px" id="reveal-params"></p>
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Row 1b: Hint / optimal banner -- own row below Parameters & Current vs Target -->
+    <div class="hint-box" id="hint-box"></div>
+    <div class="optimal-banner" id="opt-banner">
+      <h3>Optimal Performance Reached!</h3>
+      <p id="opt-msg">Your results match the oracle for your seed.</p>
+      <p style="font-size:.73rem;color:#047857;margin-top:4px" id="reveal-params"></p>
     </div>
 
     <!-- Row 2: Live visualizations -->
@@ -1393,10 +1408,12 @@ async function loadData(){
   document.getElementById('s-pos').textContent = d.n_positive;
   document.getElementById('s-neg').textContent = d.n_negative;
   const pct = Math.round(d.positive_rate*100);
-  document.getElementById('bar-pos').style.width=pct+'%';
-  document.getElementById('bar-neg').style.width=(100-pct)+'%';
-  document.getElementById('bal-pos-l').textContent=`Pain=1: ${pct}%`;
-  document.getElementById('bal-neg-l').textContent=`Pain=0: ${100-pct}%`;
+  document.getElementById('bar-pos').style.height=pct+'%';
+  document.getElementById('bar-neg').style.height=(100-pct)+'%';
+  document.getElementById('bal-pos-val').textContent=pct+'%';
+  document.getElementById('bal-neg-val').textContent=(100-pct)+'%';
+  document.getElementById('bal-pos-n').textContent=d.n_positive;
+  document.getElementById('bal-neg-n').textContent=d.n_negative;
   renderTableHeader();
   filterTable();
 }
@@ -1478,7 +1495,7 @@ async function setStudentId(){
   document.getElementById('o-loss').textContent = '<= '+d.oracle.final_loss.toFixed(3);
   document.getElementById('o-split').textContent= `${d.oracle.train_n} / ${d.oracle.val_n}`;
   document.getElementById('not-set-msg').style.display='none';
-  document.getElementById('metrics-panel').style.display='block';
+  document.getElementById('metrics-panel').style.display='flex';
   runEval();
 }
 
