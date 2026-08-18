@@ -1,0 +1,2033 @@
+#!/usr/bin/env python3
+"""
+Assignment 1 -- AI-Sandbox Interactive Explorer
+Run from the repo root:  python assignment-1-ui-explorer/run_sandbox.py
+Opens http://localhost:3001 in your browser.
+"""
+import json
+import sys
+import threading
+import webbrowser
+from pathlib import Path
+
+from flask import Flask, jsonify, render_template_string, request
+
+ROOT = Path(__file__).parent          # assignment-1-ui-explorer/
+sys.path.insert(0, str(ROOT))         # so 'import reference' finds reference.py
+
+# ---------------------------------------------------------------------------
+# Logging — reset on every server start (mode="w"), writes to assignment-1-ui-explorer/server.log
+# ---------------------------------------------------------------------------
+import logging
+
+_LOG_FILE = ROOT / "server.log"
+_LOG_FMT  = "%(asctime)s  %(levelname)-8s  %(message)s"
+_DATE_FMT = "%Y-%m-%d %H:%M:%S"
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format=_LOG_FMT,
+    datefmt=_DATE_FMT,
+    handlers=[
+        logging.FileHandler(_LOG_FILE, mode="w", encoding="utf-8"),
+        logging.StreamHandler(sys.stdout),
+    ],
+)
+log = logging.getLogger(__name__)
+# Route Flask/werkzeug request logs into the same file
+logging.getLogger("werkzeug").handlers  = logging.getLogger().handlers
+logging.getLogger("werkzeug").propagate = False
+
+log.info("Log file reset: %s", _LOG_FILE)
+# ---------------------------------------------------------------------------
+
+DATA_FILE = ROOT / "data" / "patient_features.csv"
+ORACLE_FILE = ROOT / "oracle_table.json"
+
+try:
+    import pandas as pd
+    _df = pd.read_csv(DATA_FILE)
+    PATIENTS_JSON = _df.to_dict(orient="records")
+    log.info("Loaded %d patients from %s", len(_df), DATA_FILE)
+except Exception as exc:
+    log.error("Failed to load patient data: %s", exc, exc_info=True)
+    sys.exit(1)
+
+if ORACLE_FILE.exists():
+    ORACLE_TABLE = json.loads(ORACLE_FILE.read_text(encoding="utf-8"))
+    log.info("Oracle table: %d seeds loaded", len(ORACLE_TABLE))
+else:
+    log.warning("oracle_table.json not found. Run: python assignment-1-ui-explorer/generate_oracle.py")
+    ORACLE_TABLE = {}
+
+try:
+    import torch  # noqa: F401
+    TORCH_OK = True
+    log.info("PyTorch available (version %s)", torch.__version__)
+except ImportError:
+    TORCH_OK = False
+    log.warning("PyTorch not found -- using numpy oracle (identical math)")
+
+from reference import evaluate_seed, student_to_seed
+
+# ---------------------------------------------------------------------------
+# Instructor config
+# ---------------------------------------------------------------------------
+ADD_TIMER = 0   # 1 = show 30-second read timer on each flashcard (first view only)
+                # 0 = no timer, cards close freely
+
+app = Flask(__name__)
+
+
+@app.route("/")
+def index():
+    return render_template_string(HTML_TEMPLATE, add_timer=ADD_TIMER)
+
+
+@app.route("/api/data")
+def api_data():
+    from reference import _flag_keywords
+    labels = _flag_keywords(_df["condition_text"].tolist()).tolist()
+    n_pos = int(sum(labels))
+    n_neg = len(labels) - n_pos
+    return jsonify({
+        "patients": PATIENTS_JSON,
+        "n_total": len(labels),
+        "n_positive": n_pos,
+        "n_negative": n_neg,
+        "positive_rate": round(n_pos / len(labels), 3),
+        "labels": labels,
+        "columns": list(_df.columns),
+    })
+
+
+AUC_OK_MIN, AUC_OK_MAX = 0.75, 0.92
+
+
+def _good_seed(base_seed):
+    for offset in range(900):
+        candidate = (base_seed - 100 + offset) % 900 + 100
+        entry = ORACLE_TABLE.get(str(candidate))
+        if entry and AUC_OK_MIN <= entry["auc"] <= AUC_OK_MAX:
+            return candidate
+    return base_seed
+
+
+@app.route("/api/assign", methods=["POST"])
+def api_assign():
+    data = request.get_json()
+    student_id = (data.get("student_id") or "").strip()
+    if not student_id:
+        return jsonify({"error": "student_id required"}), 400
+    raw_seed = student_to_seed(student_id)
+    seed = _good_seed(raw_seed)
+    oracle = ORACLE_TABLE.get(str(seed))
+    if oracle is None:
+        try:
+            from reference import OPTIMAL_LR, OPTIMAL_STEPS, OPTIMAL_VAL_FRACTION
+            oracle = evaluate_seed(_df, seed, OPTIMAL_LR, OPTIMAL_STEPS,
+                                   OPTIMAL_VAL_FRACTION, use_torch=TORCH_OK)
+            oracle.pop("loss_history", None)
+            ORACLE_TABLE[str(seed)] = oracle
+        except Exception as exc:
+            return jsonify({"error": str(exc)}), 500
+    return jsonify({"seed": seed, "oracle": oracle})
+
+
+@app.route("/api/evaluate", methods=["POST"])
+def api_evaluate():
+    data = request.get_json()
+    try:
+        seed = int(data["seed"])
+        lr = float(data["lr"])
+        steps = int(data["steps"])
+        val_fraction = float(data["val_fraction"])
+    except (KeyError, ValueError) as exc:
+        return jsonify({"error": str(exc)}), 400
+    try:
+        m = evaluate_seed(_df, seed, lr, steps, val_fraction, use_torch=TORCH_OK)
+    except Exception as exc:
+        return jsonify({"error": str(exc)}), 500
+    oracle = ORACLE_TABLE.get(str(seed), {})
+    is_optimal = bool(
+        oracle and
+        abs(m["auc"] - oracle["auc"]) <= 0.005 and
+        abs(m["accuracy"] - oracle["accuracy"]) <= 0.010 and
+        abs(m["f1"] - oracle["f1"]) <= 0.010 and
+        m["final_loss"] <= oracle["final_loss"] + 0.010
+    )
+    hint = _make_hint(m, oracle, lr, steps, val_fraction)
+    return jsonify({**m, "is_optimal": is_optimal, "hint": hint, "oracle": oracle})
+
+
+@app.route("/api/seed_compare", methods=["POST"])
+def api_seed_compare():
+    """Return metrics for seed-1, seed, seed+1 using the student's optimal params."""
+    data = request.get_json()
+    try:
+        seed = int(data["seed"])
+        lr = float(data["lr"])
+        steps = int(data["steps"])
+        val_fraction = float(data["val_fraction"])
+    except (KeyError, ValueError) as exc:
+        return jsonify({"error": str(exc)}), 400
+    results = []
+    for s in [seed - 1, seed, seed + 1]:
+        s = max(100, min(999, s))
+        try:
+            m = evaluate_seed(_df, s, lr, steps, val_fraction, use_torch=TORCH_OK)
+            results.append({
+                "seed": s, "auc": m["auc"],
+                "accuracy": m["accuracy"], "f1": m["f1"],
+                "loss": m["final_loss"],
+            })
+            log.info("seed_compare seed=%d  AUC=%.4f  Acc=%.4f", s, m["auc"], m["accuracy"])
+        except Exception as exc:
+            log.error("seed_compare failed for seed=%d: %s", s, exc)
+            results.append({"seed": s, "error": str(exc)})
+    return jsonify({"results": results, "student_seed": seed})
+
+
+@app.route("/api/submit", methods=["POST"])
+def api_submit():
+  # Submission saving has been disabled in this public explorer.
+  # Instructors should use a private grader to collect submissions.
+  return jsonify({"error": "submission disabled in public explorer"}), 403
+
+
+def _make_hint(m, oracle, lr, steps, val_fraction):
+    if not oracle:
+        return "Explore different parameter combinations to find the best performance."
+    auc_diff = oracle["auc"] - m["auc"]
+    hist = m.get("loss_history", [])
+    if abs(val_fraction - 0.20) > 0.01:
+        return "Val fraction should be 0.20. The oracle uses exactly 20% validation -- adjust that slider first."
+    if len(hist) >= 20:
+        tail_delta = abs(hist[-1] - hist[-10])
+        if tail_delta < 0.001 and m["final_loss"] > oracle["final_loss"] + 0.05:
+            return "Loss has plateaued too high -- learning rate is probably too small. Try 0.3 to 0.7."
+        if hist[-1] > hist[-10] and m["final_loss"] > oracle["final_loss"] + 0.02:
+            return "Loss is oscillating -- learning rate might be too large. Try reducing it."
+    if steps < 80 and auc_diff > 0.05:
+        return "Model hasn't converged yet. Increase the number of steps (try 200+)."
+    if lr < 0.15 and auc_diff > 0.05:
+        return "Learning rate is very small. Try 0.3-0.6."
+    if auc_diff > 0.06:
+        return f"AUC is {m['auc']:.3f} -- target is {oracle['auc']:.3f}. Try a higher learning rate."
+    if auc_diff > 0.025:
+        return f"Getting closer! AUC {m['auc']:.3f} vs target {oracle['auc']:.3f}. Fine-tune lr or add steps."
+    if auc_diff > 0.005:
+        return f"Almost there -- AUC within {auc_diff:.3f}. Small tweaks should get you over the line."
+    return "Keep experimenting -- you're in the right range. Try small adjustments."
+
+
+# ---------------------------------------------------------------------------
+# HTML template
+# ---------------------------------------------------------------------------
+HTML_TEMPLATE = r"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI-Sandbox -- Assignment 1</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:#1e293b;display:flex;min-height:100vh;font-size:14px}
+
+/* ---- Sidebar ---- */
+#sidebar{width:260px;min-width:260px;background:#e8dfd0;color:#2e1f10;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;border-right:1px solid #cfc0a4}
+#sidebar h1{font-size:.95rem;font-weight:800;padding:16px 16px 2px;color:#1e1208;letter-spacing:.03em}
+#sidebar .subtitle{font-size:.7rem;color:#7a6450;padding:0 16px 14px;border-bottom:1px solid #cfc0a4;font-weight:500}
+.sid-s{padding:12px 14px;border-bottom:1px solid #cfc0a4}
+.sid-lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:#6b5440;margin-bottom:5px;font-weight:700}
+.sid-s input{width:100%;padding:7px 9px;border-radius:6px;border:1px solid #c4ae8c;background:#e0d6c4;color:#2e1f10;font-size:.82rem}
+.sid-s input:focus{outline:none;border-color:#4f46e5}
+.sid-s button{width:100%;margin-top:7px;padding:7px;background:#4f46e5;color:white;border:none;border-radius:6px;cursor:pointer;font-size:.8rem;font-weight:700}
+.sid-s button:hover{background:#4338ca}
+#seed-disp{font-size:.74rem;color:#4f46e5;margin-top:6px;display:none;font-weight:600}
+.oracle-s{padding:12px 14px;border-bottom:1px solid #cfc0a4;display:none}
+.oracle-row{display:flex;justify-content:space-between;margin-bottom:6px}
+.oracle-row .nm{font-size:.8rem;color:#5c4430;font-weight:600}
+.oracle-row .vl{font-size:.88rem;font-weight:800;color:#4f46e5}
+.oracle-row .vl.hit{color:#10b981}
+.fc-prog-s{padding:12px 14px;border-bottom:1px solid #cfc0a4}
+.fc-prog-bar-wrap{background:#cfc0a4;border-radius:99px;height:6px;overflow:hidden;margin:6px 0 4px}
+.fc-prog-bar-fill{height:100%;background:#4f46e5;border-radius:99px;transition:width .4s}
+.fc-prog-txt{font-size:.72rem;color:#6b5440;font-weight:500}
+.fc-done-badge{font-size:.74rem;color:#10b981;font-weight:700;display:none;margin-top:4px}
+.submit-s{padding:12px 14px;display:none}
+.submit-s button{width:100%;padding:8px;border:none;border-radius:7px;cursor:pointer;font-size:.82rem;font-weight:700;background:#cfc0a4;color:#6b5440}
+.submit-s button.unlocked{background:#10b981;color:white}
+.submit-s button.unlocked:hover{background:#059669}
+#submit-note{font-size:.7rem;color:#6b5440;margin-top:5px;font-weight:500}
+
+/* ---- Main ---- */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.tab-nav{background:white;border-bottom:2px solid #e2e8f0;display:flex;padding:0 20px;position:sticky;top:0;z-index:20;gap:4px}
+.tab-btn{padding:12px 16px;font-size:.82rem;font-weight:600;color:#64748b;cursor:pointer;border:none;background:none;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap}
+.tab-btn.active{color:#4f46e5;border-bottom-color:#4f46e5}
+.tab-btn:hover:not(.active){color:#334155}
+.tab-pane{display:none;padding:22px;overflow-y:auto;flex:1}
+.tab-pane.active{display:block}
+
+/* ---- Cards ---- */
+.card{background:white;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:18px;margin-bottom:16px}
+.card-title{font-size:.9rem;font-weight:700;color:#1e293b;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.badge{font-size:.67rem;background:#ede9fe;color:#4f46e5;padding:2px 7px;border-radius:99px;font-weight:700}
+.badge.green{background:#dcfce7;color:#166534}
+
+/* ---- Overview tab ---- */
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+@media(max-width:900px){.info-grid{grid-template-columns:1fr}}
+.info-card{background:white;border-radius:10px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.08);border-top:3px solid #4f46e5}
+.info-card.g{border-top-color:#10b981}
+.info-card.a{border-top-color:#f59e0b}
+.info-card h3{font-size:.82rem;font-weight:700;color:#1e293b;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.info-card p{font-size:.78rem;color:#475569;line-height:1.55}
+
+.pipeline{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:20px;padding:14px 18px;background:white;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.pipe-step{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:80px}
+.pipe-step .p-icon{font-size:1.4rem}
+.pipe-step .p-name{font-size:.68rem;font-weight:700;color:#334155;text-align:center}
+.pipe-step .p-sub{font-size:.62rem;color:#94a3b8;text-align:center}
+.pipe-arrow{font-size:1.1rem;color:#94a3b8;padding:0 4px}
+
+/* ---- Concept grid ---- */
+.concepts-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.prog-info{font-size:.8rem;color:#64748b}
+.complete-banner{background:#ecfdf5;border:1.5px solid #10b981;border-radius:8px;padding:10px 14px;font-size:.82rem;color:#065f46;display:none;margin-bottom:12px;font-weight:600}
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.concept-card{background:white;border-radius:10px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.08);cursor:pointer;transition:transform .15s,box-shadow .15s;border:2px solid transparent;position:relative;text-align:center}
+.concept-card:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,.12)}
+.concept-card.done{border-color:#10b981}
+.concept-card.done::after{content:'✓';position:absolute;top:6px;right:8px;color:#10b981;font-size:.85rem;font-weight:800}
+.concept-card .c-icon{font-size:1.8rem;margin-bottom:7px}
+.concept-card .c-title{font-size:.75rem;font-weight:700;color:#1e293b;line-height:1.3}
+.concept-card .c-tap{font-size:.63rem;color:#94a3b8;margin-top:5px}
+
+/* ---- Modal ---- */
+#modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;align-items:center;justify-content:center}
+#modal-overlay.open{display:flex}
+#modal-box{background:white;border-radius:14px;width:min(780px,95vw);max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal-header{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid #e2e8f0;position:sticky;top:0;background:white;z-index:1}
+.modal-header h2{font-size:1.05rem;font-weight:800;color:#1e293b;display:flex;align-items:center;gap:10px}
+.modal-close{background:none;border:none;font-size:1.3rem;cursor:pointer;color:#94a3b8;padding:4px 8px;border-radius:6px}
+.modal-close:hover{background:#f1f5f9;color:#1e293b}
+.modal-close:disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
+#modal-timer{font-size:.8rem;font-weight:700;color:#6366f1;background:#eef2ff;padding:3px 12px;border-radius:20px;min-width:3.5rem;text-align:center;display:none}
+.modal-body{padding:22px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media(max-width:640px){.modal-body{grid-template-columns:1fr}}
+.modal-left .section-lbl{font-size:.65rem;text-transform:uppercase;letter-spacing:.09em;color:#94a3b8;font-weight:700;margin-bottom:6px;margin-top:14px}
+.modal-left .section-lbl:first-child{margin-top:0}
+.modal-left p{font-size:.82rem;color:#334155;line-height:1.6;margin-bottom:6px}
+.modal-left .formula{font-family:monospace;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px 12px;font-size:.8rem;color:#4f46e5;margin:8px 0;white-space:pre-line}
+.modal-left .example-box{background:#fef9e7;border-left:3px solid #f59e0b;border-radius:0 7px 7px 0;padding:10px 12px;font-size:.78rem;color:#78350f;line-height:1.5;margin-top:10px}
+.modal-right{display:flex;flex-direction:column;gap:12px}
+.modal-right svg{width:100%;height:auto}
+.modal-right .caption{font-size:.72rem;color:#64748b;text-align:center;margin-top:-6px}
+
+/* ---- Dataset tab ---- */
+.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.stat-chip{background:white;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.07);padding:12px 16px;text-align:center;min-width:100px}
+.stat-chip .n{font-size:1.4rem;font-weight:800;color:#4f46e5}
+.stat-chip .l{font-size:.68rem;color:#64748b;margin-top:2px}
+.stat-chip.green .n{color:#10b981}
+.stat-chip.amber .n{color:#f59e0b}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:820px){.two-col{grid-template-columns:1fr}}
+.balance-bar{height:16px;border-radius:99px;overflow:hidden;display:flex;margin:8px 0}
+.balance-bar .bp{background:#4f46e5}.balance-bar .bn{background:#e2e8f0}
+.balance-lbl{display:flex;justify-content:space-between;font-size:.7rem;color:#64748b}
+.why-box{background:#eff6ff;border-left:3px solid #3b82f6;border-radius:0 7px 7px 0;padding:10px 12px;font-size:.78rem;color:#1d4ed8;line-height:1.55;margin-bottom:10px}
+.kw-tester textarea{width:100%;height:85px;padding:9px;border:1px solid #e2e8f0;border-radius:7px;font-size:.8rem;resize:vertical;font-family:inherit}
+.kw-tester button{margin-top:7px;padding:7px 16px;background:#4f46e5;color:white;border:none;border-radius:6px;cursor:pointer;font-size:.8rem;font-weight:600}
+.kw-result{margin-top:9px;font-size:.8rem;line-height:1.7}
+.kw-result mark{background:#fef3c7;padding:0 2px;border-radius:3px;font-weight:600}
+.kw-hits{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.kw-chip{background:#ede9fe;color:#4f46e5;padding:1px 8px;border-radius:99px;font-size:.7rem;font-weight:700}
+.tbl-controls{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.tbl-controls input,.tbl-controls select{padding:6px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:.78rem;background:white}
+.tbl-controls input{flex:1;min-width:180px}
+.tbl-wrap{overflow-x:auto;border:1px solid #e2e8f0;border-radius:8px;max-height:380px;overflow-y:auto}
+table{border-collapse:collapse;font-size:.75rem;white-space:nowrap}
+thead th{background:#f8fafc;padding:7px 10px;text-align:left;font-weight:600;color:#64748b;position:sticky;top:0;border-bottom:1px solid #e2e8f0;z-index:1}
+thead th.first-col{position:sticky;left:0;z-index:2;background:#f8fafc}
+tbody tr:nth-child(even){background:#fafafa}
+tbody td{padding:5px 10px;border-bottom:1px solid #f1f5f9;max-width:180px;overflow:hidden;text-overflow:ellipsis}
+tbody td.first-col{position:sticky;left:0;background:inherit;z-index:1;font-weight:700}
+.lbl-pos{background:#ede9fe;color:#4f46e5;padding:1px 7px;border-radius:99px;font-size:.68rem;font-weight:700}
+.lbl-neg{background:#f1f5f9;color:#94a3b8;padding:1px 7px;border-radius:99px;font-size:.68rem}
+#tbl-badge{font-size:.68rem;background:#f1f5f9;color:#64748b;padding:2px 8px;border-radius:99px;font-weight:600}
+
+/* ---- Training tab ---- */
+.reminder-banner{background:#fef9e7;border:1.5px solid #f59e0b;border-radius:8px;padding:10px 14px;font-size:.8rem;color:#92400e;margin-bottom:16px;display:none}
+.train-layout{display:grid;grid-template-columns:290px 1fr;gap:16px;align-items:start}
+@media(max-width:760px){.train-layout{grid-template-columns:1fr}}
+.slider-row{margin-bottom:14px}
+.slider-row label{display:flex;justify-content:space-between;font-size:.8rem;font-weight:600;color:#334155;margin-bottom:4px}
+.slider-row label span{color:#4f46e5;font-weight:700;min-width:48px;text-align:right}
+input[type=range]{width:100%;accent-color:#4f46e5;cursor:pointer}
+.slider-hints{display:flex;justify-content:space-between;font-size:.63rem;color:#94a3b8;margin-top:1px}
+.metric-bars{display:flex;flex-direction:column;gap:10px}
+.m-row .ml{display:flex;justify-content:space-between;font-size:.75rem;margin-bottom:3px}
+.m-row .ml .mn{color:#64748b;font-weight:600}
+.m-row .ml .mv{display:flex;gap:10px}
+.m-row .ml .mv .cur{color:#1e293b;font-weight:700}
+.m-row .ml .mv .tgt{color:#94a3b8}
+.prog-track{height:7px;background:#f1f5f9;border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;background:#4f46e5;border-radius:99px;transition:width .4s}
+.prog-fill.good{background:#10b981}.prog-fill.warn{background:#f59e0b}
+.hint-box{background:#fef9e7;border-left:3px solid #f59e0b;border-radius:0 7px 7px 0;padding:9px 12px;font-size:.78rem;color:#92400e;margin-top:12px;line-height:1.5;display:none}
+.optimal-banner{background:#ecfdf5;border:2px solid #10b981;border-radius:10px;padding:16px;text-align:center;display:none;margin-top:14px}
+.optimal-banner h3{color:#065f46;font-size:.95rem;margin-bottom:4px}
+.optimal-banner p{color:#047857;font-size:.78rem}
+.log-wrap{max-height:240px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:7px;font-size:.72rem}
+.log-wrap table{width:100%;border-collapse:collapse;white-space:nowrap}
+.log-wrap thead th{background:#f8fafc;padding:5px 8px;text-align:left;color:#64748b;font-weight:600;position:sticky;top:0;border-bottom:1px solid #e2e8f0}
+.log-wrap tbody td{padding:4px 8px;border-bottom:1px solid #f8fafc}
+.opt-y{color:#10b981;font-weight:700}.opt-n{color:#94a3b8}
+
+/* ---- Vis grid (Training tab) ---- */
+.vis-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+@media(max-width:860px){.vis-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:540px){.vis-grid{grid-template-columns:1fr}}
+.vis-card{background:white;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:14px}
+.vis-title{font-size:.8rem;font-weight:700;color:#334155;margin-bottom:8px}
+.vis-caption{font-size:.71rem;color:#64748b;margin-top:6px;line-height:1.45;min-height:26px}
+.cm-col-labels{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:3px}
+.cm-col-lbl{font-size:.65rem;color:#94a3b8;text-align:center}
+.cm-row-wrap{display:flex;gap:4px;align-items:stretch}
+.cm-row-lbl{font-size:.65rem;color:#94a3b8;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);width:14px;text-align:center;flex-shrink:0}
+.cm-cells{display:grid;grid-template-columns:1fr 1fr;gap:5px;flex:1}
+.cm-cell{border-radius:7px;padding:8px 5px;text-align:center;transition:all .35s}
+.cm-cell .cnt{font-size:1.5rem;font-weight:800;line-height:1}
+.cm-cell .lbl{font-size:.63rem;line-height:1.3;margin-top:3px;opacity:.9}
+.cm-tp,.cm-tn{background:#dcfce7;color:#166534}
+.cm-fn{background:#fee2e2;color:#991b1b}
+.cm-fp{background:#fef3c7;color:#92400e}
+
+/* ---- Explanation panel ---- */
+.explain-grid{display:grid;grid-template-columns:1fr 1fr}
+@media(max-width:700px){.explain-grid{grid-template-columns:1fr}}
+.exp-sec{padding:14px 16px;border-bottom:1px solid #f1f5f9}
+.exp-sec:nth-child(odd){border-right:1px solid #f1f5f9}
+@media(max-width:700px){.exp-sec:nth-child(odd){border-right:none}}
+.exp-sec:nth-last-child(-n+2){border-bottom:none}
+@media(max-width:700px){.exp-sec:last-child{border-bottom:none}.exp-sec:nth-last-child(2){border-bottom:1px solid #f1f5f9}}
+.exp-lbl{font-size:.67rem;text-transform:uppercase;letter-spacing:.09em;color:#94a3b8;font-weight:700;margin-bottom:5px}
+.exp-txt{font-size:.79rem;color:#334155;line-height:1.65}
+.exp-math{font-family:monospace;font-size:.72rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:5px;padding:7px 10px;color:#4f46e5;margin:6px 0 7px;white-space:pre-line;line-height:1.7}
+.exp-change{font-size:.75rem;color:#7c3aed;background:#faf5ff;border-left:3px solid #a78bfa;border-radius:0 5px 5px 0;padding:6px 10px;margin-bottom:6px;line-height:1.55}
+.exp-txt .better{color:#10b981;font-weight:700}
+.exp-txt .worse{color:#ef4444;font-weight:700}
+.exp-txt .neutral{color:#f59e0b;font-weight:700}
+
+/* ---- Completion footer ---- */
+#complete-footer{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;z-index:120;display:none;
+  background:linear-gradient(180deg,#f8fff4,#ecfdf5);border:1px solid #10b981;padding:10px 14px;border-radius:10px;box-shadow:0 6px 18px rgba(2,6,23,.12);font-size:.92rem;color:#065f46;display:flex;gap:12px;align-items:center}
+#complete-footer .cf-msg{font-weight:700}
+#complete-footer .cf-actions{display:flex;gap:8px;align-items:center}
+#complete-footer button{background:#10b981;color:white;border:none;padding:6px 10px;border-radius:8px;cursor:pointer;font-weight:700}
+#complete-footer .cf-dismiss{background:transparent;color:#065f46;border:none;font-size:1.1rem;cursor:pointer;padding:4px}
+/* ---- Persistent top completion bar ---- */
+#top-complete-bar{position:fixed;top:0;left:0;right:0;height:46px;z-index:500;display:none;align-items:center;justify-content:center;gap:10px;
+  background:linear-gradient(90deg,#053b2c,#065f46 45%,#0d9668 85%,#10b981);
+  color:#ecfdf5;font-weight:700;font-size:.86rem;letter-spacing:.01em;
+  box-shadow:0 6px 20px rgba(2,6,23,.3);border-bottom:1px solid rgba(236,253,245,.28)}
+#top-complete-bar .tcb-check{flex:none;width:22px;height:22px;border-radius:999px;background:#ecfdf5;color:#065f46;
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;box-shadow:0 0 0 3px rgba(236,253,245,.22)}
+#top-complete-bar .tcb-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#top-complete-bar .tcb-text b{font-weight:800;color:#fff}
+body.has-completion-bar{padding-top:46px}
+body.has-completion-bar #sidebar{height:calc(100vh - 46px)}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <h1>ISTA 457 / INFO 557 · Neural Networks</h1>
+  <p class="subtitle">Assignment 1 &mdash; Pipeline</p>
+
+  <div class="sid-s">
+    <div class="sid-lbl">Your Student ID</div>
+    <input type="text" id="sid-input" placeholder="e.g. jdoe2025" />
+    <button onclick="setStudentId()">Set ID &rarr;</button>
+    <div id="seed-disp"></div>
+  </div>
+
+  <div class="oracle-s" id="oracle-s">
+    <div class="sid-lbl">Your Target (Oracle)</div>
+    <div class="oracle-row"><span class="nm">F1 Score</span><span class="vl" id="o-f1">--</span></div>
+    <div class="oracle-row"><span class="nm">Accuracy</span><span class="vl" id="o-acc">--</span></div>
+    <div class="oracle-row"><span class="nm">AUC</span><span class="vl" id="o-auc">--</span></div>
+    <div class="oracle-row"><span class="nm">Final Loss</span><span class="vl" id="o-loss">--</span></div>
+    <div class="oracle-row"><span class="nm">Train / Val</span><span class="vl" id="o-split">--</span></div>
+  </div>
+
+  <div class="fc-prog-s">
+    <div class="sid-lbl">Concept Progress</div>
+    <div class="fc-prog-bar-wrap"><div class="fc-prog-bar-fill" id="fc-fill" style="width:0%"></div></div>
+    <div class="fc-prog-txt" id="fc-txt">0 / 11 concepts explored</div>
+    <div class="fc-done-badge" id="fc-done">All concepts explored!</div>
+  </div>
+
+  <div class="submit-s" id="submit-s">
+    <div class="sid-lbl">Submission</div>
+    <div id="submit-note">Reach optimal performance to unlock.</div>
+    <button id="submit-btn" onclick="submitResult()">Submit &amp; Save</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div id="main">
+  <nav class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('overview')">Overview &amp; Concepts</button>
+    <button class="tab-btn" onclick="switchTab('explore')">Dataset Explorer</button>
+    <button class="tab-btn" onclick="switchTab('train')">Training Explorer</button>
+  </nav>
+
+  <!-- ============================================================ -->
+  <!-- TAB 1: OVERVIEW & CONCEPTS -->
+  <!-- ============================================================ -->
+  <div class="tab-pane active" id="tab-overview">
+
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>🏥 The Problem</h3>
+        <p>Identify patients with chronic pain from their EHR. Chronic pain
+        affects roughly <strong>20% of adults</strong> but is often
+        under-detected until crisis — early identification enables proactive
+        care and cuts long-term costs.
+        <br><br>
+        This is a <strong>binary classification</strong> task:
+        <strong>pain = 1</strong> or <strong>pain = 0</strong> per patient.</p>
+      </div>
+      <div class="info-card g">
+        <h3>📊 The Dataset</h3>
+        <p>A curated subset inspired by <strong>Synthea</strong>, an
+        open-source synthetic EHR generator (no HIPAA concerns). Real Synthea
+        spans dozens of tables across full patient lifetimes; here we extracted
+        <strong>320 patients</strong> — small enough
+        to keep the focus on pipeline mechanics.
+        <br><br>
+        Why synthetic? Real EHR data requires institutional access. Synthea
+        mimics real population statistics so the skills you build transfer
+        directly to production clinical data.</p>
+      </div>
+      <div class="info-card a">
+        <h3>🔬 The Approach</h3>
+        <p>Build a logistic regression classifier <strong>from scratch</strong>
+        using only NumPy — no scikit-learn. You implement every equation:
+        gradient descent, log-loss, stratified split, and AUC.
+        <br><br>
+        Logistic regression is the <strong>clinical gold-standard
+        baseline</strong> — fast, interpretable, the benchmark every more
+        complex model is measured against. The sandbox shows your target;
+        <code>pipeline.py</code> must reproduce it.</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-title">Pipeline Stages</div>
+      <div class="pipeline" id="pipeline-flow">
+        <div class="pipe-step">
+          <div class="p-icon">📝</div>
+          <div class="p-name">Raw Text</div>
+          <div class="p-sub">condition_text</div>
+        </div>
+        <div class="pipe-arrow">&#8594;</div>
+        <div class="pipe-step">
+          <div class="p-icon">🔍</div>
+          <div class="p-name">Keyword Label</div>
+          <div class="p-sub">flag_keyword_match</div>
+        </div>
+        <div class="pipe-arrow">&#8594;</div>
+        <div class="pipe-step">
+          <div class="p-icon">✂️</div>
+          <div class="p-name">Stratified Split</div>
+          <div class="p-sub">stratified_split</div>
+        </div>
+        <div class="pipe-arrow">&#8594;</div>
+        <div class="pipe-step">
+          <div class="p-icon">⚖️</div>
+          <div class="p-name">Standardize</div>
+          <div class="p-sub">standardize_features</div>
+        </div>
+        <div class="pipe-arrow">&#8594;</div>
+        <div class="pipe-step">
+          <div class="p-icon">🧠</div>
+          <div class="p-name">Train Model</div>
+          <div class="p-sub">train_logistic_regression</div>
+        </div>
+        <div class="pipe-arrow">&#8594;</div>
+        <div class="pipe-step">
+          <div class="p-icon">📐</div>
+          <div class="p-name">Evaluate</div>
+          <div class="p-sub">roc_auc / F1</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="concepts-header">
+        <div class="card-title" style="margin-bottom:0">
+          Key Concepts
+          <span class="badge" id="concepts-badge">0/11</span>
+        </div>
+        <div class="prog-info">Click each card to explore &mdash; all 11 required to complete the assignment exploration.</div>
+      </div>
+      <div class="complete-banner" id="complete-banner">
+        All 11 concepts explored! You're ready to move to the Training Explorer.
+      </div>
+      <div class="concept-grid" id="concept-grid"></div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TAB 2: DATASET EXPLORER -->
+  <!-- ============================================================ -->
+  <div class="tab-pane" id="tab-explore">
+
+    <div class="stats-row" id="stats-row">
+      <div class="stat-chip"><div class="n" id="s-total">--</div><div class="l">Patients</div></div>
+      <div class="stat-chip green"><div class="n" id="s-pos">--</div><div class="l">Pain=1</div></div>
+      <div class="stat-chip amber"><div class="n" id="s-neg">--</div><div class="l">Pain=0</div></div>
+      <div class="stat-chip"><div class="n">19</div><div class="l">Features Used</div></div>
+      <div class="stat-chip"><div class="n">23</div><div class="l">Total Columns</div></div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Class Balance</div>
+        <div class="balance-bar" id="bal-bar">
+          <div class="bp" id="bar-pos" style="width:40%"></div>
+          <div class="bn" id="bar-neg" style="width:60%"></div>
+        </div>
+        <div class="balance-lbl">
+          <span id="bal-pos-l">Pain=1: 40%</span>
+          <span id="bal-neg-l">Pain=0: 60%</span>
+        </div>
+        <p style="font-size:.76rem;color:#64748b;margin-top:10px;line-height:1.5">
+          <strong>Class imbalance:</strong> A model that always predicts
+          &ldquo;pain=0&rdquo; gets 60% accuracy for free &mdash; yet it&rsquo;s
+          completely useless. That&rsquo;s why we use AUC and F1 instead of raw accuracy.
+        </p>
+      </div>
+
+      <div class="card kw-tester">
+        <div class="card-title">Keyword Tester</div>
+        <div class="why-box">
+          <strong>Why does this exist?</strong> The dataset has no pre-built
+          label column. We <em>create</em> <code>binary_label</code> by
+          scanning <code>condition_text</code> for 31 pain-related keywords using
+          regex. This is Stage 1 of your pipeline: <code>flag_keyword_match()</code>.
+          The approach generalises &mdash; swap the keyword list for any clinical
+          concept and the same code creates a new label.
+        </div>
+        <textarea id="kw-input" placeholder="Paste any condition text here&#10;e.g. Chronic back pain; Type 2 diabetes; Osteoarthritis of knee"></textarea>
+        <button onclick="testKeywords()">Test Keywords</button>
+        <div class="kw-result" id="kw-result"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        Patient Table &mdash; All Columns
+        <span id="tbl-badge"></span>
+      </div>
+      <p style="font-size:.74rem;color:#64748b;margin-bottom:10px">
+        <code>binary_label</code> is the first column, <code>id</code> is second. Scroll right to see all 23 columns.
+        The 19 features used for training are highlighted in blue headers.
+      </p>
+      <div style="background:#fef2f2;border-left:3px solid #f87171;border-radius:0 7px 7px 0;padding:10px 14px;font-size:.78rem;color:#7f1d1d;line-height:1.7;margin-bottom:10px">
+        <strong>Why only 19 features?</strong> The 23 columns include 4 that cannot or should not be used as model inputs:
+        <br>&bull; <code>id</code> &mdash; patient identifier, not a clinical signal
+        <br>&bull; <code>binary_label</code> &mdash; the target variable itself (using it as a feature is circular)
+        <br>&bull; <code>condition_text</code> &mdash; <strong>label leakage:</strong> the label was created from this text, so feeding it back in would let the model read the answer key
+        <br>&bull; <code>race</code> &mdash; demographic attribute excluded to prevent the model from encoding a protected characteristic
+      </div>
+      <div class="tbl-controls">
+        <input type="text" id="tbl-search" placeholder="Search condition text..." oninput="filterTable()">
+      </div>
+      <div class="tbl-wrap">
+        <table id="patient-table">
+          <thead id="tbl-head"></thead>
+          <tbody id="tbl-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TAB 3: TRAINING EXPLORER -->
+  <!-- ============================================================ -->
+  <div class="tab-pane" id="tab-train">
+    <div class="reminder-banner" id="reminder-banner">
+      📚 You haven&rsquo;t explored all 11 concept cards yet.
+      Go back to <strong>Overview &amp; Concepts</strong> and click each card.
+      <span id="reminder-count"></span>
+    </div>
+
+    <div class="card" style="background:#ede9fe;border:1px solid #c4b5fd;margin-bottom:16px">
+      <div style="font-size:.8rem;color:#3730a3;line-height:1.6">
+        <strong>How to use this tab:</strong>
+        Enter your Student ID in the sidebar to unlock your unique target.
+        Adjust the three sliders &mdash; the loss curve, ROC curve, and confusion matrix update live.
+        Find the combination that makes all four bars green.
+      </div>
+    </div>
+
+    <!-- Row 1: Parameters | Current vs Target -->
+    <div class="train-layout">
+      <div>
+        <div class="card">
+          <div class="card-title">Parameters</div>
+          <div class="slider-row">
+            <label>Learning Rate <span id="lr-val">0.10</span></label>
+            <input type="range" id="lr-sl" min="0.001" max="1.0" step="0.001" value="0.10"
+              oninput="document.getElementById('lr-val').textContent=parseFloat(this.value).toFixed(3);scheduleEval()">
+            <div class="slider-hints"><span>0.001</span><span>0.5</span><span>1.0</span></div>
+          </div>
+          <div class="slider-row">
+            <label>Steps (Iterations) <span id="steps-val">50</span></label>
+            <input type="range" id="steps-sl" min="10" max="500" step="10" value="50"
+              oninput="document.getElementById('steps-val').textContent=this.value;scheduleEval()">
+            <div class="slider-hints"><span>10</span><span>250</span><span>500</span></div>
+          </div>
+          <div class="slider-row">
+            <label>Val Fraction <span id="vf-val">0.20</span></label>
+            <input type="range" id="vf-sl" min="0.10" max="0.40" step="0.01" value="0.20"
+              oninput="document.getElementById('vf-val').textContent=parseFloat(this.value).toFixed(2);scheduleEval()">
+            <div class="slider-hints"><span>0.10</span><span>0.25</span><span>0.40</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card" id="not-set-msg">
+          <p style="color:#94a3b8;text-align:center;padding:20px 0;font-size:.85rem">
+            Enter your Student ID in the sidebar to begin.
+          </p>
+        </div>
+        <div id="metrics-panel" style="display:none">
+          <div class="card">
+            <div class="card-title">Current vs Target</div>
+            <div class="metric-bars" id="metric-bars"></div>
+            <div class="hint-box" id="hint-box"></div>
+          </div>
+          <div class="optimal-banner" id="opt-banner">
+            <h3>Optimal Performance Reached!</h3>
+            <p id="opt-msg">Your results match the oracle for your seed.</p>
+            <p style="font-size:.73rem;color:#047857;margin-top:4px" id="reveal-params"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: Live visualizations -->
+    <div class="vis-grid" id="vis-panels" style="display:none">
+      <div class="vis-card">
+        <div class="vis-title">📉 Loss Curve</div>
+        <canvas id="loss-canvas" width="300" height="160" style="width:100%;height:auto"></canvas>
+        <div class="vis-caption" id="loss-caption"></div>
+      </div>
+      <div class="vis-card">
+        <div class="vis-title">📐 ROC Curve</div>
+        <canvas id="roc-canvas" width="300" height="160" style="width:100%;height:auto"></canvas>
+        <div class="vis-caption" id="roc-caption"></div>
+      </div>
+      <div class="vis-card">
+        <div class="vis-title">🔢 Confusion Matrix</div>
+        <div class="cm-col-labels">
+          <div class="cm-col-lbl">Predicted Pain=1</div>
+          <div class="cm-col-lbl">Predicted Pain=0</div>
+        </div>
+        <div class="cm-row-wrap">
+          <div class="cm-row-lbl">Actual</div>
+          <div class="cm-cells">
+            <div class="cm-cell cm-tp" id="cm-tp"><div class="cnt">--</div><div class="lbl">TP<br>pain caught</div></div>
+            <div class="cm-cell cm-fn" id="cm-fn"><div class="cnt">--</div><div class="lbl">FN<br>pain missed</div></div>
+            <div class="cm-cell cm-fp" id="cm-fp"><div class="cnt">--</div><div class="lbl">FP<br>false alarm</div></div>
+            <div class="cm-cell cm-tn" id="cm-tn"><div class="cnt">--</div><div class="lbl">TN<br>healthy cleared</div></div>
+          </div>
+        </div>
+        <div class="vis-caption" id="cm-caption"></div>
+      </div>
+    </div>
+
+    <!-- Row 3: Explanation -->
+    <div class="card" id="explain-panel" style="display:none;padding:0;overflow:hidden;margin-bottom:16px">
+      <div class="card-title" style="padding:12px 16px;border-bottom:1px solid #f1f5f9;margin-bottom:0">
+        💡 What&rsquo;s happening?
+      </div>
+      <div class="explain-grid">
+        <div class="exp-sec" id="exp-loss"></div>
+        <div class="exp-sec" id="exp-cm"></div>
+        <div class="exp-sec" id="exp-auc"></div>
+        <div class="exp-sec" id="exp-params"></div>
+      </div>
+    </div>
+
+    <!-- Row 4: Seed Sensitivity (live, updates with every eval) -->
+    <div class="card" id="seed-panel">
+      <div class="card-title">🎲 Seed Sensitivity — What if your split were different?</div>
+      <p style="font-size:.82rem;color:#475569;line-height:1.6;margin-bottom:16px">
+        Your current parameters applied to three different train/val splits.
+        Each seed shuffles the patients differently — notice how the metrics shift
+        even though your model and hyperparameters are <em>identical</em>.
+        This is why every student gets a personal seed: fair comparison requires the same split.
+      </p>
+      <div id="seed-compare-body">
+        <div style="text-align:center;color:#94a3b8;padding:24px;font-size:.85rem">Enter your Student ID and run the trainer to see the comparison.</div>
+      </div>
+    </div>
+
+    <!-- Row 5: Interaction Log -->
+    <div class="card" id="log-card" style="display:none">
+      <div class="card-title">Interaction Log <span class="badge" id="log-cnt">0</span></div>
+      <div class="log-wrap">
+        <table>
+          <thead><tr><th>#</th><th>LR</th><th>Steps</th><th>VF</th>
+            <th>AUC</th><th>Acc%</th><th>F1</th><th>Loss</th><th>Status</th></tr></thead>
+          <tbody id="log-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- MODAL -->
+<!-- ============================================================ -->
+<div id="modal-overlay" onclick="closeModal()">
+  <div id="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h2 id="modal-title"></h2>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span id="modal-timer"></span>
+        <button class="modal-close" id="modal-close-btn" onclick="closeModal()">&#10005;</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-left" id="modal-left"></div>
+      <div class="modal-right" id="modal-right"></div>
+    </div>
+  </div>
+</div>
+
+<div id="complete-footer" aria-live="polite" style="display:none">
+  <div class="cf-msg">Exploration complete ✓ — copy these optimal parameters into <code>pipeline.py</code>'s <code>get_sandbox_params()</code></div>
+  <div class="cf-actions">
+    <button id="copy-params-btn" onclick="copyOptimalParams()">Copy params</button>
+    <button class="cf-dismiss" onclick="dismissCompleteFooter()" title="Dismiss">✕</button>
+  </div>
+</div>
+
+<!-- Persistent top completion bar -->
+<div id="top-complete-bar" style="display:none" aria-hidden="true" role="status">
+  <div class="tcb-check">&#10003;</div>
+  <div class="tcb-text">Exploration complete — <b>optimal parameters</b> ready to copy below</div>
+</div>
+<script>
+// ============================================================
+// State
+// ============================================================
+const ADD_TIMER = {{ add_timer }};   // set in run_sandbox.py
+
+const state = {
+  studentId: null, seed: null, oracle: null,
+  currentMetrics: null, interactionLog: [],
+  isOptimal: false, evalTimer: null,
+  exploredCards: new Set(),
+};
+
+const PAIN_KEYWORDS = [
+  "chronic","pain","arthritis","osteoarthritis","rheumatoid","fibromyalgia",
+  "migraine","neuropathy","neuralgia","sciatica","back pain","neck pain",
+  "spinal","fracture","injury","burn","wound","trauma","sprain","strain",
+  "tendon","ligament","joint","osteoporosis","gout","lupus","paralysis",
+  "amputation","surgery","postoperative","whiplash"
+];
+
+const FEATURE_COLS = new Set([
+  "age","is_female","number_of_unique_meds","number_of_encounters","number_of_procedures",
+  "unique_procedures","pain_severity","body_height","body_weight",
+  "body_mass_index","systolic_blood_pressure","diastolic_blood_pressure",
+  "heart_rate","respiratory_rate","qaly","daly","qols",
+  "healthcare_expenses","healthcare_coverage"
+]);
+
+// ============================================================
+// Concept card data
+// ============================================================
+const CONCEPTS = [
+  {
+    icon:"📉",title:"Gradient Descent",
+    explanation:`The model learns by repeatedly asking: "which direction reduces the loss?" It computes the gradient (the slope of the loss with respect to each weight) and takes a small step downhill.\n\nThe learning rate controls step size. Too small: slow convergence. Too large: the model overshoots the minimum and loss oscillates or diverges.\n\nAfter enough steps, the loss plateaus — the model has converged to its best weights for this data.`,
+    formula:`weights -= lr × ∇_weights\nbias    -= lr × ∇_bias\n\n∇_weights = Xᵀ · (pred - y) / N\n∇_bias    = mean(pred - y)`,
+    example:`In this assignment you will implement train_logistic_regression() which runs this update loop for 'iterations' steps.`,
+    visual:`<svg viewBox="0 0 300 185" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="185" fill="#f8fafc" rx="8"/>
+  <line x1="48" y1="18" x2="48" y2="155" stroke="#cbd5e1" stroke-width="1.5"/>
+  <line x1="48" y1="155" x2="282" y2="155" stroke="#cbd5e1" stroke-width="1.5"/>
+  <line x1="48" y1="85" x2="282" y2="85" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4"/>
+  <path d="M55,28 C85,52 138,108 268,148" stroke="#4f46e5" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <circle cx="78" cy="42" r="6" fill="#f59e0b"/>
+  <circle cx="118" cy="72" r="6" fill="#f59e0b"/>
+  <circle cx="168" cy="100" r="6" fill="#f59e0b"/>
+  <circle cx="228" cy="130" r="8" fill="#10b981"/>
+  <line x1="78" y1="42" x2="118" y2="72" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5"/>
+  <line x1="118" y1="72" x2="168" y2="100" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5"/>
+  <line x1="168" y1="100" x2="228" y2="130" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5"/>
+  <text x="240" y="126" font-size="11" fill="#10b981" font-weight="700">converged</text>
+  <text x="26" y="90" font-size="11" fill="#64748b" text-anchor="middle" transform="rotate(-90,26,90)">Loss</text>
+  <text x="165" y="174" font-size="11" fill="#64748b" text-anchor="middle">Training Steps →</text>
+  <text x="84" y="36" font-size="11" fill="#f59e0b" font-weight="700">step 1</text>
+  <text x="42" y="25" font-size="10" fill="#94a3b8" text-anchor="end">high</text>
+  <text x="42" y="157" font-size="10" fill="#94a3b8" text-anchor="end">low</text>
+</svg>`,
+  },
+  {
+    icon:"⚖️",title:"Feature Standardization",
+    explanation:`Our features have wildly different scales: age ranges 0–90, healthcare expenses range 0–500,000. Without scaling, the gradient is dominated by the large-scale features — the model barely sees age because 1 dollar of expenses creates a much larger gradient than 1 year of age.\n\nZ-score standardization subtracts the column mean and divides by the column standard deviation, putting every feature in the range ≈ [-3, 3]. Now the optimizer can move freely in all directions.\n\nCritically: you compute mean and std on the training set ONLY, then apply those same values to the validation set. Otherwise you leak validation information into training.`,
+    formula:`z = (x − mean_train) / std_train\n\n(Apply same mean/std to val too)`,
+    example:`standardize_features(X_train) is provided for you. It returns (X_scaled, means, stds). You then compute X_val_scaled = (X_val - means) / stds.`,
+    visual:`<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="180" fill="#f8fafc" rx="8"/>
+  <text x="68" y="10" text-anchor="middle" font-size="12" fill="#334155" font-weight="700">Before</text>
+  <text x="225" y="10" text-anchor="middle" font-size="12" fill="#334155" font-weight="700">After</text>
+  <!-- Before bars: wildly different heights -->
+  <rect x="15" y="122" width="22" height="24" fill="#4f46e5" rx="3"/>
+  <text x="26" y="161" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">age</text>
+  <text x="26" y="116" text-anchor="middle" font-size="9" fill="#4f46e5" font-weight="700">0–90</text>
+  <rect x="48" y="28" width="22" height="118" fill="#f59e0b" rx="3"/>
+  <text x="59" y="161" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">cost</text>
+  <text x="59" y="22" text-anchor="middle" font-size="9" fill="#d97706" font-weight="700">0–500k</text>
+  <rect x="81" y="80" width="22" height="66" fill="#10b981" rx="3"/>
+  <text x="92" y="161" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">bmi</text>
+  <text x="92" y="74" text-anchor="middle" font-size="9" fill="#059669" font-weight="700">10–50</text>
+  <!-- Arrow -->
+  <line x1="122" y1="90" x2="148" y2="90" stroke="#94a3b8" stroke-width="2.5"/>
+  <polygon points="148,86 157,90 148,94" fill="#94a3b8"/>
+  <text x="139" y="81" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">z-score</text>
+  <!-- After: bounds lines -->
+  <line x1="165" y1="40" x2="290" y2="40" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="4"/>
+  <line x1="165" y1="150" x2="290" y2="150" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="4"/>
+  
+  <!-- After bars: equal height -->
+  <rect x="175" y="72" width="22" height="78" fill="#4f46e5" rx="3"/>
+  <text x="186" y="161" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">age</text>
+  <rect x="207" y="70" width="22" height="80" fill="#f59e0b" rx="3"/>
+  <text x="218" y="161" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">cost</text>
+  <rect x="239" y="71" width="22" height="79" fill="#10b981" rx="3"/>
+  <text x="250" y="161" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">bmi</text>
+  <text x="278" y="103" text-anchor="middle" font-size="11" fill="#10b981" font-weight="700">same</text>
+  <text x="278" y="116" text-anchor="middle" font-size="11" fill="#10b981" font-weight="700">scale!</text>
+</svg>`,
+  },
+  {
+    icon:"✂️",title:"Stratified Split",
+    explanation:`A plain random split can accidentally put most positive patients in training and almost none in validation. With only 320 patients and a 40% positive rate, the imbalance in a random split can be substantial.\n\nStratified split fixes this by separately sampling from each class. It takes exactly val_fraction of class-0 patients and val_fraction of class-1 patients for the validation set. Both train and val end up with the same 40/60 ratio.\n\nThis ensures your validation AUC reflects real model quality, not a lucky (or unlucky) split.`,
+    formula:`For each class c:\n  indices_c = where(labels == c)\n  shuffle(indices_c, seed)\n  n_val = round(val_fraction × len(indices_c))\n  val ← first n_val shuffled indices`,
+    example:`You implement stratified_split(labels, 0.20, seed). Different seeds give different shuffles — that's why every student has a different seed and thus different train/val assignment for the same patients.`,
+    visual:`<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="180" fill="#f8fafc" rx="8"/>
+  <!-- Left: Random (bad) -->
+  <text x="75" y="18" text-anchor="middle" font-size="12" fill="#ef4444" font-weight="700">Random split ✗</text>
+  <text x="10" y="44" font-size="11" fill="#475569" font-weight="600">Train:</text>
+  <rect x="50" y="30" width="26" height="20" fill="#4f46e5" rx="3"/>
+  <rect x="76" y="30" width="74" height="20" fill="#e2e8f0" rx="3" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="63" y="44" text-anchor="middle" font-size="10" fill="white" font-weight="700">25%</text>
+  <text x="10" y="73" font-size="11" fill="#475569" font-weight="600">Val:</text>
+  <rect x="50" y="58" width="62" height="20" fill="#4f46e5" rx="3"/>
+  <rect x="112" y="58" width="38" height="20" fill="#e2e8f0" rx="3" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="81" y="72" text-anchor="middle" font-size="10" fill="white" font-weight="700">60%</text>
+  
+  <!-- Divider -->
+  <line x1="153" y1="22" x2="153" y2="110" stroke="#e2e8f0" stroke-width="1.5"/>
+  <!-- Right: Stratified (correct) -->
+  <text x="226" y="18" text-anchor="middle" font-size="12" fill="#10b981" font-weight="700">Stratified ✓</text>
+  <text x="162" y="44" font-size="11" fill="#475569" font-weight="600">Train:</text>
+  <rect x="204" y="30" width="42" height="20" fill="#4f46e5" rx="3"/>
+  <rect x="246" y="30" width="42" height="20" fill="#e2e8f0" rx="3" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="225" y="44" text-anchor="middle" font-size="10" fill="white" font-weight="700">40%</text>
+  <text x="162" y="73" font-size="11" fill="#475569" font-weight="600">Val:</text>
+  <rect x="204" y="58" width="42" height="20" fill="#4f46e5" rx="3"/>
+  <rect x="246" y="58" width="42" height="20" fill="#e2e8f0" rx="3" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="225" y="72" text-anchor="middle" font-size="10" fill="white" font-weight="700">40%</text>
+  <!-- Legend -->
+  <rect x="52" y="115" width="16" height="12" fill="#4f46e5" rx="2"/>
+  <text x="72" y="126" font-size="11" fill="#475569" font-weight="600">pain = 1</text>
+  <rect x="148" y="115" width="16" height="12" fill="#e2e8f0" rx="2" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="168" y="126" font-size="11" fill="#475569" font-weight="600">pain = 0</text>
+  <text x="150" y="150" text-anchor="middle" font-size="11" fill="#64748b">Stratified = same class ratio in train &amp; val</text>
+  <text x="150" y="165" text-anchor="middle" font-size="11" fill="#10b981" font-weight="600">Both rows: 40% pain=1, 60% pain=0</text>
+</svg>`,
+  },
+  {
+    icon:"📐",title:"AUC-ROC",
+    explanation:`AUC (Area Under the ROC Curve) measures the model's ability to rank positive patients above negative ones — regardless of any threshold.\n\nFormally: pick one pain patient and one non-pain patient at random. AUC = P(score_pain > score_no_pain). AUC=0.5 is random guessing; AUC=1.0 is perfect ranking.\n\nThe ROC curve sweeps the decision threshold from 0 to 1 and plots true positive rate vs false positive rate. AUC is the area under this curve. It is threshold-independent, making it the gold standard for comparing classifiers.`,
+    formula:`AUC = P(score_pos > score_neg)\n\n= Σ (sp>sn: 1, sp==sn: 0.5, sp<sn: 0)\n  ─────────────────────────────────\n       N_pos × N_neg`,
+    example:`You implement roc_auc(y_true, scores) using a double loop over positive/negative pairs. At this dataset size (~64 val patients) the double loop runs in milliseconds.`,
+    visual:`<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="280" height="200" fill="#f8fafc" rx="8"/>
+  <line x1="45" y1="18" x2="45" y2="162" stroke="#cbd5e1" stroke-width="1.5"/>
+  <line x1="45" y1="162" x2="262" y2="162" stroke="#cbd5e1" stroke-width="1.5"/>
+  <!-- Random diagonal -->
+  <line x1="45" y1="162" x2="262" y2="18" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5"/>
+  <!-- ROC curve -->
+  <path d="M45,162 C68,145 94,94 132,54 S202,28 262,18" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round"/>
+  <!-- Shaded AUC area -->
+  <path d="M45,162 C68,145 94,94 132,54 S202,28 262,18 L262,162 Z" fill="#4f46e5" opacity="0.14"/>
+  <!-- AUC label -->
+  <text x="170" y="118" text-anchor="middle" font-size="15" fill="#4f46e5" font-weight="800">AUC</text>
+  <!-- Operating point at t=0.5 -->
+  <circle cx="118" cy="74" r="7" fill="#f59e0b" stroke="white" stroke-width="2"/>
+  <text x="130" y="68" font-size="10" fill="#d97706" font-weight="700">t = 0.5</text>
+  <!-- Random label -->
+  <text x="168" y="148" text-anchor="middle" font-size="10" fill="#94a3b8" font-style="italic">random</text>
+  <!-- Axis labels -->
+  <text x="154" y="186" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">False Positive Rate →</text>
+  <text x="16" y="96" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600" transform="rotate(-90,16,96)">True Positive Rate</text>
+  <text x="37" y="22" font-size="10" fill="#64748b">1.0</text>
+  <text x="37" y="165" font-size="10" fill="#64748b">0</text>
+  <text x="254" y="176" font-size="10" fill="#64748b">1.0</text>
+</svg>`,
+  },
+  {
+    icon:"🎯",title:"Precision vs Recall",
+    explanation:`Precision: of all patients the model flags as pain, what fraction actually have pain? (Avoid false alarms)\nRecall: of all patients who actually have pain, what fraction did the model catch? (Avoid missed cases)\n\nLowering the decision threshold catches more pain patients (high recall) but also flags more healthy patients (low precision). There is an inherent trade-off.\n\nF1 score is the harmonic mean of precision and recall. It punishes extreme imbalances — a model with perfect recall and zero precision gets F1=0.`,
+    formula:`Precision = TP / (TP + FP)\nRecall    = TP / (TP + FN)\nF1        = 2 × P × R / (P + R)`,
+    example:`At threshold=0.5 on this dataset you should see precision ≈ 0.68 and recall ≈ 0.77 at the optimal hyperparameters. Lowering the threshold increases recall but decreases precision.`,
+    visual:`<svg viewBox="0 0 280 195" xmlns="http://www.w3.org/2000/svg">
+  <rect width="280" height="195" fill="#f8fafc" rx="8"/>
+  <line x1="45" y1="18" x2="45" y2="158" stroke="#cbd5e1" stroke-width="1.5"/>
+  <line x1="45" y1="158" x2="262" y2="158" stroke="#cbd5e1" stroke-width="1.5"/>
+  <!-- P-R curve -->
+  <path d="M52,30 C78,38 130,88 262,152" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round"/>
+  <!-- High threshold point -->
+  <circle cx="82" cy="42" r="7" fill="#4f46e5" stroke="white" stroke-width="2"/>
+  <text x="95" y="38" font-size="11" fill="#4f46e5" font-weight="700">high threshold</text>
+  <text x="95" y="52" font-size="10" fill="#64748b">P=0.90  R=0.30</text>
+  <!-- t=0.5 point -->
+  <circle cx="162" cy="92" r="7" fill="#f59e0b" stroke="white" stroke-width="2"/>
+  <text x="172" y="88" font-size="11" fill="#d97706" font-weight="700">t = 0.5</text>
+  <text x="172" y="102" font-size="10" fill="#64748b">P=0.68  R=0.77</text>
+  <!-- Low threshold point -->
+  <circle cx="232" cy="136" r="7" fill="#ef4444" stroke="white" stroke-width="2"/>
+  <text x="202" y="152" font-size="11" fill="#ef4444" font-weight="700">low threshold</text>
+  <!-- Axis labels -->
+  <text x="154" y="182" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">Recall →</text>
+  <text x="18" y="92" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600" transform="rotate(-90,18,92)">Precision</text>
+  <text x="37" y="22" font-size="10" fill="#64748b">1.0</text>
+  <text x="37" y="160" font-size="10" fill="#64748b">0</text>
+</svg>`,
+  },
+  {
+    icon:"📊",title:"Log Loss (BCE)",
+    explanation:`Binary cross-entropy (log loss) is what the model minimises during training. It measures how surprised the model is at the true labels.\n\nIf a patient truly has pain (y=1) and the model says p=0.99, the loss is tiny: -log(0.99) ≈ 0.01. If the model says p=0.01, the loss is enormous: -log(0.01) ≈ 4.6. Confident wrong predictions are punished severely.\n\nThis is why gradient descent on log loss pushes the model toward confident correct predictions, not just correct ones.`,
+    formula:`loss = −mean[y·log(p) + (1−y)·log(1−p)]\n\nFor y=1: term = −log(p)  → 0 as p→1\nFor y=0: term = −log(1−p) → 0 as p→0`,
+    example:`Your logistic_regression_gradients() implements the gradient of this loss. The gradient is surprisingly clean: error = (predictions − y), then grad_weights = Xᵀ·error/N.`,
+    visual:`<svg viewBox="0 0 280 195" xmlns="http://www.w3.org/2000/svg">
+  <rect width="280" height="195" fill="#f8fafc" rx="8"/>
+  <line x1="45" y1="18" x2="45" y2="158" stroke="#cbd5e1" stroke-width="1.5"/>
+  <line x1="45" y1="158" x2="262" y2="158" stroke="#cbd5e1" stroke-width="1.5"/>
+  <!-- -log(p) curve: high at left (p→0), low at right (p→1) -->
+  <path d="M55,152 C88,148 158,118 244,28" fill="none" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+  <!-- Asymptote indicator -->
+  <line x1="244" y1="28" x2="244" y2="158" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4" opacity="0.5"/>
+  <!-- Annotations right (loss → ∞) -->
+  <rect x="155" y="12" width="88" height="28" rx="4" fill="#fef2f2"/>
+  <text x="199" y="24" text-anchor="middle" font-size="10" fill="#ef4444" font-weight="700">p → 0, y = 1</text>
+  <text x="199" y="36" text-anchor="middle" font-size="10" fill="#ef4444" font-weight="700">loss → ∞</text>
+  <!-- Low loss annotation left (p≈1) -->
+  <circle cx="62" cy="152" r="7" fill="#10b981" stroke="white" stroke-width="2"/>
+  <text x="74" y="148" font-size="11" fill="#10b981" font-weight="700">p ≈ 1 → low loss</text>
+  <!-- Axis labels -->
+  <text x="154" y="182" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">Predicted prob. p  (y = 1)</text>
+  <text x="18" y="92" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600" transform="rotate(-90,18,92)">−log(p)</text>
+  <text x="38" y="25" font-size="10" fill="#94a3b8" text-anchor="end">∞</text>
+  <text x="38" y="160" font-size="10" fill="#94a3b8" text-anchor="end">0</text>
+  <text x="42" y="172" font-size="10" fill="#94a3b8">0</text>
+  <text x="252" y="172" font-size="10" fill="#94a3b8">1</text>
+</svg>`,
+  },
+  {
+    icon:"🔢",title:"Confusion Matrix",
+    explanation:`A confusion matrix shows the four ways a binary classifier can be right or wrong. It is the foundation of every evaluation metric.\n\nTP (True Positive): model says pain=1, patient has pain. Correct.\nFP (False Positive): model says pain=1, patient is healthy. False alarm.\nTN (True Negative): model says pain=0, patient is healthy. Correct.\nFN (False Negative): model says pain=0, patient has pain. Dangerous miss.\n\nIn healthcare, FN is often the most costly error: missing a pain patient who needed intervention.`,
+    formula:`Accuracy  = (TP + TN) / total\nPrecision = TP / (TP + FP)\nRecall    = TP / (TP + FN)\nSpecificity = TN / (TN + FP)`,
+    example:`confusion_counts(y_true, y_pred) returns (TP, FP, TN, FN) as plain ints. Implementation: use numpy boolean operations like np.sum((y_pred==1) & (y_true==1)).`,
+    visual:`<svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg">
+  <rect width="280" height="220" fill="#f8fafc" rx="8"/>
+  <!-- Header -->
+  <text x="162" y="18" text-anchor="middle" font-size="12" fill="#334155" font-weight="700">Predicted</text>
+  <text x="108" y="30" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">Pain = 1</text>
+  <text x="218" y="30" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">Pain = 0</text>
+  <text x="20" y="97" text-anchor="middle" font-size="12" fill="#334155" font-weight="700" transform="rotate(-90,28,97)">Actual</text>
+  <text x="44" y="82" text-anchor="end" font-size="11" fill="#64748b" font-weight="600">Pain=1</text>
+  <text x="44" y="148" text-anchor="end" font-size="11" fill="#64748b" font-weight="600">Pain=0</text>
+  <!-- TP cell -->
+  <rect x="50" y="34" width="108" height="90" rx="6" fill="#bbf7d0" stroke="#86efac" stroke-width="1.5"/>
+  <text x="104" y="74" text-anchor="middle" font-size="20" font-weight="800" fill="#065f46">TP</text>
+  <text x="104" y="92" text-anchor="middle" font-size="11" fill="#047857" font-weight="600">True Positive</text>
+  <text x="104" y="108" text-anchor="middle" font-size="10" fill="#059669">pain caught ✓</text>
+  <!-- FN cell -->
+  <rect x="162" y="34" width="108" height="90" rx="6" fill="#fecaca" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="216" y="74" text-anchor="middle" font-size="20" font-weight="800" fill="#991b1b">FN</text>
+  <text x="216" y="92" text-anchor="middle" font-size="11" fill="#b91c1c" font-weight="600">False Negative</text>
+  <text x="216" y="108" text-anchor="middle" font-size="10" fill="#dc2626">pain missed ✗</text>
+  <!-- FP cell -->
+  <rect x="50" y="128" width="108" height="82" rx="6" fill="#fef3c7" stroke="#fcd34d" stroke-width="1.5"/>
+  <text x="104" y="163" text-anchor="middle" font-size="20" font-weight="800" fill="#92400e">FP</text>
+  <text x="104" y="181" text-anchor="middle" font-size="11" fill="#b45309" font-weight="600">False Positive</text>
+  <text x="104" y="197" text-anchor="middle" font-size="10" fill="#d97706">false alarm</text>
+  <!-- TN cell -->
+  <rect x="162" y="128" width="108" height="82" rx="6" fill="#bbf7d0" stroke="#86efac" stroke-width="1.5"/>
+  <text x="216" y="163" text-anchor="middle" font-size="20" font-weight="800" fill="#065f46">TN</text>
+  <text x="216" y="181" text-anchor="middle" font-size="11" fill="#047857" font-weight="600">True Negative</text>
+  <text x="216" y="197" text-anchor="middle" font-size="10" fill="#059669">healthy cleared ✓</text>
+</svg>`,
+  },
+  {
+    icon:"🚨",title:"Label Leakage",
+    explanation:`Label leakage occurs when a feature is derived from or correlates directly with the target label — in a way that wouldn't be available at prediction time or that trivially encodes the answer.\n\nIn this dataset: the pain label was created by scanning condition_text for pain-related keywords. If you used condition_text as a feature, the model would essentially read the answer key — AUC would be 1.0 and the result would be meaningless.\n`,
+    formula:`Leakage: feature → label (already known)\n\nExcluded from features:\n  - condition_text (used to CREATE the label)`,
+    example:`This is why pipeline.py uses specific features and not the full CSV. The choice of which columns to include is a key part of data curation — not an implementation detail.`,
+    visual:`<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="280" height="200" fill="#f8fafc" rx="8"/>
+  <defs>
+    <marker id="arrB2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6" fill="none" stroke="#7c3aed" stroke-width="1.5"/>
+    </marker>
+    <marker id="arrR2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6" fill="none" stroke="#ef4444" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  <!-- condition_text box -->
+  <rect x="8" y="28" width="106" height="40" rx="7" fill="#ede9fe" stroke="#7c3aed" stroke-width="1"/>
+  <text x="61" y="50" text-anchor="middle" font-size="11" fill="#4f46e5" font-weight="700">condition_text</text>
+  <text x="61" y="63" text-anchor="middle" font-size="10" fill="#7c3aed">raw EHR text</text>
+  <!-- Arrow to keyword match -->
+  <line x1="114" y1="48" x2="136" y2="48" stroke="#7c3aed" stroke-width="1" marker-end="url(#arrB2)"/>
+  <!-- keyword match box -->
+  <rect x="136" y="28" width="136" height="40" rx="7" fill="#ede9fe" stroke="#7c3aed" stroke-width="1"/>
+  <text x="204" y="50" text-anchor="middle" font-size="11" fill="#4f46e5" font-weight="700">keyword match</text>
+  <text x="204" y="63" text-anchor="middle" font-size="10" fill="#7c3aed">flag_keyword_match()</text>
+  <!-- Arrow down to label -->
+  <line x1="204" y1="68" x2="204" y2="90" stroke="#7c3aed" stroke-width="1" marker-end="url(#arrB2)"/>
+  <!-- pain_label box -->
+  <rect x="136" y="90" width="136" height="40" rx="7" fill="#bbf7d0" stroke="#10b981" stroke-width="1"/>
+  <text x="204" y="112" text-anchor="middle" font-size="11" fill="#065f46" font-weight="700">pain_label</text>
+  <text x="204" y="125" text-anchor="middle" font-size="10" fill="#047857">pain = 0  or  pain = 1</text>
+  <!-- Red dashed arrow from condition_text going down -->
+  <line x1="61" y1="68" x2="61" y2="140" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="6" marker-end="url(#arrR2)"/>
+  <!-- Cannot use box -->
+  <rect x="8" y="140" width="106" height="50" rx="7" fill="#fecaca" stroke="#ef4444" stroke-width="1"/>
+  <text x="61" y="157" text-anchor="middle" font-size="11" fill="#ef4444" font-weight="800">✗ CANNOT use</text>
+  <text x="61" y="172" text-anchor="middle" font-size="11" fill="#dc2626" font-weight="600">as a feature!</text>
+  <text x="61" y="184" text-anchor="middle" font-size="10" fill="#dc2626">AUC = 1.0, meaningless</text>
+</svg>`,
+  },
+  {
+    icon:"🌡️",title:"Decision Threshold",
+    explanation:`Logistic regression outputs a probability p ∈ (0, 1). To make a binary prediction (pain or not), you apply a threshold: if p ≥ threshold, predict pain=1.\n\nThe default threshold is 0.5, but it can be tuned. Lowering it makes the model more aggressive at flagging pain — higher recall but lower precision. Raising it makes the model more conservative — fewer false alarms but more missed cases.\n\nIn healthcare, the cost of a missed pain patient (FN) may far exceed the cost of a false alarm (FP), justifying a lower threshold.`,
+    formula:`y_pred = 1   if p ≥ threshold\ny_pred = 0   if p < threshold\n\nDefault: threshold = 0.50`,
+    example:`confusion_counts() takes binary predictions, so you must first apply a threshold: y_pred = (probs >= 0.5).astype(int). The AI-Sandbox uses threshold=0.5 throughout.`,
+    visual:`<svg viewBox="0 0 280 190" xmlns="http://www.w3.org/2000/svg">
+  <rect width="280" height="190" fill="#f8fafc" rx="8"/>
+  <!-- Pain=0 distribution (left bell) -->
+  <path d="M14,150 C28,148 58,58 90,150" fill="#fecaca" fill-opacity="0.85" stroke="#ef4444" stroke-width="2"/>
+  <!-- Pain=1 distribution (right bell) -->
+  <path d="M96,150 C128,58 158,148 188,150" fill="#bbf7d0" fill-opacity="0.85" stroke="#10b981" stroke-width="2"/>
+  <!-- Overlap shading -->
+  <path d="M96,150 C108,95 120,68 130,150" fill="#fde68a" fill-opacity="0.6"/>
+  <!-- Threshold line -->
+  <line x1="130" y1="25" x2="130" y2="154" stroke="#f59e0b" stroke-width="3" stroke-dasharray="6"/>
+  <!-- Threshold label box -->
+  <rect x="106" y="10" width="48" height="24" rx="5" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="130" y="19" text-anchor="middle" font-size="10" fill="#b45309" font-weight="700">threshold</text>
+  <text x="130" y="30" text-anchor="middle" font-size="12" fill="#d97706" font-weight="800">0.50</text>
+  <!-- Distribution labels -->
+  <text x="52" y="100" text-anchor="middle" font-size="13" fill="#991b1b" font-weight="700">Pain = 0</text>
+  <text x="142" y="100" text-anchor="middle" font-size="13" fill="#065f46" font-weight="700">Pain = 1</text>
+  <!-- Legend -->
+  <rect x="10" y="160" width="52" height="16" fill="#fecaca" rx="3" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="36" y="172" text-anchor="middle" font-size="10" fill="#991b1b" font-weight="600">FP region</text>
+  <rect x="148" y="160" width="52" height="16" fill="#bbf7d0" rx="3" stroke="#10b981" stroke-width="1.5"/>
+  <text x="174" y="172" text-anchor="middle" font-size="10" fill="#065f46" font-weight="600">TP region</text>
+  <text x="140" y="186" text-anchor="middle" font-size="11" fill="#64748b">Predicted probability p →</text>
+</svg>`,
+  },
+  {
+    icon:"🧪",title:"Preprocessing Leakage",
+    explanation:`A subtle but common mistake: computing feature statistics (mean, std) on the full dataset before splitting into train and validation. This leaks validation statistics into training.\n\nThe correct order is:\n1. Split the data into train and validation.\n2. Compute mean and std on train ONLY.\n3. Apply those same values to scale validation.\n\nIf you fit the scaler on all data, the model has already "seen" the validation distribution — performance estimates will be optimistic and unreliable.`,
+    formula:`WRONG:  scale(all_data) → split\nCORRECT: split → scale(train) → apply to val\n\nmeans = X_train.mean(axis=0)\nstds  = X_train.std(axis=0)\nX_val_scaled = (X_val - means) / stds`,
+    example:`standardize_features(X_train) is already written for you. It returns (X_train_scaled, means, stds). Use those means/stds to scale X_val manually: X_val_scaled = (X_val - means) / stds.`,
+    visual:`<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="280" height="200" fill="#f8fafc" rx="8"/>
+  <!-- WRONG section -->
+  <text x="70" y="16" text-anchor="middle" font-size="13" fill="#ef4444" font-weight="700">✗ WRONG ORDER</text>
+  <rect x="8" y="22" width="54" height="24" rx="4" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="35" y="37" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">all data</text>
+  <line x1="62" y1="34" x2="74" y2="34" stroke="#94a3b8" stroke-width="2"/>
+  <polygon points="74,30 82,34 74,38" fill="#94a3b8"/>
+  <rect x="82" y="22" width="58" height="24" rx="4" fill="#fecaca" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="111" y="37" text-anchor="middle" font-size="10" fill="#dc2626" font-weight="600">scale ALL</text>
+  <line x1="140" y1="34" x2="152" y2="34" stroke="#94a3b8" stroke-width="2"/>
+  <polygon points="152,30 160,34 152,38" fill="#94a3b8"/>
+  <rect x="160" y="22" width="44" height="24" rx="4" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="182" y="37" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">split</text>
+  
+  <!-- Divider -->
+  <line x1="8" y1="62" x2="272" y2="62" stroke="#e2e8f0" stroke-width="1.5"/>
+  <!-- CORRECT section -->
+  <text x="70" y="80" text-anchor="middle" font-size="13" fill="#10b981" font-weight="700">✓ CORRECT ORDER</text>
+  <rect x="8" y="86" width="54" height="24" rx="4" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="35" y="101" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">all data</text>
+  <line x1="62" y1="98" x2="74" y2="98" stroke="#94a3b8" stroke-width="2"/>
+  <polygon points="74,94 82,98 74,102" fill="#94a3b8"/>
+  <rect x="82" y="86" width="44" height="24" rx="4" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="104" y="101" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">split</text>
+  <!-- Fork lines -->
+  <line x1="126" y1="98" x2="140" y2="88" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="126" y1="98" x2="140" y2="112" stroke="#94a3b8" stroke-width="1.5"/>
+  <!-- Train branch -->
+  <rect x="140" y="78" width="68" height="22" rx="4" fill="#bbf7d0" stroke="#10b981" stroke-width="1.5"/>
+  <text x="174" y="92" text-anchor="middle" font-size="10" fill="#065f46" font-weight="600">scale TRAIN</text>
+  <line x1="208" y1="89" x2="220" y2="89" stroke="#94a3b8" stroke-width="1.5"/>
+  <polygon points="220,85 228,89 220,93" fill="#94a3b8"/>
+  <rect x="228" y="78" width="44" height="22" rx="4" fill="#bbf7d0" stroke="#10b981" stroke-width="1.5"/>
+  <text x="250" y="92" text-anchor="middle" font-size="10" fill="#065f46" font-weight="600">val</text>
+  <!-- Val branch -->
+  <rect x="140" y="104" width="68" height="22" rx="4" fill="#e0e7ff" stroke="#6366f1" stroke-width="1.5"/>
+  <text x="174" y="118" text-anchor="middle" font-size="10" fill="#3730a3" font-weight="600">val (raw)</text>
+  <!-- Checkmark -->
+  
+  <!-- Bottom note -->
+  <text x="140" y="152" text-anchor="middle" font-size="11" fill="#64748b">Fit scaler on TRAIN only.</text>
+  <text x="140" y="167" text-anchor="middle" font-size="11" fill="#64748b">Apply same μ, σ to val set.</text>
+</svg>`,
+  },
+  {
+    icon:"🎲",title:"Random Seeds",
+    explanation:`A random seed is a starting number fed to the random-number generator (RNG). Given the same seed, the RNG always produces the exact same sequence of "random" numbers — making results reproducible.\n\nIn this assignment, your personal seed controls which 64 patients land in your validation set. Changing the seed by even 1 reshuffles the entire split: different patients are held out, so your AUC, accuracy, F1, and loss all shift — even with identical code and hyperparameters.\n\nYour seed is derived from your NetID:\n  seed = SHA-256("your_netid") mod 900 + 100\nSHA-256 is a one-way hash: the same input always gives the same output, but you can't reverse it. This guarantees every student gets a unique, tamper-proof split.`,
+    formula:`seed = SHA-256(netid) mod 900 + 100\n\nnp.random.default_rng(seed)  →  fixed shuffle\n\nChange seed by 1  →  completely different\n                       validation patients\n                   →  different AUC / Acc / F1`,
+    visual:`<svg viewBox="0 0 300 205" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="205" fill="#f8fafc" rx="8"/>
+  <!-- Seed N label -->
+  <rect x="8" y="14" width="58" height="26" rx="4" fill="#ede9fe" stroke="#7c3aed" stroke-width="1"/>
+  <text x="37" y="31" text-anchor="middle" font-size="11" fill="#4f46e5" font-weight="700">Seed N</text>
+  <!-- Seed N patient blocks (val = orange, train = indigo) -->
+  <rect x="90" y="14" width="13" height="26" rx="2" fill="#6366f1"/>
+  <rect x="106" y="14" width="13" height="26" rx="2" fill="#f97316"/>
+  <rect x="122" y="14" width="13" height="26" rx="2" fill="#6366f1"/>
+  <rect x="138" y="14" width="13" height="26" rx="2" fill="#6366f1"/>
+  <rect x="154" y="14" width="13" height="26" rx="2" fill="#f97316"/>
+  <rect x="170" y="14" width="13" height="26" rx="2" fill="#6366f1"/>
+  <rect x="186" y="14" width="13" height="26" rx="2" fill="#6366f1"/>
+  <rect x="202" y="14" width="13" height="26" rx="2" fill="#6366f1"/>
+  <rect x="218" y="14" width="13" height="26" rx="2" fill="#f97316"/>
+  <rect x="234" y="14" width="13" height="26" rx="2" fill="#6366f1"/>
+  <rect x="250" y="14" width="13" height="26" rx="2" fill="#6366f1"/>
+  <rect x="266" y="14" width="13" height="26" rx="2" fill="#f97316"/>
+  <rect x="282" y="14" width="13" height="26" rx="2" fill="#6366f1"/>
+  <!-- Seed N metrics -->
+  <text x="10" y="56" font-size="11" fill="#475569" font-weight="600">AUC <tspan fill="#4f46e5" font-weight="700">0.881</tspan>   Acc <tspan fill="#4f46e5" font-weight="700">81.3%</tspan></text>
+  <!-- Divider -->
+  <line x1="8" y1="70" x2="292" y2="70" stroke="#cbd5e1" stroke-width="1.5"/>
+  <!-- Seed N+1 label -->
+  <rect x="8" y="80" width="72" height="26" rx="4" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="44" y="97" text-anchor="middle" font-size="11" fill="#4f46e5" font-weight="700">Seed N+1</text>
+  <!-- Seed N+1 patient blocks (different patients in val) -->
+  <rect x="88" y="80" width="13" height="26" rx="2" fill="#f97316"/>
+  <rect x="104" y="80" width="13" height="26" rx="2" fill="#6366f1"/>
+  <rect x="120" y="80" width="13" height="26" rx="2" fill="#6366f1"/>
+  <rect x="136" y="80" width="13" height="26" rx="2" fill="#6366f1"/>
+  <rect x="152" y="80" width="13" height="26" rx="2" fill="#f97316"/>
+  <rect x="168" y="80" width="13" height="26" rx="2" fill="#6366f1"/>
+  <rect x="184" y="80" width="13" height="26" rx="2" fill="#6366f1"/>
+  <rect x="200" y="80" width="13" height="26" rx="2" fill="#f97316"/>
+  <rect x="216" y="80" width="13" height="26" rx="2" fill="#6366f1"/>
+  <rect x="232" y="80" width="13" height="26" rx="2" fill="#6366f1"/>
+  <rect x="248" y="80" width="13" height="26" rx="2" fill="#6366f1"/>
+  <rect x="264" y="80" width="13" height="26" rx="2" fill="#f97316"/>
+  <rect x="280" y="80" width="13" height="26" rx="2" fill="#6366f1"/>
+  <!-- Seed N+1 metrics -->
+  <text x="10" y="122" font-size="11" fill="#475569" font-weight="600">AUC <tspan fill="#dc2626" font-weight="700">0.857</tspan>   Acc <tspan fill="#dc2626" font-weight="700">78.1%</tspan></text>
+  <!-- Divider -->
+  <line x1="8" y1="134" x2="292" y2="134" stroke="#cbd5e1" stroke-width="1.5"/>
+  <!-- Legend -->
+  <rect x="8" y="144" width="16" height="14" rx="2" fill="#6366f1"/>
+  <text x="28" y="156" font-size="11" fill="#475569" font-weight="600">training patients</text>
+  <rect x="140" y="144" width="16" height="14" rx="2" fill="#f97316"/>
+  <text x="160" y="156" font-size="11" fill="#475569" font-weight="600">validation patients</text>
+  <!-- Summary -->
+  <text x="150" y="177" text-anchor="middle" font-size="11" fill="#475569">Same model. Same hyperparameters. Different seed</text>
+  <text x="150" y="192" text-anchor="middle" font-size="11" fill="#475569">→ different val patients → different metrics.</text>
+</svg>`,
+  },
+];
+
+// ============================================================
+// Tabs
+// ============================================================
+function switchTab(name){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
+    b.classList.toggle('active',['overview','explore','train'][i]===name);
+  });
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(name==='train') updateReminderBanner();
+}
+
+// ============================================================
+// Concept cards
+// ============================================================
+function renderConceptGrid(){
+  const grid = document.getElementById('concept-grid');
+  grid.innerHTML = CONCEPTS.map((c,i)=>`
+    <div class="concept-card" id="cc-${i}" onclick="openConcept(${i})">
+      <div class="c-icon">${c.icon}</div>
+      <div class="c-title">${c.title}</div>
+      <div class="c-tap">Click to explore</div>
+    </div>
+  `).join('');
+}
+
+let _conceptTimerId = null;
+
+function openConcept(idx){
+  const c = CONCEPTS[idx];
+
+  document.getElementById('modal-title').innerHTML =
+    `<span style="font-size:1.4rem;margin-right:6px">${c.icon}</span>${c.title}`;
+  document.getElementById('modal-left').innerHTML = `
+    <div class="section-lbl">What it is</div>
+    <p>${c.explanation.replace(/\n/g,'</p><p>')}</p>
+    <div class="section-lbl">The Math</div>
+    <div class="formula">${c.formula}</div>
+    ${c.example ? `<div class="section-lbl">In Assignment 1</div><div class="example-box">${c.example}</div>` : ''}
+  `;
+  document.getElementById('modal-right').innerHTML = `
+    ${c.visual}
+    <div class="caption">Figure: ${c.title}</div>
+  `;
+  document.getElementById('modal-overlay').classList.add('open');
+
+  const closeBtn = document.getElementById('modal-close-btn');
+  const timerEl  = document.getElementById('modal-timer');
+  if (_conceptTimerId) clearInterval(_conceptTimerId);
+
+  // No timer mode: mark explored immediately and open freely
+  if (!ADD_TIMER || state.exploredCards.has(idx)) {
+    closeBtn.disabled = false;
+    timerEl.style.display = 'none';
+    if (!state.exploredCards.has(idx)) {
+      state.exploredCards.add(idx);
+      document.getElementById(`cc-${idx}`).classList.add('done');
+      updateConceptProgress();
+    }
+    return;
+  }
+
+  // First view with timer enabled: enforce 30-second read time
+  let remaining = 30;
+  closeBtn.disabled = true;
+  timerEl.style.display = 'inline-block';
+  timerEl.textContent = `⏱ ${remaining}s`;
+
+  _conceptTimerId = setInterval(() => {
+    remaining -= 1;
+    if (remaining <= 0) {
+      clearInterval(_conceptTimerId);
+      _conceptTimerId = null;
+      closeBtn.disabled = false;
+      timerEl.style.display = 'none';
+      state.exploredCards.add(idx);
+      document.getElementById(`cc-${idx}`).classList.add('done');
+      updateConceptProgress();
+    } else {
+      timerEl.textContent = `⏱ ${remaining}s`;
+    }
+  }, 1000);
+}
+
+function closeModal(){
+  const closeBtn = document.getElementById('modal-close-btn');
+  if (closeBtn && closeBtn.disabled) return;   // blocked during countdown
+  if (_conceptTimerId) { clearInterval(_conceptTimerId); _conceptTimerId = null; }
+  document.getElementById('modal-timer').style.display = 'none';
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function updateConceptProgress(){
+  const n = state.exploredCards.size;
+  const total = CONCEPTS.length;
+  document.getElementById('fc-fill').style.width = (n/total*100)+'%';
+  document.getElementById('fc-txt').textContent = `${n} / ${total} concepts explored`;
+  document.getElementById('concepts-badge').textContent = `${n}/${total}`;
+  if(n >= total){
+    document.getElementById('complete-banner').style.display='block';
+    document.getElementById('fc-done').style.display='block';
+  }
+  // Refresh submit/footer state in case exploration completion unlocked actions
+  try{ updateSubmitBtn(); }catch(e){/* ignore */}
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+// ============================================================
+// Dataset Explorer
+// ============================================================
+let allPatients = [];
+let allLabels = [];
+let allColumns = [];
+
+async function loadData(){
+  const r = await fetch('/api/data');
+  const d = await r.json();
+  allPatients = d.patients;
+  allLabels = d.labels;
+  allColumns = d.columns || Object.keys(d.patients[0]||{});
+  document.getElementById('s-total').textContent = d.n_total;
+  document.getElementById('s-pos').textContent = d.n_positive;
+  document.getElementById('s-neg').textContent = d.n_negative;
+  const pct = Math.round(d.positive_rate*100);
+  document.getElementById('bar-pos').style.width=pct+'%';
+  document.getElementById('bar-neg').style.width=(100-pct)+'%';
+  document.getElementById('bal-pos-l').textContent=`Pain=1: ${pct}%`;
+  document.getElementById('bal-neg-l').textContent=`Pain=0: ${100-pct}%`;
+  renderTableHeader();
+  filterTable();
+}
+
+function renderTableHeader(){
+  // binary_label first, id second, then the rest
+  const ordered = ['binary_label', 'id', ...allColumns.filter(c=>c!=='binary_label'&&c!=='id')];
+  const head = document.getElementById('tbl-head');
+  head.innerHTML = '<tr>' + ordered.map((col,i)=>{
+    const isFirst = i===0;
+    const isFeat = FEATURE_COLS.has(col);
+    const style = isFeat ? 'color:#4f46e5' : '';
+    return `<th class="${isFirst?'first-col':''}" style="${style}">${col}</th>`;
+  }).join('') + '</tr>';
+  window._orderedCols = ordered;
+}
+
+function filterTable(){
+  if(!allPatients.length) return;
+  const q = document.getElementById('tbl-search').value.toLowerCase();
+  const filtered = allPatients.filter((p)=>{
+    const cond = (p.condition_text||'').toLowerCase();
+    return !q || cond.includes(q);
+  });
+  document.getElementById('tbl-badge').textContent = filtered.length+' shown';
+  const cols = window._orderedCols || [];
+  const rows = filtered.map((p)=>{
+    const lbl = parseInt(p['binary_label']);
+    const lblBadge = lbl===1
+      ? '<span class="lbl-pos">pain=1</span>'
+      : '<span class="lbl-neg">pain=0</span>';
+    return '<tr>' + cols.map((col,ci)=>{
+      let val = p[col];
+      if(col==='binary_label') val = lblBadge;
+      else if(col==='is_female') val = val ? 'F' : 'M';
+      else if(col==='condition_text') val = `<span title="${(p[col]||'').replace(/"/g,"'")}">` + (p[col]||'').slice(0,45)+'…</span>';
+      else if(typeof val==='number') val = Number.isInteger(val) ? val : val.toFixed(2);
+      return `<td class="${ci===0?'first-col':''}">${val??''}</td>`;
+    }).join('') + '</tr>';
+  }).join('');
+  document.getElementById('tbl-body').innerHTML = rows ||
+    '<tr><td colspan="30" style="text-align:center;color:#94a3b8;padding:16px">No matches</td></tr>';
+}
+
+function testKeywords(){
+  const text = document.getElementById('kw-input').value;
+  if(!text.trim()) return;
+  const esc = PAIN_KEYWORDS.map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));
+  const pat = new RegExp('\\b(?:'+esc.join('|')+')\\b','gi');
+  const hits = [...new Set([...text.matchAll(pat)].map(m=>m[0].toLowerCase()))];
+  const hl = text.replace(pat,m=>`<mark>${m}</mark>`);
+  let html = `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:9px;margin-bottom:7px;line-height:1.7">${hl}</div>`;
+  if(hits.length){
+    html += `<div style="font-size:.74rem;color:#047857;font-weight:600;margin-bottom:4px">Matched ${hits.length} keyword${hits.length>1?'s':''}:</div>`;
+    html += '<div class="kw-hits">'+hits.map(h=>`<span class="kw-chip">${h}</span>`).join('')+'</div>';
+    html += `<div style="font-size:.72rem;color:#047857;margin-top:6px">&#8594; This patient would be labeled <strong>pain=1</strong></div>`;
+  } else {
+    html += '<div style="color:#94a3b8;font-size:.78rem">No pain keywords matched &rarr; this patient would be labeled pain=0.</div>';
+  }
+  document.getElementById('kw-result').innerHTML = html;
+}
+
+// ============================================================
+// Sidebar: set student ID
+// ============================================================
+async function setStudentId(){
+  const id = document.getElementById('sid-input').value.trim();
+  if(!id){alert('Please enter your student ID.');return;}
+  const r = await fetch('/api/assign',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({student_id:id})});
+  const d = await r.json();
+  if(d.error){alert('Error: '+d.error);return;}
+  state.studentId=id; state.seed=d.seed; state.oracle=d.oracle;
+  document.getElementById('seed-disp').style.display='block';
+  document.getElementById('seed-disp').textContent=`Seed: ${d.seed} (train ${d.oracle.train_n}, val ${d.oracle.val_n})`;
+  document.getElementById('oracle-s').style.display='block';
+  document.getElementById('o-auc').textContent  = '>= '+d.oracle.auc.toFixed(3);
+  document.getElementById('o-acc').textContent  = '>= '+(d.oracle.accuracy*100).toFixed(1)+'%';
+  document.getElementById('o-f1').textContent   = '>= '+d.oracle.f1.toFixed(3);
+  document.getElementById('o-loss').textContent = '<= '+d.oracle.final_loss.toFixed(3);
+  document.getElementById('o-split').textContent= `${d.oracle.train_n} / ${d.oracle.val_n}`;
+  document.getElementById('not-set-msg').style.display='none';
+  document.getElementById('metrics-panel').style.display='block';
+  runEval();
+}
+
+// ============================================================
+// Training Explorer
+// ============================================================
+function scheduleEval(){clearTimeout(state.evalTimer);state.evalTimer=setTimeout(runEval,350);}
+
+async function runEval(){
+  if(!state.seed) return;
+  const lr    = parseFloat(document.getElementById('lr-sl').value);
+  const steps = parseInt(document.getElementById('steps-sl').value);
+  const vf    = parseFloat(document.getElementById('vf-sl').value);
+  const r = await fetch('/api/evaluate',{method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({seed:state.seed,lr,steps,val_fraction:vf})});
+  const d = await r.json();
+  if(d.error){console.error(d.error);return;}
+  state.currentMetrics=d; state.isOptimal=d.is_optimal;
+  updateMetricsUI(d,state.oracle);
+  logInteraction({lr,steps,val_fraction:vf},d);
+  // Live visualisations
+  document.getElementById('vis-panels').style.display='grid';
+  document.getElementById('explain-panel').style.display='block';
+  drawLossCurve(d.loss_history||[]);
+  drawROCCurve(d.roc_curve||[], d.auc);
+  updateConfusionMatrix(d.tp, d.fp, d.tn, d.fn);
+  updateExplanation(d, state.oracle, lr, steps, vf);
+  updateSubmitBtn();
+  loadSeedComparison(lr, steps, vf);
+}
+
+function updateMetricsUI(m,oracle){
+  if(!oracle) return;
+  const bars=[
+    {name:'F1',   cur:m.f1,        tgt:oracle.f1,        hi:true},
+    {name:'Accuracy',cur:m.accuracy,tgt:oracle.accuracy,  hi:true,pct:true},
+    {name:'AUC',  cur:m.auc,       tgt:oracle.auc,       hi:true},
+    {name:'Loss', cur:m.final_loss,tgt:oracle.final_loss, hi:false},
+  ];
+  document.getElementById('metric-bars').innerHTML = bars.map(b=>{
+    const ratio = b.hi ? Math.min(b.cur/b.tgt,1.05) : Math.min(b.tgt/b.cur,1.05);
+    const pct = Math.round(ratio*100);
+    const cls = ratio>=1?'good':(ratio>=0.85?'warn':'');
+    const cStr = b.pct?(b.cur*100).toFixed(1)+'%':b.cur.toFixed(3);
+    const tStr = b.pct?(b.tgt*100).toFixed(1)+'%':b.tgt.toFixed(3);
+    return `<div class="m-row">
+      <div class="ml"><span class="mn">${b.name}</span>
+        <span class="mv"><span class="cur">${cStr}</span>
+        <span class="tgt">target ${b.hi?'>=':'<='} ${tStr}</span></span>
+      </div>
+      <div class="prog-track"><div class="prog-fill ${cls}" style="width:${Math.min(pct,100)}%"></div></div>
+    </div>`;
+  }).join('');
+  const hb = document.getElementById('hint-box');
+  if(m.hint && !m.is_optimal){hb.style.display='block';hb.textContent='💡 '+m.hint;}
+  else{hb.style.display='none';}
+  const ob = document.getElementById('opt-banner');
+  if(m.is_optimal){
+    ob.style.display='block';
+    const lr=parseFloat(document.getElementById('lr-sl').value);
+    const st=parseInt(document.getElementById('steps-sl').value);
+    const vf=parseFloat(document.getElementById('vf-sl').value);
+    document.getElementById('reveal-params').textContent=
+      `Parameters: lr=${lr.toFixed(3)}, steps=${st}, val_fraction=${vf.toFixed(2)}`;
+  } else { ob.style.display='none'; }
+  ['o-auc','o-acc','o-f1','o-loss'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.classList.toggle('hit',m.is_optimal);
+  });
+}
+
+function updateReminderBanner(){
+  const n = state.exploredCards.size;
+  const banner = document.getElementById('reminder-banner');
+  if(n < CONCEPTS.length){
+    banner.style.display='block';
+    document.getElementById('reminder-count').textContent=` (${n}/${CONCEPTS.length} explored)`;
+  } else { banner.style.display='none'; }
+}
+
+function updateSubmitBtn(){
+  const btn = document.getElementById('submit-btn');
+  const note = document.getElementById('submit-note');
+  const allCards = state.exploredCards.size >= CONCEPTS.length;
+  if(state.isOptimal && allCards){
+    btn.className='unlocked'; btn.disabled=false; note.textContent='Ready to submit!';
+  } else if(state.isOptimal && !allCards){
+    btn.className=''; btn.disabled=true;
+    note.textContent=`Explore all concepts first (${state.exploredCards.size}/${CONCEPTS.length}).`;
+  } else {
+    btn.className=''; btn.disabled=true; note.textContent='Reach optimal performance to unlock.';
+  }
+  // Update the completion footer visibility as well
+  updateCompleteFooter();
+}
+
+function updateCompleteFooter(){
+  const footer = document.getElementById('complete-footer');
+  if(!footer) return;
+  const allCards = state.exploredCards.size >= CONCEPTS.length;
+  if(state.isOptimal && allCards){
+    // show footer and include the current optimal parameters for easy copy
+    const lr = parseFloat(document.getElementById('lr-sl').value).toFixed(3);
+    const steps = parseInt(document.getElementById('steps-sl').value);
+    const vf = parseFloat(document.getElementById('vf-sl').value).toFixed(2);
+    footer.style.display = 'flex';
+    footer.querySelector('.cf-msg').innerHTML =
+      `Exploration complete ✓ — use these optimal parameters in <code>pipeline.py</code> <strong>get_sandbox_params()</strong>:`;
+    // store params on the button for copy
+    footer.dataset.lr = lr; footer.dataset.steps = steps; footer.dataset.vf = vf;
+    const tr = document.getElementById('top-complete-bar');
+    if(tr){ tr.style.display = 'flex'; }
+    document.body.classList.add('has-completion-bar');
+  } else {
+    footer.style.display = 'none';
+    const tr = document.getElementById('top-complete-bar');
+    if(tr){ tr.style.display = 'none'; }
+    document.body.classList.remove('has-completion-bar');
+  }
+}
+
+function copyOptimalParams(){
+  const footer = document.getElementById('complete-footer');
+  if(!footer) return;
+  const lr = footer.dataset.lr || parseFloat(document.getElementById('lr-sl').value).toFixed(3);
+  const steps = footer.dataset.steps || parseInt(document.getElementById('steps-sl').value);
+  const vf = footer.dataset.vf || parseFloat(document.getElementById('vf-sl').value).toFixed(2);
+  const sid = state.studentId || 'your_id';
+  const snippet = `return {\n  "student_id": "${sid}",\n  "learning_rate": ${lr},\n  "steps": ${steps},\n  "val_fraction": ${vf},\n}`;
+  // copy to clipboard
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(snippet).then(()=>{
+      const b = document.getElementById('copy-params-btn');
+      const old = b.textContent;
+      b.textContent = 'Copied ✓';
+      setTimeout(()=>{ b.textContent = old; }, 1800);
+    }).catch(()=>{ alert('Copy failed — select and copy the params manually.'); });
+  } else {
+    alert('Clipboard not available — select and copy the params shown in the banner.');
+  }
+}
+
+function dismissCompleteFooter(){
+  const footer = document.getElementById('complete-footer');
+  if(footer) footer.style.display = 'none';
+}
+
+function logInteraction(params,metrics){
+  state.interactionLog.push({
+    step:state.interactionLog.length+1,
+    timestamp:new Date().toISOString(),
+    params:{...params},
+    metrics:{auc:metrics.auc,accuracy:metrics.accuracy,f1:metrics.f1,loss:metrics.final_loss},
+    is_optimal:metrics.is_optimal,
+  });
+  const cnt=state.interactionLog.length;
+  document.getElementById('log-cnt').textContent=cnt;
+  document.getElementById('log-card').style.display='block';
+  const rows=[...state.interactionLog].reverse().map(e=>{
+    const s=e.is_optimal?'<span class="opt-y">OPTIMAL</span>':'<span class="opt-n">--</span>';
+    return `<tr><td>${e.step}</td><td>${e.params.lr.toFixed(3)}</td>
+      <td>${e.params.steps}</td><td>${e.params.val_fraction.toFixed(2)}</td>
+      <td>${e.metrics.auc.toFixed(3)}</td><td>${(e.metrics.accuracy*100).toFixed(1)}</td>
+      <td>${e.metrics.f1.toFixed(3)}</td><td>${e.metrics.loss.toFixed(3)}</td>
+      <td>${s}</td></tr>`;
+  }).join('');
+  document.getElementById('log-body').innerHTML=rows;
+  updateSubmitBtn();
+}
+
+// ---- Canvas: Loss Curve ----
+function drawLossCurve(hist){
+  if(!hist||hist.length<2) return;
+  const canvas=document.getElementById('loss-canvas');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height,P=30;
+  ctx.clearRect(0,0,W,H);
+  const mn=Math.min(...hist),mx=Math.max(...hist),range=mx-mn||0.01;
+  const oracle=state.oracle;
+  const toX=i=>P+(W-2*P)*i/(hist.length-1);
+  const toY=v=>H-P-(H-2*P)*(v-mn)/range;
+  // Subtle grid
+  ctx.strokeStyle='#f1f5f9'; ctx.lineWidth=1;
+  [0.25,0.5,0.75].forEach(t=>{const y=H-P-(H-2*P)*t;ctx.beginPath();ctx.moveTo(P,y);ctx.lineTo(W-P,y);ctx.stroke();});
+  // Oracle target line
+  if(oracle && oracle.final_loss>=mn && oracle.final_loss<=mx){
+    const oy=toY(oracle.final_loss);
+    ctx.strokeStyle='#10b981'; ctx.lineWidth=1.2; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(P,oy); ctx.lineTo(W-P,oy); ctx.stroke();
+    ctx.setLineDash([]); ctx.fillStyle='#10b981'; ctx.font='8px sans-serif';
+    ctx.fillText('oracle',W-P-34,oy-3);
+  }
+  // Axes
+  ctx.strokeStyle='#e2e8f0'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(P,P); ctx.lineTo(P,H-P); ctx.lineTo(W-P,H-P); ctx.stroke();
+  // Loss curve
+  ctx.strokeStyle='#4f46e5'; ctx.lineWidth=2;
+  ctx.beginPath();
+  hist.forEach((v,i)=>i===0?ctx.moveTo(toX(i),toY(v)):ctx.lineTo(toX(i),toY(v)));
+  ctx.stroke();
+  // End dot
+  ctx.fillStyle='#4f46e5';
+  ctx.beginPath(); ctx.arc(toX(hist.length-1),toY(hist[hist.length-1]),4,0,Math.PI*2); ctx.fill();
+  // Axis value labels
+  ctx.fillStyle='#94a3b8'; ctx.font='8px sans-serif';
+  ctx.fillText(mx.toFixed(3),2,P+4);
+  ctx.fillText(mn.toFixed(3),2,H-P+10);
+  ctx.fillText(`${hist.length} steps`,W/2-18,H-2);
+  // Caption
+  const tail=hist.slice(-10);
+  const tailRange=Math.max(...tail)-Math.min(...tail);
+  const lastLoss=hist[hist.length-1];
+  let cap='';
+  if(tailRange>0.02) cap='⚠️ Oscillating — learning rate likely too high';
+  else if(oracle && lastLoss<=oracle.final_loss+0.01) cap='✓ Converged — matches oracle target';
+  else if((hist[0]-lastLoss)<0.02) cap='Barely decreasing — try a higher LR or more steps';
+  else cap=`${hist[0].toFixed(3)} → ${lastLoss.toFixed(3)}  (dropped ${(hist[0]-lastLoss).toFixed(3)})`;
+  document.getElementById('loss-caption').textContent=cap;
+}
+
+// ---- Canvas: ROC Curve ----
+function drawROCCurve(pts, auc){
+  const canvas=document.getElementById('roc-canvas');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height,P=28;
+  ctx.clearRect(0,0,W,H);
+  const toX=fpr=>P+(W-2*P)*fpr;
+  const toY=tpr=>H-P-(H-2*P)*tpr;
+  // Axes
+  ctx.strokeStyle='#e2e8f0'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(P,P); ctx.lineTo(P,H-P); ctx.lineTo(W-P,H-P); ctx.stroke();
+  // Random baseline diagonal
+  ctx.strokeStyle='#cbd5e1'; ctx.lineWidth=1; ctx.setLineDash([4,3]);
+  ctx.beginPath(); ctx.moveTo(P,H-P); ctx.lineTo(W-P,P); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#cbd5e1'; ctx.font='8px sans-serif'; ctx.fillText('random',W/2+6,H/2+2);
+  // Axis labels
+  ctx.fillStyle='#94a3b8';
+  ctx.fillText('0',P-7,H-P+9); ctx.fillText('1',W-P-4,H-P+9);
+  ctx.fillText('1',2,P+4);
+  ctx.fillText('FPR',W-P+2,H-P+9);
+  ctx.save(); ctx.translate(10,H/2+12); ctx.rotate(-Math.PI/2); ctx.fillText('TPR',0,0); ctx.restore();
+  if(!pts||pts.length<2){
+    document.getElementById('roc-caption').textContent='Evaluating...'; return;
+  }
+  // Shaded area under curve
+  ctx.fillStyle='rgba(79,70,229,0.1)';
+  ctx.beginPath(); ctx.moveTo(P,H-P);
+  pts.forEach(([fpr,tpr])=>ctx.lineTo(toX(fpr),toY(tpr)));
+  ctx.lineTo(W-P,H-P); ctx.closePath(); ctx.fill();
+  // ROC line
+  ctx.strokeStyle='#4f46e5'; ctx.lineWidth=2;
+  ctx.beginPath();
+  pts.forEach(([fpr,tpr],i)=>i===0?ctx.moveTo(toX(fpr),toY(tpr)):ctx.lineTo(toX(fpr),toY(tpr)));
+  ctx.stroke();
+  // Operating point at threshold ≈ 0.5 (middle of sweep)
+  const opIdx=Math.floor(pts.length/2);
+  const [opFpr,opTpr]=pts[opIdx];
+  ctx.fillStyle='#ef4444';
+  ctx.beginPath(); ctx.arc(toX(opFpr),toY(opTpr),5,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#991b1b'; ctx.font='bold 8px sans-serif';
+  ctx.fillText('t=0.5',toX(opFpr)+7,toY(opTpr)-2);
+  // AUC label
+  ctx.fillStyle='#4f46e5'; ctx.font='bold 10px sans-serif';
+  ctx.fillText(`AUC = ${auc.toFixed(3)}`,P+4,P+12);
+  // Caption
+  const oracle=state.oracle;
+  const diff=oracle?(auc-oracle.auc):null;
+  let cap=`AUC = ${auc.toFixed(3)}`;
+  if(diff!==null) cap+=diff>=-0.005?' ✓ at oracle target':` — ${Math.abs(diff).toFixed(3)} below oracle (${oracle.auc.toFixed(3)})`;
+  document.getElementById('roc-caption').textContent=cap;
+}
+
+// ---- Confusion Matrix ----
+function updateConfusionMatrix(tp,fp,tn,fn){
+  if(tp===undefined||tp===null) return;
+  document.getElementById('cm-tp').innerHTML=`<div class="cnt">${tp}</div><div class="lbl">TP<br>pain caught</div>`;
+  document.getElementById('cm-fn').innerHTML=`<div class="cnt">${fn}</div><div class="lbl">FN<br>⚠️ pain missed</div>`;
+  document.getElementById('cm-fp').innerHTML=`<div class="cnt">${fp}</div><div class="lbl">FP<br>false alarm</div>`;
+  document.getElementById('cm-tn').innerHTML=`<div class="cnt">${tn}</div><div class="lbl">TN<br>healthy cleared</div>`;
+  const total=tp+fp+tn+fn;
+  const missRate=total>0?Math.round(fn/(tp+fn||1)*100):0;
+  const acc=total>0?((tp+tn)/total*100).toFixed(1):0;
+  document.getElementById('cm-caption').textContent=`Accuracy ${acc}%  |  Miss rate ${missRate}% of actual pain patients`;
+}
+
+// ---- Dynamic Explanation ----
+let _prevExplainParams  = null;
+let _prevExplainMetrics = null;
+
+function updateExplanation(m, oracle, lr, steps, vf){
+  if(!oracle) return;
+  const hist = m.loss_history || [];
+  const {tp=0, fp=0, tn=0, fn=0} = m;
+  const total  = tp + fp + tn + fn;
+  const tpr    = total > 0 ? tp / Math.max(tp+fn, 1) : 0;
+  const fpr    = total > 0 ? fp / Math.max(fp+tn, 1) : 0;
+  const prec   = (tp+fp) > 0 ? tp/(tp+fp) : 0;
+  const rec    = (tp+fn) > 0 ? tp/(tp+fn) : 0;
+  const f1     = (prec+rec) > 0 ? 2*prec*rec/(prec+rec) : 0;
+  const curLoss  = hist.length > 0 ? hist[hist.length-1] : null;
+  const firstLoss= hist.length > 0 ? hist[0] : null;
+  const drop     = (firstLoss !== null && curLoss !== null) ? firstLoss - curLoss : 0;
+
+  const prevP = _prevExplainParams;
+  const prevM = _prevExplainMetrics;
+  const stepsChanged = prevP && steps !== prevP.steps;
+  const lrChanged    = prevP && Math.abs(lr - prevP.lr) > 0.001;
+  const changed      = stepsChanged || lrChanged;
+
+  // ── LOSS ──────────────────────────────────────────────────────
+  const lossMath = curLoss !== null
+    ? `L = −(1/N)·Σ [ y·log(p̂) + (1−y)·log(1−p̂) ]\nN = ${total} validation patients\nFirst step : ${firstLoss.toFixed(4)}   Last step : ${curLoss.toFixed(4)}   Drop : ${drop.toFixed(4)}\nCurrent L  : ${curLoss.toFixed(4)}    Oracle target : ${oracle.final_loss.toFixed(4)}`
+    : `L = −(1/N)·Σ [ y·log(p̂) + (1−y)·log(1−p̂) ]`;
+
+  let lossChange = '';
+  if(changed && curLoss !== null && prevM && prevM.final_loss != null){
+    const d = curLoss - prevM.final_loss;
+    const dStr = (d>0?'+':'')+d.toFixed(4);
+    if(stepsChanged){
+      const extra = steps - prevP.steps;
+      lossChange = `<div class="exp-change"><strong>Steps ${prevP.steps} → ${steps}:</strong> `
+        +`Each step runs <code>w -= lr × (Xᵀ·error)/N</code> once. `
+        +`${extra>0 ? extra+' extra updates let weights descend further toward the minimum.' : Math.abs(extra)+' fewer updates — weights stopped earlier.'} `
+        +`Loss changed ${dStr} → ${curLoss.toFixed(4)}.</div>`;
+    } else {
+      lossChange = `<div class="exp-change"><strong>LR ${prevP.lr.toFixed(3)} → ${lr.toFixed(3)}:</strong> `
+        +`Each gradient step now moves weights by a ${lr>prevP.lr?'larger':'smaller'} amount. `
+        +`${lr>prevP.lr?'Faster descent — but watch for oscillation if loss jumps.':'Smaller, more stable steps — may need more iterations to converge.'} `
+        +`Loss changed ${dStr}.</div>`;
+    }
+  }
+
+  const lossStatus = (() => {
+    if(!curLoss) return 'Move the sliders to start training.';
+    const tail = hist.slice(-Math.min(10,hist.length));
+    const tailRange = Math.max(...tail)-Math.min(...tail);
+    if(tailRange>0.02) return `<span class="worse">Oscillating</span> — loss is jumping instead of decreasing. LR ${lr.toFixed(3)} is overshooting the minimum each update. Try halving it.`;
+    if(drop<0.03)      return `<span class="neutral">Barely moving</span> — only dropped ${drop.toFixed(4)} across ${steps} steps. LR ${lr.toFixed(3)} is too small. Try 0.3–0.6.`;
+    if(Math.abs(curLoss-oracle.final_loss)<0.001) return `<span class="better">Converged</span> — reached ${curLoss.toFixed(4)}, matches oracle target ${oracle.final_loss.toFixed(4)}.`;
+    if(curLoss<=oracle.final_loss+0.01) return `<span class="neutral">Nearly there</span> — gap is ${(curLoss-oracle.final_loss).toFixed(4)}. Fine-tune to close the last digit.`;
+    if(curLoss<=oracle.final_loss+0.04) return `<span class="neutral">Getting closer</span> — gap is ${(curLoss-oracle.final_loss).toFixed(4)}. A few more steps should close it.`;
+    return `<span class="worse">Not converged</span> — ${curLoss.toFixed(4)} still above oracle (${oracle.final_loss.toFixed(4)}). Needs more steps or a higher LR.`;
+  })();
+
+  // ── AUC ───────────────────────────────────────────────────────
+  const aucMath = total > 0
+    ? `AUC = P( score(pain patient) > score(healthy patient) ) = ${m.auc.toFixed(4)}\nAt threshold 0.50:\n  TPR = TP/(TP+FN) = ${tp}/(${tp+fn}) = ${tpr.toFixed(3)}\n  FPR = FP/(FP+TN) = ${fp}/(${fp+tn}) = ${fpr.toFixed(3)}\nOracle AUC : ${oracle.auc.toFixed(4)}`
+    : `AUC = P( score(pain) > score(healthy) )`;
+
+  let aucChange = '';
+  if(changed && prevM){
+    const d = m.auc - prevM.auc;
+    const dStr = (d>0?'+':'')+d.toFixed(4);
+    const reason = stepsChanged
+      ? (steps>prevP.steps
+          ? `More gradient updates push pain-patient scores higher and healthy-patient scores lower — the model's ranking improves.`
+          : `Fewer updates mean the model didn't fully learn to separate the two groups — ranking degrades.`)
+      : (lr>prevP.lr
+          ? `Larger steps per update — convergence speeds up, though diminishing returns set in near the minimum.`
+          : `Smaller steps — convergence slows; AUC may need more steps to reach its peak.`);
+    aucChange = `<div class="exp-change"><strong>AUC ${prevM.auc.toFixed(4)} → ${m.auc.toFixed(4)} (${dStr}):</strong> ${reason}</div>`;
+  }
+
+  const aucStatus = (() => {
+    const diff = oracle.auc - m.auc;
+    if(m.auc<0.5)   return `<span class="worse">Below random (${m.auc.toFixed(4)})</span> — worse than a coin flip. LR likely too high, or val_fraction is not 0.20.`;
+    if(diff>0.05)   return `<span class="worse">${m.auc.toFixed(4)}</span> vs target ${oracle.auc.toFixed(4)} — gap ${diff.toFixed(4)}. Weights not converged enough to rank patients reliably.`;
+    if(diff>0.005)  return `<span class="neutral">${m.auc.toFixed(4)}</span> vs target ${oracle.auc.toFixed(4)} — gap ${diff.toFixed(4)}. Very close; fine-tune one slider.`;
+    return `<span class="better">${m.auc.toFixed(4)}</span> matches oracle. Model correctly ranks ${Math.round(m.auc*100)}% of pain/healthy pairs.`;
+  })();
+
+  // ── CONFUSION MATRIX ─────────────────────────────────────────
+  const cmMath = total > 0
+    ? `Precision = TP/(TP+FP) = ${tp}/(${tp+fp}) = ${prec.toFixed(3)}\nRecall    = TP/(TP+FN) = ${tp}/(${tp+fn}) = ${rec.toFixed(3)}\nF1        = 2·P·R/(P+R) = 2·${prec.toFixed(3)}·${rec.toFixed(3)}/(${(prec+rec).toFixed(3)}) = ${f1.toFixed(3)}\nAccuracy  = (TP+TN)/N   = (${tp}+${tn})/${total} = ${((tp+tn)/total).toFixed(3)}`
+    : `Precision = TP/(TP+FP)\nRecall    = TP/(TP+FN)\nF1        = 2·P·R/(P+R)`;
+
+  let cmChange = '';
+  if(changed && prevM){
+    const fnD = fn - (prevM.fn||0);
+    const fpD = fp - (prevM.fp||0);
+    if(fnD !== 0 || fpD !== 0){
+      const parts = [];
+      if(fnD!==0) parts.push(`FN: ${prevM.fn||0} → ${fn} (${fnD>0?'+':''}${fnD})`);
+      if(fpD!==0) parts.push(`FP: ${prevM.fp||0} → ${fp} (${fpD>0?'+':''}${fpD})`);
+      const reason = stepsChanged
+        ? (steps>prevP.steps
+            ? `More steps sharpen the decision boundary — predicted probabilities move closer to 0 or 1 rather than clustering near 0.5, reducing borderline misclassifications.`
+            : `Fewer steps leave the boundary fuzzy — more patients land near the 0.5 threshold and get flipped.`)
+        : `The LR change altered how aggressively the decision boundary shifted per update.`;
+      cmChange = `<div class="exp-change"><strong>${parts.join('  |  ')}:</strong> ${reason}</div>`;
+    }
+  }
+
+  const cmStatus = (() => {
+    if(total===0) return 'Evaluating…';
+    const missRate = Math.round(fn/Math.max(tp+fn,1)*100);
+    const fpRate   = Math.round(fp/Math.max(fp+tn,1)*100);
+    if(fn>fp*1.5) return `<span class="worse">${fn} pain patients missed (${missRate}% miss rate)</span> — False Negatives dominate. Model too conservative; under-trained weights predict "healthy" for real pain patients.`;
+    if(fp>fn*1.5) return `<span class="neutral">${fp} false alarms (${fpRate}% of healthy)</span> — False Positives dominate. Model over-eager, flagging healthy patients unnecessarily.`;
+    return `Balanced errors — ${fn} missed and ${fp} false alarms. <strong>${tp}</strong> pain caught, <strong>${tn}</strong> healthy cleared of ${total} validation patients.`;
+  })();
+
+  // ── PARAMETERS ───────────────────────────────────────────────
+  const paramMath = `Gradient update (one step):\n  w(t+1) = w(t) − lr × ∇L\n  ∇L     = (1/N) · Xᵀ · (p̂ − y)\n\nRunning ${steps} steps × lr ${lr.toFixed(3)} each.\nTotal weight movement ≈ ${steps} × ${lr.toFixed(3)} × avg_gradient`;
+
+  const pp = [];
+  if(lr<0.05)         pp.push(`<strong>LR ${lr.toFixed(3)}</strong> — very small: each update is tiny; needs many steps to converge.`);
+  else if(lr>0.7)     pp.push(`<strong>LR ${lr.toFixed(3)}</strong> — high: risk of oscillation; loss may jump instead of decrease.`);
+  else                pp.push(`<strong>LR ${lr.toFixed(3)}</strong> — moderate, stable convergence range.`);
+  if(steps<50)        pp.push(`<strong>Steps ${steps}</strong> — very few; model almost certainly under-trained.`);
+  else if(steps>=200) pp.push(`<strong>Steps ${steps}</strong> — ample for convergence at most LR values.`);
+  else                pp.push(`<strong>Steps ${steps}</strong> — moderate; check whether loss has flattened yet.`);
+  if(Math.abs(vf-0.20)>0.02) pp.push(`<strong>Val fraction ${vf.toFixed(2)}</strong> — ⚠️ oracle uses 0.20; different split means results won't match.`);
+  else                       pp.push(`<strong>Val fraction ${vf.toFixed(2)}</strong> — correct, matches oracle split.`);
+
+  // ── RENDER ───────────────────────────────────────────────────
+  document.getElementById('exp-loss').innerHTML=`
+    <div class="exp-lbl">📉 Loss Curve</div>
+    <div class="exp-math">${lossMath}</div>
+    ${lossChange}
+    <div class="exp-txt">${lossStatus}</div>`;
+
+  document.getElementById('exp-auc').innerHTML=`
+    <div class="exp-lbl">📐 AUC-ROC</div>
+    <div class="exp-math">${aucMath}</div>
+    ${aucChange}
+    <div class="exp-txt">${aucStatus}</div>`;
+
+  document.getElementById('exp-cm').innerHTML=`
+    <div class="exp-lbl">🔢 Confusion Matrix</div>
+    <div class="exp-math">${cmMath}</div>
+    ${cmChange}
+    <div class="exp-txt">${cmStatus}</div>`;
+
+  document.getElementById('exp-params').innerHTML=`
+    <div class="exp-lbl">⚙️ Parameter Effects</div>
+    <div class="exp-math">${paramMath}</div>
+    <div class="exp-txt">${pp.join('<br>')}</div>`;
+
+  _prevExplainParams  = {lr, steps, vf};
+  _prevExplainMetrics = {...m};
+}
+
+async function submitResult(){
+  if(!state.studentId||!state.isOptimal) return;
+  document.getElementById('submit-btn').textContent='Saving...';
+  document.getElementById('submit-btn').disabled=true;
+  const best=state.interactionLog.find(e=>e.is_optimal);
+  const payload={
+    student_id:state.studentId, seed:state.seed,
+    interaction_count:state.interactionLog.length,
+    interaction_log:state.interactionLog,
+    optimal_achieved:true,
+    best_performance:{
+      lr:best.params.lr, steps:best.params.steps, val_fraction:best.params.val_fraction,
+      auc:best.metrics.auc, accuracy:best.metrics.accuracy,
+      f1:best.metrics.f1, final_loss:best.metrics.loss,
+    },
+  };
+  const r=await fetch('/api/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  const d=await r.json();
+  if(d.success){
+    document.getElementById('submit-note').textContent='Saved: '+d.saved_to;
+    document.getElementById('submit-btn').textContent='Saved!';
+    document.getElementById('submit-btn').style.background='#10b981';
+  } else {
+    document.getElementById('submit-btn').textContent='Submit & Save';
+    document.getElementById('submit-btn').disabled=false;
+    alert('Save failed: '+JSON.stringify(d));
+  }
+}
+
+async function loadSeedComparison(lr, steps, val_fraction){
+  const body = document.getElementById('seed-compare-body');
+  try {
+    const r = await fetch('/api/seed_compare',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({seed:state.seed, lr, steps, val_fraction}),
+    });
+    const d = await r.json();
+    if(d.error){ body.innerHTML=`<p style="color:#dc2626">Error: ${d.error}</p>`; return; }
+
+    const fmt = (v,ref,good='higher')=>{
+      if(v===undefined) return '—';
+      const diff = v - ref;
+      const better = good==='higher' ? diff>0 : diff<0;
+      const color = Math.abs(diff)<0.001 ? '#1e293b' : better ? '#10b981' : '#dc2626';
+      const sign  = diff>0?'+':'';
+      return `<span style="color:${color};font-weight:600">${v.toFixed(4)}</span>`
+           + `<span style="font-size:.7rem;color:${color};margin-left:3px">(${sign}${diff.toFixed(3)})</span>`;
+    };
+
+    const yours = d.results.find(x=>x.seed===state.seed)||d.results[1];
+    const rows = d.results.map(row=>{
+      const isYours = row.seed === state.seed;
+      const bg = isYours ? 'background:#f0fdf4;font-weight:700' : '';
+      const label = isYours
+        ? `<strong>Seed ${row.seed} ★ (yours)</strong>`
+        : `Seed ${row.seed} ${row.seed < state.seed ? '(seed − 1)' : '(seed + 1)'}`;
+      if(row.error) return `<tr style="${bg}"><td>${label}</td><td colspan="4" style="color:#dc2626">${row.error}</td></tr>`;
+      return `<tr style="${bg}">
+        <td>${label}</td>
+        <td>${isYours ? yours.auc.toFixed(4) : fmt(row.auc,yours.auc,'higher')}</td>
+        <td>${isYours ? (yours.accuracy*100).toFixed(1)+'%' : fmt(row.accuracy,yours.accuracy,'higher').replace(/(\d\.\d{4})/,m=>(parseFloat(m)*100).toFixed(1)+'%')}</td>
+        <td>${isYours ? yours.f1.toFixed(4) : fmt(row.f1,yours.f1,'higher')}</td>
+        <td>${isYours ? yours.loss.toFixed(4) : fmt(row.loss,yours.loss,'lower')}</td>
+      </tr>`;
+    }).join('');
+
+    body.innerHTML = `
+      <div class="log-wrap">
+        <table>
+          <thead><tr>
+            <th>Split</th><th>AUC</th><th>Accuracy</th><th>F1</th><th>Loss</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+      <p style="font-size:.78rem;color:#64748b;margin-top:12px;line-height:1.6">
+        <strong>Green</strong> = better than your split &nbsp;|&nbsp;
+        <strong>Red</strong> = worse than your split &nbsp;|&nbsp;
+        Differences arise purely from which patients land in validation — not from anything you did wrong.
+        This is why every model should use the same shared split: apples-to-apples comparison.
+      </p>`;
+  } catch(e) {
+    body.innerHTML=`<p style="color:#dc2626">Failed to load comparison: ${e.message}</p>`;
+  }
+}
+
+// ============================================================
+// Init
+// ============================================================
+renderConceptGrid();
+loadData();
+document.getElementById('sid-input').addEventListener('keydown',e=>{if(e.key==='Enter')setStudentId();});
+</script>
+</body>
+</html>
+"""
+
+
+if __name__ == "__main__":
+    log.info("=" * 45)
+    log.info("Assignment 1 -- AI-Sandbox Explorer")
+    log.info("URL : http://localhost:3001")
+    log.info("Log : %s", _LOG_FILE)
+    log.info("=" * 45)
+    threading.Timer(1.3, lambda: webbrowser.open("http://localhost:3001")).start()
+    app.run(port=3001, debug=False, use_reloader=False)
