@@ -135,6 +135,7 @@ thead th.first-col{position:sticky;left:0;z-index:2;background:#f8fafc}
 tbody tr:nth-child(even){background:#fafafa}
 tbody td{padding:5px 10px;border-bottom:1px solid #f1f5f9;max-width:180px;overflow:hidden;text-overflow:ellipsis}
 tbody td.first-col{position:sticky;left:0;background:inherit;z-index:1;font-weight:700}
+tbody td.cond-col{max-width:420px}
 .lbl-pos{background:#ede9fe;color:#4f46e5;padding:1px 7px;border-radius:99px;font-size:.68rem;font-weight:700}
 .lbl-neg{background:#f1f5f9;color:#94a3b8;padding:1px 7px;border-radius:99px;font-size:.68rem}
 #tbl-badge{font-size:.68rem;background:#f1f5f9;color:#64748b;padding:2px 8px;border-radius:99px;font-weight:600}
@@ -236,7 +237,7 @@ body.has-completion-bar #sidebar{height:calc(100vh - 46px)}
 
   <div class="sid-s">
     <div class="sid-lbl">Your Student ID</div>
-    <input type="text" id="sid-input" placeholder="e.g. jdoe2025" />
+    <input type="text" id="sid-input" placeholder="e.g. jdoe" />
     <button onclick="setStudentId()">Set ID &rarr;</button>
     <div id="seed-disp"></div>
   </div>
@@ -280,7 +281,7 @@ body.has-completion-bar #sidebar{height:calc(100vh - 46px)}
     <div class="info-grid">
       <div class="info-card">
         <h3>🏥 The Problem</h3>
-        <p>Identify patients with chronic pain from their EHR. Chronic pain
+        <p>Identify patients with chronic pain from their electronic health records (EHR). Chronic pain
         affects roughly <strong>20% of adults</strong> but is often
         under-detected until crisis — early identification enables proactive
         care and cuts long-term costs.
@@ -653,233 +654,6 @@ const FEATURE_COLS = new Set([
 // ============================================================
 const CONCEPTS = [
   {
-    icon:"📉",title:"Gradient Descent",
-    explanation:`The model learns by repeatedly asking: "which direction reduces the loss?" It computes the gradient (the slope of the loss with respect to each weight) and takes a small step downhill.\n\nThe learning rate controls step size. Too small: slow convergence. Too large: the model overshoots the minimum and loss oscillates or diverges.\n\nAfter enough steps, the loss plateaus — the model has converged to its best weights for this data.`,
-    formula:`weights -= lr × ∇_weights\nbias    -= lr × ∇_bias\n\n∇_weights = Xᵀ · (pred - y) / N\n∇_bias    = mean(pred - y)`,
-    example:`In this assignment you will implement train_logistic_regression() which runs this update loop for 'iterations' steps.`,
-    visual:`<svg viewBox="0 0 300 185" xmlns="http://www.w3.org/2000/svg">
-  <rect width="300" height="185" fill="#f8fafc" rx="8"/>
-  <line x1="48" y1="18" x2="48" y2="155" stroke="#cbd5e1" stroke-width="1.5"/>
-  <line x1="48" y1="155" x2="282" y2="155" stroke="#cbd5e1" stroke-width="1.5"/>
-  <line x1="48" y1="85" x2="282" y2="85" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4"/>
-  <path d="M55,28 C85,52 138,108 268,148" stroke="#4f46e5" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <circle cx="78" cy="42" r="6" fill="#f59e0b"/>
-  <circle cx="118" cy="72" r="6" fill="#f59e0b"/>
-  <circle cx="168" cy="100" r="6" fill="#f59e0b"/>
-  <circle cx="228" cy="130" r="8" fill="#10b981"/>
-  <line x1="78" y1="42" x2="118" y2="72" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5"/>
-  <line x1="118" y1="72" x2="168" y2="100" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5"/>
-  <line x1="168" y1="100" x2="228" y2="130" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5"/>
-  <text x="240" y="126" font-size="11" fill="#10b981" font-weight="700">converged</text>
-  <text x="26" y="90" font-size="11" fill="#64748b" text-anchor="middle" transform="rotate(-90,26,90)">Loss</text>
-  <text x="165" y="174" font-size="11" fill="#64748b" text-anchor="middle">Training Steps →</text>
-  <text x="84" y="36" font-size="11" fill="#f59e0b" font-weight="700">step 1</text>
-  <text x="42" y="25" font-size="10" fill="#94a3b8" text-anchor="end">high</text>
-  <text x="42" y="157" font-size="10" fill="#94a3b8" text-anchor="end">low</text>
-</svg>`,
-  },
-  {
-    icon:"⚖️",title:"Feature Standardization",
-    explanation:`Our features have wildly different scales: age ranges 0–90, healthcare expenses range 0–500,000. Without scaling, the gradient is dominated by the large-scale features — the model barely sees age because 1 dollar of expenses creates a much larger gradient than 1 year of age.\n\nZ-score standardization subtracts the column mean and divides by the column standard deviation, putting every feature in the range ≈ [-3, 3]. Now the optimizer can move freely in all directions.\n\nCritically: you compute mean and std on the training set ONLY, then apply those same values to the validation set. Otherwise you leak validation information into training.`,
-    formula:`z = (x − mean_train) / std_train\n\n(Apply same mean/std to val too)`,
-    example:`standardize_features(X_train) is provided for you. It returns (X_scaled, means, stds). You then compute X_val_scaled = (X_val - means) / stds.`,
-    visual:`<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
-  <rect width="300" height="180" fill="#f8fafc" rx="8"/>
-  <text x="68" y="10" text-anchor="middle" font-size="12" fill="#334155" font-weight="700">Before</text>
-  <text x="225" y="10" text-anchor="middle" font-size="12" fill="#334155" font-weight="700">After</text>
-  <!-- Before bars: wildly different heights -->
-  <rect x="15" y="122" width="22" height="24" fill="#4f46e5" rx="3"/>
-  <text x="26" y="161" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">age</text>
-  <text x="26" y="116" text-anchor="middle" font-size="9" fill="#4f46e5" font-weight="700">0–90</text>
-  <rect x="48" y="28" width="22" height="118" fill="#f59e0b" rx="3"/>
-  <text x="59" y="161" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">cost</text>
-  <text x="59" y="22" text-anchor="middle" font-size="9" fill="#d97706" font-weight="700">0–500k</text>
-  <rect x="81" y="80" width="22" height="66" fill="#10b981" rx="3"/>
-  <text x="92" y="161" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">bmi</text>
-  <text x="92" y="74" text-anchor="middle" font-size="9" fill="#059669" font-weight="700">10–50</text>
-  <!-- Arrow -->
-  <line x1="122" y1="90" x2="148" y2="90" stroke="#94a3b8" stroke-width="2.5"/>
-  <polygon points="148,86 157,90 148,94" fill="#94a3b8"/>
-  <text x="139" y="81" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">z-score</text>
-  <!-- After: bounds lines -->
-  <line x1="165" y1="40" x2="290" y2="40" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="4"/>
-  <line x1="165" y1="150" x2="290" y2="150" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="4"/>
-  
-  <!-- After bars: equal height -->
-  <rect x="175" y="72" width="22" height="78" fill="#4f46e5" rx="3"/>
-  <text x="186" y="161" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">age</text>
-  <rect x="207" y="70" width="22" height="80" fill="#f59e0b" rx="3"/>
-  <text x="218" y="161" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">cost</text>
-  <rect x="239" y="71" width="22" height="79" fill="#10b981" rx="3"/>
-  <text x="250" y="161" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">bmi</text>
-  <text x="278" y="103" text-anchor="middle" font-size="11" fill="#10b981" font-weight="700">same</text>
-  <text x="278" y="116" text-anchor="middle" font-size="11" fill="#10b981" font-weight="700">scale!</text>
-</svg>`,
-  },
-  {
-    icon:"✂️",title:"Stratified Split",
-    explanation:`A plain random split can accidentally put most positive patients in training and almost none in validation. With only 320 patients and a 40% positive rate, the imbalance in a random split can be substantial.\n\nStratified split fixes this by separately sampling from each class. It takes exactly val_fraction of class-0 patients and val_fraction of class-1 patients for the validation set. Both train and val end up with the same 40/60 ratio.\n\nThis ensures your validation AUC reflects real model quality, not a lucky (or unlucky) split.`,
-    formula:`For each class c:\n  indices_c = where(labels == c)\n  shuffle(indices_c, seed)\n  n_val = round(val_fraction × len(indices_c))\n  val ← first n_val shuffled indices`,
-    example:`You implement stratified_split(labels, 0.20, seed). Different seeds give different shuffles — that's why every student has a different seed and thus different train/val assignment for the same patients.`,
-    visual:`<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
-  <rect width="300" height="180" fill="#f8fafc" rx="8"/>
-  <!-- Left: Random (bad) -->
-  <text x="75" y="18" text-anchor="middle" font-size="12" fill="#ef4444" font-weight="700">Random split ✗</text>
-  <text x="10" y="44" font-size="11" fill="#475569" font-weight="600">Train:</text>
-  <rect x="50" y="30" width="26" height="20" fill="#4f46e5" rx="3"/>
-  <rect x="76" y="30" width="74" height="20" fill="#e2e8f0" rx="3" stroke="#cbd5e1" stroke-width="1"/>
-  <text x="63" y="44" text-anchor="middle" font-size="10" fill="white" font-weight="700">25%</text>
-  <text x="10" y="73" font-size="11" fill="#475569" font-weight="600">Val:</text>
-  <rect x="50" y="58" width="62" height="20" fill="#4f46e5" rx="3"/>
-  <rect x="112" y="58" width="38" height="20" fill="#e2e8f0" rx="3" stroke="#cbd5e1" stroke-width="1"/>
-  <text x="81" y="72" text-anchor="middle" font-size="10" fill="white" font-weight="700">60%</text>
-  
-  <!-- Divider -->
-  <line x1="153" y1="22" x2="153" y2="110" stroke="#e2e8f0" stroke-width="1.5"/>
-  <!-- Right: Stratified (correct) -->
-  <text x="226" y="18" text-anchor="middle" font-size="12" fill="#10b981" font-weight="700">Stratified ✓</text>
-  <text x="162" y="44" font-size="11" fill="#475569" font-weight="600">Train:</text>
-  <rect x="204" y="30" width="42" height="20" fill="#4f46e5" rx="3"/>
-  <rect x="246" y="30" width="42" height="20" fill="#e2e8f0" rx="3" stroke="#cbd5e1" stroke-width="1"/>
-  <text x="225" y="44" text-anchor="middle" font-size="10" fill="white" font-weight="700">40%</text>
-  <text x="162" y="73" font-size="11" fill="#475569" font-weight="600">Val:</text>
-  <rect x="204" y="58" width="42" height="20" fill="#4f46e5" rx="3"/>
-  <rect x="246" y="58" width="42" height="20" fill="#e2e8f0" rx="3" stroke="#cbd5e1" stroke-width="1"/>
-  <text x="225" y="72" text-anchor="middle" font-size="10" fill="white" font-weight="700">40%</text>
-  <!-- Legend -->
-  <rect x="52" y="115" width="16" height="12" fill="#4f46e5" rx="2"/>
-  <text x="72" y="126" font-size="11" fill="#475569" font-weight="600">pain = 1</text>
-  <rect x="148" y="115" width="16" height="12" fill="#e2e8f0" rx="2" stroke="#cbd5e1" stroke-width="1"/>
-  <text x="168" y="126" font-size="11" fill="#475569" font-weight="600">pain = 0</text>
-  <text x="150" y="150" text-anchor="middle" font-size="11" fill="#64748b">Stratified = same class ratio in train &amp; val</text>
-  <text x="150" y="165" text-anchor="middle" font-size="11" fill="#10b981" font-weight="600">Both rows: 40% pain=1, 60% pain=0</text>
-</svg>`,
-  },
-  {
-    icon:"📐",title:"AUC-ROC",
-    explanation:`AUC (Area Under the ROC Curve) measures the model's ability to rank positive patients above negative ones — regardless of any threshold.\n\nFormally: pick one pain patient and one non-pain patient at random. AUC = P(score_pain > score_no_pain). AUC=0.5 is random guessing; AUC=1.0 is perfect ranking.\n\nThe ROC curve sweeps the decision threshold from 0 to 1 and plots true positive rate vs false positive rate. AUC is the area under this curve. It is threshold-independent, making it the gold standard for comparing classifiers.`,
-    formula:`AUC = P(score_pos > score_neg)\n\n= Σ (sp>sn: 1, sp==sn: 0.5, sp<sn: 0)\n  ─────────────────────────────────\n       N_pos × N_neg`,
-    example:`You implement roc_auc(y_true, scores) using a double loop over positive/negative pairs. At this dataset size (~64 val patients) the double loop runs in milliseconds.`,
-    visual:`<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
-  <rect width="280" height="200" fill="#f8fafc" rx="8"/>
-  <line x1="45" y1="18" x2="45" y2="162" stroke="#cbd5e1" stroke-width="1.5"/>
-  <line x1="45" y1="162" x2="262" y2="162" stroke="#cbd5e1" stroke-width="1.5"/>
-  <!-- Random diagonal -->
-  <line x1="45" y1="162" x2="262" y2="18" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5"/>
-  <!-- ROC curve -->
-  <path d="M45,162 C68,145 94,94 132,54 S202,28 262,18" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round"/>
-  <!-- Shaded AUC area -->
-  <path d="M45,162 C68,145 94,94 132,54 S202,28 262,18 L262,162 Z" fill="#4f46e5" opacity="0.14"/>
-  <!-- AUC label -->
-  <text x="170" y="118" text-anchor="middle" font-size="15" fill="#4f46e5" font-weight="800">AUC</text>
-  <!-- Operating point at t=0.5 -->
-  <circle cx="118" cy="74" r="7" fill="#f59e0b" stroke="white" stroke-width="2"/>
-  <text x="130" y="68" font-size="10" fill="#d97706" font-weight="700">t = 0.5</text>
-  <!-- Random label -->
-  <text x="168" y="148" text-anchor="middle" font-size="10" fill="#94a3b8" font-style="italic">random</text>
-  <!-- Axis labels -->
-  <text x="154" y="186" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">False Positive Rate →</text>
-  <text x="16" y="96" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600" transform="rotate(-90,16,96)">True Positive Rate</text>
-  <text x="37" y="22" font-size="10" fill="#64748b">1.0</text>
-  <text x="37" y="165" font-size="10" fill="#64748b">0</text>
-  <text x="254" y="176" font-size="10" fill="#64748b">1.0</text>
-</svg>`,
-  },
-  {
-    icon:"🎯",title:"Precision vs Recall",
-    explanation:`Precision: of all patients the model flags as pain, what fraction actually have pain? (Avoid false alarms)\nRecall: of all patients who actually have pain, what fraction did the model catch? (Avoid missed cases)\n\nLowering the decision threshold catches more pain patients (high recall) but also flags more healthy patients (low precision). There is an inherent trade-off.\n\nF1 score is the harmonic mean of precision and recall. It punishes extreme imbalances — a model with perfect recall and zero precision gets F1=0.`,
-    formula:`Precision = TP / (TP + FP)\nRecall    = TP / (TP + FN)\nF1        = 2 × P × R / (P + R)`,
-    example:`At threshold=0.5 on this dataset you should see precision ≈ 0.68 and recall ≈ 0.77 at the optimal hyperparameters. Lowering the threshold increases recall but decreases precision.`,
-    visual:`<svg viewBox="0 0 280 195" xmlns="http://www.w3.org/2000/svg">
-  <rect width="280" height="195" fill="#f8fafc" rx="8"/>
-  <line x1="45" y1="18" x2="45" y2="158" stroke="#cbd5e1" stroke-width="1.5"/>
-  <line x1="45" y1="158" x2="262" y2="158" stroke="#cbd5e1" stroke-width="1.5"/>
-  <!-- P-R curve -->
-  <path d="M52,30 C78,38 130,88 262,152" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round"/>
-  <!-- High threshold point -->
-  <circle cx="82" cy="42" r="7" fill="#4f46e5" stroke="white" stroke-width="2"/>
-  <text x="95" y="38" font-size="11" fill="#4f46e5" font-weight="700">high threshold</text>
-  <text x="95" y="52" font-size="10" fill="#64748b">P=0.90  R=0.30</text>
-  <!-- t=0.5 point -->
-  <circle cx="162" cy="92" r="7" fill="#f59e0b" stroke="white" stroke-width="2"/>
-  <text x="172" y="88" font-size="11" fill="#d97706" font-weight="700">t = 0.5</text>
-  <text x="172" y="102" font-size="10" fill="#64748b">P=0.68  R=0.77</text>
-  <!-- Low threshold point -->
-  <circle cx="232" cy="136" r="7" fill="#ef4444" stroke="white" stroke-width="2"/>
-  <text x="202" y="152" font-size="11" fill="#ef4444" font-weight="700">low threshold</text>
-  <!-- Axis labels -->
-  <text x="154" y="182" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">Recall →</text>
-  <text x="18" y="92" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600" transform="rotate(-90,18,92)">Precision</text>
-  <text x="37" y="22" font-size="10" fill="#64748b">1.0</text>
-  <text x="37" y="160" font-size="10" fill="#64748b">0</text>
-</svg>`,
-  },
-  {
-    icon:"📊",title:"Log Loss (BCE)",
-    explanation:`Binary cross-entropy (log loss) is what the model minimises during training. It measures how surprised the model is at the true labels.\n\nIf a patient truly has pain (y=1) and the model says p=0.99, the loss is tiny: -log(0.99) ≈ 0.01. If the model says p=0.01, the loss is enormous: -log(0.01) ≈ 4.6. Confident wrong predictions are punished severely.\n\nThis is why gradient descent on log loss pushes the model toward confident correct predictions, not just correct ones.`,
-    formula:`loss = −mean[y·log(p) + (1−y)·log(1−p)]\n\nFor y=1: term = −log(p)  → 0 as p→1\nFor y=0: term = −log(1−p) → 0 as p→0`,
-    example:`Your logistic_regression_gradients() implements the gradient of this loss. The gradient is surprisingly clean: error = (predictions − y), then grad_weights = Xᵀ·error/N.`,
-    visual:`<svg viewBox="0 0 280 195" xmlns="http://www.w3.org/2000/svg">
-  <rect width="280" height="195" fill="#f8fafc" rx="8"/>
-  <line x1="45" y1="18" x2="45" y2="158" stroke="#cbd5e1" stroke-width="1.5"/>
-  <line x1="45" y1="158" x2="262" y2="158" stroke="#cbd5e1" stroke-width="1.5"/>
-  <!-- -log(p) curve: high at left (p→0), low at right (p→1) -->
-  <path d="M55,152 C88,148 158,118 244,28" fill="none" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
-  <!-- Asymptote indicator -->
-  <line x1="244" y1="28" x2="244" y2="158" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4" opacity="0.5"/>
-  <!-- Annotations right (loss → ∞) -->
-  <rect x="155" y="12" width="88" height="28" rx="4" fill="#fef2f2"/>
-  <text x="199" y="24" text-anchor="middle" font-size="10" fill="#ef4444" font-weight="700">p → 0, y = 1</text>
-  <text x="199" y="36" text-anchor="middle" font-size="10" fill="#ef4444" font-weight="700">loss → ∞</text>
-  <!-- Low loss annotation left (p≈1) -->
-  <circle cx="62" cy="152" r="7" fill="#10b981" stroke="white" stroke-width="2"/>
-  <text x="74" y="148" font-size="11" fill="#10b981" font-weight="700">p ≈ 1 → low loss</text>
-  <!-- Axis labels -->
-  <text x="154" y="182" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">Predicted prob. p  (y = 1)</text>
-  <text x="18" y="92" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600" transform="rotate(-90,18,92)">−log(p)</text>
-  <text x="38" y="25" font-size="10" fill="#94a3b8" text-anchor="end">∞</text>
-  <text x="38" y="160" font-size="10" fill="#94a3b8" text-anchor="end">0</text>
-  <text x="42" y="172" font-size="10" fill="#94a3b8">0</text>
-  <text x="252" y="172" font-size="10" fill="#94a3b8">1</text>
-</svg>`,
-  },
-  {
-    icon:"🔢",title:"Confusion Matrix",
-    explanation:`A confusion matrix shows the four ways a binary classifier can be right or wrong. It is the foundation of every evaluation metric.\n\nTP (True Positive): model says pain=1, patient has pain. Correct.\nFP (False Positive): model says pain=1, patient is healthy. False alarm.\nTN (True Negative): model says pain=0, patient is healthy. Correct.\nFN (False Negative): model says pain=0, patient has pain. Dangerous miss.\n\nIn healthcare, FN is often the most costly error: missing a pain patient who needed intervention.`,
-    formula:`Accuracy  = (TP + TN) / total\nPrecision = TP / (TP + FP)\nRecall    = TP / (TP + FN)\nSpecificity = TN / (TN + FP)`,
-    example:`confusion_counts(y_true, y_pred) returns (TP, FP, TN, FN) as plain ints. Implementation: use numpy boolean operations like np.sum((y_pred==1) & (y_true==1)).`,
-    visual:`<svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg">
-  <rect width="280" height="220" fill="#f8fafc" rx="8"/>
-  <!-- Header -->
-  <text x="162" y="18" text-anchor="middle" font-size="12" fill="#334155" font-weight="700">Predicted</text>
-  <text x="108" y="30" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">Pain = 1</text>
-  <text x="218" y="30" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">Pain = 0</text>
-  <text x="20" y="97" text-anchor="middle" font-size="12" fill="#334155" font-weight="700" transform="rotate(-90,28,97)">Actual</text>
-  <text x="44" y="82" text-anchor="end" font-size="11" fill="#64748b" font-weight="600">Pain=1</text>
-  <text x="44" y="148" text-anchor="end" font-size="11" fill="#64748b" font-weight="600">Pain=0</text>
-  <!-- TP cell -->
-  <rect x="50" y="34" width="108" height="90" rx="6" fill="#bbf7d0" stroke="#86efac" stroke-width="1.5"/>
-  <text x="104" y="74" text-anchor="middle" font-size="20" font-weight="800" fill="#065f46">TP</text>
-  <text x="104" y="92" text-anchor="middle" font-size="11" fill="#047857" font-weight="600">True Positive</text>
-  <text x="104" y="108" text-anchor="middle" font-size="10" fill="#059669">pain caught ✓</text>
-  <!-- FN cell -->
-  <rect x="162" y="34" width="108" height="90" rx="6" fill="#fecaca" stroke="#fca5a5" stroke-width="1.5"/>
-  <text x="216" y="74" text-anchor="middle" font-size="20" font-weight="800" fill="#991b1b">FN</text>
-  <text x="216" y="92" text-anchor="middle" font-size="11" fill="#b91c1c" font-weight="600">False Negative</text>
-  <text x="216" y="108" text-anchor="middle" font-size="10" fill="#dc2626">pain missed ✗</text>
-  <!-- FP cell -->
-  <rect x="50" y="128" width="108" height="82" rx="6" fill="#fef3c7" stroke="#fcd34d" stroke-width="1.5"/>
-  <text x="104" y="163" text-anchor="middle" font-size="20" font-weight="800" fill="#92400e">FP</text>
-  <text x="104" y="181" text-anchor="middle" font-size="11" fill="#b45309" font-weight="600">False Positive</text>
-  <text x="104" y="197" text-anchor="middle" font-size="10" fill="#d97706">false alarm</text>
-  <!-- TN cell -->
-  <rect x="162" y="128" width="108" height="82" rx="6" fill="#bbf7d0" stroke="#86efac" stroke-width="1.5"/>
-  <text x="216" y="163" text-anchor="middle" font-size="20" font-weight="800" fill="#065f46">TN</text>
-  <text x="216" y="181" text-anchor="middle" font-size="11" fill="#047857" font-weight="600">True Negative</text>
-  <text x="216" y="197" text-anchor="middle" font-size="10" fill="#059669">healthy cleared ✓</text>
-</svg>`,
-  },
-  {
     icon:"🚨",title:"Label Leakage",
     explanation:`Label leakage occurs when a feature is derived from or correlates directly with the target label — in a way that wouldn't be available at prediction time or that trivially encodes the answer.\n\nIn this dataset: the pain label was created by scanning condition_text for pain-related keywords. If you used condition_text as a feature, the model would essentially read the answer key — AUC would be 1.0 and the result would be meaningless.\n`,
     formula:`Leakage: feature → label (already known)\n\nExcluded from features:\n  - condition_text (used to CREATE the label)`,
@@ -920,82 +694,42 @@ const CONCEPTS = [
 </svg>`,
   },
   {
-    icon:"🌡️",title:"Decision Threshold",
-    explanation:`Logistic regression outputs a probability p ∈ (0, 1). To make a binary prediction (pain or not), you apply a threshold: if p ≥ threshold, predict pain=1.\n\nThe default threshold is 0.5, but it can be tuned. Lowering it makes the model more aggressive at flagging pain — higher recall but lower precision. Raising it makes the model more conservative — fewer false alarms but more missed cases.\n\nIn healthcare, the cost of a missed pain patient (FN) may far exceed the cost of a false alarm (FP), justifying a lower threshold.`,
-    formula:`y_pred = 1   if p ≥ threshold\ny_pred = 0   if p < threshold\n\nDefault: threshold = 0.50`,
-    example:`confusion_counts() takes binary predictions, so you must first apply a threshold: y_pred = (probs >= 0.5).astype(int). The AI-Sandbox uses threshold=0.5 throughout.`,
-    visual:`<svg viewBox="0 0 280 190" xmlns="http://www.w3.org/2000/svg">
-  <rect width="280" height="190" fill="#f8fafc" rx="8"/>
-  <!-- Pain=0 distribution (left bell) -->
-  <path d="M14,150 C28,148 58,58 90,150" fill="#fecaca" fill-opacity="0.85" stroke="#ef4444" stroke-width="2"/>
-  <!-- Pain=1 distribution (right bell) -->
-  <path d="M96,150 C128,58 158,148 188,150" fill="#bbf7d0" fill-opacity="0.85" stroke="#10b981" stroke-width="2"/>
-  <!-- Overlap shading -->
-  <path d="M96,150 C108,95 120,68 130,150" fill="#fde68a" fill-opacity="0.6"/>
-  <!-- Threshold line -->
-  <line x1="130" y1="25" x2="130" y2="154" stroke="#f59e0b" stroke-width="3" stroke-dasharray="6"/>
-  <!-- Threshold label box -->
-  <rect x="106" y="10" width="48" height="24" rx="5" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
-  <text x="130" y="19" text-anchor="middle" font-size="10" fill="#b45309" font-weight="700">threshold</text>
-  <text x="130" y="30" text-anchor="middle" font-size="12" fill="#d97706" font-weight="800">0.50</text>
-  <!-- Distribution labels -->
-  <text x="52" y="100" text-anchor="middle" font-size="13" fill="#991b1b" font-weight="700">Pain = 0</text>
-  <text x="142" y="100" text-anchor="middle" font-size="13" fill="#065f46" font-weight="700">Pain = 1</text>
-  <!-- Legend -->
-  <rect x="10" y="160" width="52" height="16" fill="#fecaca" rx="3" stroke="#ef4444" stroke-width="1.5"/>
-  <text x="36" y="172" text-anchor="middle" font-size="10" fill="#991b1b" font-weight="600">FP region</text>
-  <rect x="148" y="160" width="52" height="16" fill="#bbf7d0" rx="3" stroke="#10b981" stroke-width="1.5"/>
-  <text x="174" y="172" text-anchor="middle" font-size="10" fill="#065f46" font-weight="600">TP region</text>
-  <text x="140" y="186" text-anchor="middle" font-size="11" fill="#64748b">Predicted probability p →</text>
-</svg>`,
-  },
-  {
-    icon:"🧪",title:"Preprocessing Leakage",
-    explanation:`A subtle but common mistake: computing feature statistics (mean, std) on the full dataset before splitting into train and validation. This leaks validation statistics into training.\n\nThe correct order is:\n1. Split the data into train and validation.\n2. Compute mean and std on train ONLY.\n3. Apply those same values to scale validation.\n\nIf you fit the scaler on all data, the model has already "seen" the validation distribution — performance estimates will be optimistic and unreliable.`,
-    formula:`WRONG:  scale(all_data) → split\nCORRECT: split → scale(train) → apply to val\n\nmeans = X_train.mean(axis=0)\nstds  = X_train.std(axis=0)\nX_val_scaled = (X_val - means) / stds`,
-    example:`standardize_features(X_train) is already written for you. It returns (X_train_scaled, means, stds). Use those means/stds to scale X_val manually: X_val_scaled = (X_val - means) / stds.`,
-    visual:`<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
-  <rect width="280" height="200" fill="#f8fafc" rx="8"/>
-  <!-- WRONG section -->
-  <text x="70" y="16" text-anchor="middle" font-size="13" fill="#ef4444" font-weight="700">✗ WRONG ORDER</text>
-  <rect x="8" y="22" width="54" height="24" rx="4" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5"/>
-  <text x="35" y="37" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">all data</text>
-  <line x1="62" y1="34" x2="74" y2="34" stroke="#94a3b8" stroke-width="2"/>
-  <polygon points="74,30 82,34 74,38" fill="#94a3b8"/>
-  <rect x="82" y="22" width="58" height="24" rx="4" fill="#fecaca" stroke="#ef4444" stroke-width="1.5"/>
-  <text x="111" y="37" text-anchor="middle" font-size="10" fill="#dc2626" font-weight="600">scale ALL</text>
-  <line x1="140" y1="34" x2="152" y2="34" stroke="#94a3b8" stroke-width="2"/>
-  <polygon points="152,30 160,34 152,38" fill="#94a3b8"/>
-  <rect x="160" y="22" width="44" height="24" rx="4" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5"/>
-  <text x="182" y="37" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">split</text>
+    icon:"✂️",title:"Stratified Split",
+    explanation:`A plain random split can accidentally put most positive patients in training and almost none in validation. With only 320 patients and a 40% positive rate, the imbalance in a random split can be substantial.\n\nStratified split fixes this by separately sampling from each class. It takes exactly val_fraction of class-0 patients and val_fraction of class-1 patients for the validation set. Both train and val end up with the same 40/60 ratio.\n\nThis ensures your validation AUC reflects real model quality, not a lucky (or unlucky) split.`,
+    formula:`For each class c:\n  indices_c = where(labels == c)\n  shuffle(indices_c, seed)\n  n_val = round(val_fraction × len(indices_c))\n  val ← first n_val shuffled indices`,
+    example:`You implement stratified_split(labels, 0.20, seed). Different seeds give different shuffles — that's why every student has a different seed and thus different train/val assignment for the same patients.`,
+    visual:`<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="180" fill="#f8fafc" rx="8"/>
+  <!-- Left: Random (bad) -->
+  <text x="75" y="18" text-anchor="middle" font-size="12" fill="#ef4444" font-weight="700">Random split ✗</text>
+  <text x="10" y="44" font-size="11" fill="#475569" font-weight="600">Train:</text>
+  <rect x="50" y="30" width="26" height="20" fill="#4f46e5" rx="3"/>
+  <rect x="76" y="30" width="74" height="20" fill="#e2e8f0" rx="3" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="63" y="44" text-anchor="middle" font-size="10" fill="white" font-weight="700">25%</text>
+  <text x="10" y="73" font-size="11" fill="#475569" font-weight="600">Val:</text>
+  <rect x="50" y="58" width="62" height="20" fill="#4f46e5" rx="3"/>
+  <rect x="112" y="58" width="38" height="20" fill="#e2e8f0" rx="3" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="81" y="72" text-anchor="middle" font-size="10" fill="white" font-weight="700">60%</text>
   
   <!-- Divider -->
-  <line x1="8" y1="62" x2="272" y2="62" stroke="#e2e8f0" stroke-width="1.5"/>
-  <!-- CORRECT section -->
-  <text x="70" y="80" text-anchor="middle" font-size="13" fill="#10b981" font-weight="700">✓ CORRECT ORDER</text>
-  <rect x="8" y="86" width="54" height="24" rx="4" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5"/>
-  <text x="35" y="101" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">all data</text>
-  <line x1="62" y1="98" x2="74" y2="98" stroke="#94a3b8" stroke-width="2"/>
-  <polygon points="74,94 82,98 74,102" fill="#94a3b8"/>
-  <rect x="82" y="86" width="44" height="24" rx="4" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5"/>
-  <text x="104" y="101" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">split</text>
-  <!-- Fork lines -->
-  <line x1="126" y1="98" x2="140" y2="88" stroke="#94a3b8" stroke-width="1.5"/>
-  <line x1="126" y1="98" x2="140" y2="112" stroke="#94a3b8" stroke-width="1.5"/>
-  <!-- Train branch -->
-  <rect x="140" y="78" width="68" height="22" rx="4" fill="#bbf7d0" stroke="#10b981" stroke-width="1.5"/>
-  <text x="174" y="92" text-anchor="middle" font-size="10" fill="#065f46" font-weight="600">scale TRAIN</text>
-  <line x1="208" y1="89" x2="220" y2="89" stroke="#94a3b8" stroke-width="1.5"/>
-  <polygon points="220,85 228,89 220,93" fill="#94a3b8"/>
-  <rect x="228" y="78" width="44" height="22" rx="4" fill="#bbf7d0" stroke="#10b981" stroke-width="1.5"/>
-  <text x="250" y="92" text-anchor="middle" font-size="10" fill="#065f46" font-weight="600">val</text>
-  <!-- Val branch -->
-  <rect x="140" y="104" width="68" height="22" rx="4" fill="#e0e7ff" stroke="#6366f1" stroke-width="1.5"/>
-  <text x="174" y="118" text-anchor="middle" font-size="10" fill="#3730a3" font-weight="600">val (raw)</text>
-  <!-- Checkmark -->
-  
-  <!-- Bottom note -->
-  <text x="140" y="152" text-anchor="middle" font-size="11" fill="#64748b">Fit scaler on TRAIN only.</text>
+  <line x1="153" y1="22" x2="153" y2="110" stroke="#e2e8f0" stroke-width="1.5"/>
+  <!-- Right: Stratified (correct) -->
+  <text x="226" y="18" text-anchor="middle" font-size="12" fill="#10b981" font-weight="700">Stratified ✓</text>
+  <text x="162" y="44" font-size="11" fill="#475569" font-weight="600">Train:</text>
+  <rect x="204" y="30" width="42" height="20" fill="#4f46e5" rx="3"/>
+  <rect x="246" y="30" width="42" height="20" fill="#e2e8f0" rx="3" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="225" y="44" text-anchor="middle" font-size="10" fill="white" font-weight="700">40%</text>
+  <text x="162" y="73" font-size="11" fill="#475569" font-weight="600">Val:</text>
+  <rect x="204" y="58" width="42" height="20" fill="#4f46e5" rx="3"/>
+  <rect x="246" y="58" width="42" height="20" fill="#e2e8f0" rx="3" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="225" y="72" text-anchor="middle" font-size="10" fill="white" font-weight="700">40%</text>
+  <!-- Legend -->
+  <rect x="52" y="115" width="16" height="12" fill="#4f46e5" rx="2"/>
+  <text x="72" y="126" font-size="11" fill="#475569" font-weight="600">pain = 1</text>
+  <rect x="148" y="115" width="16" height="12" fill="#e2e8f0" rx="2" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="168" y="126" font-size="11" fill="#475569" font-weight="600">pain = 0</text>
+  <text x="150" y="150" text-anchor="middle" font-size="11" fill="#64748b">Stratified = same class ratio in train &amp; val</text>
+  <text x="150" y="165" text-anchor="middle" font-size="11" fill="#10b981" font-weight="600">Both rows: 40% pain=1, 60% pain=0</text>
 </svg>`,
   },
   {
@@ -1055,7 +789,274 @@ const CONCEPTS = [
   <text x="150" y="177" text-anchor="middle" font-size="11" fill="#475569">Same model. Same hyperparameters. Different seed</text>
   <text x="150" y="192" text-anchor="middle" font-size="11" fill="#475569">→ different val patients → different metrics.</text>
 </svg>`,
+  },  {
+    icon:"🧪",title:"Preprocessing Leakage",
+    explanation:`A subtle but common mistake: computing feature statistics (mean, std) on the full dataset before splitting into train and validation. This leaks validation statistics into training.\n\nThe correct order is:\n1. Split the data into train and validation.\n2. Compute mean and std on train ONLY.\n3. Apply those same values to scale validation.\n\nIf you fit the scaler on all data, the model has already "seen" the validation distribution — performance estimates will be optimistic and unreliable.`,
+    formula:`WRONG:  scale(all_data) → split\nCORRECT: split → scale(train) → apply to val\n\nmeans = X_train.mean(axis=0)\nstds  = X_train.std(axis=0)\nX_val_scaled = (X_val - means) / stds`,
+    example:`standardize_features(X_train) is already written for you. It returns (X_train_scaled, means, stds). Use those means/stds to scale X_val manually: X_val_scaled = (X_val - means) / stds.`,
+    visual:`<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="280" height="200" fill="#f8fafc" rx="8"/>
+  <!-- WRONG section -->
+  <text x="70" y="16" text-anchor="middle" font-size="13" fill="#ef4444" font-weight="700">✗ WRONG ORDER</text>
+  <rect x="8" y="22" width="54" height="24" rx="4" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="35" y="37" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">all data</text>
+  <line x1="62" y1="34" x2="74" y2="34" stroke="#94a3b8" stroke-width="2"/>
+  <polygon points="74,30 82,34 74,38" fill="#94a3b8"/>
+  <rect x="82" y="22" width="58" height="24" rx="4" fill="#fecaca" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="111" y="37" text-anchor="middle" font-size="10" fill="#dc2626" font-weight="600">scale ALL</text>
+  <line x1="140" y1="34" x2="152" y2="34" stroke="#94a3b8" stroke-width="2"/>
+  <polygon points="152,30 160,34 152,38" fill="#94a3b8"/>
+  <rect x="160" y="22" width="44" height="24" rx="4" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="182" y="37" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">split</text>
+  
+  <!-- Divider -->
+  <line x1="8" y1="62" x2="272" y2="62" stroke="#e2e8f0" stroke-width="1.5"/>
+  <!-- CORRECT section -->
+  <text x="70" y="80" text-anchor="middle" font-size="13" fill="#10b981" font-weight="700">✓ CORRECT ORDER</text>
+  <rect x="8" y="86" width="54" height="24" rx="4" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="35" y="101" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">all data</text>
+  <line x1="62" y1="98" x2="74" y2="98" stroke="#94a3b8" stroke-width="2"/>
+  <polygon points="74,94 82,98 74,102" fill="#94a3b8"/>
+  <rect x="82" y="86" width="44" height="24" rx="4" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="104" y="101" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">split</text>
+  <!-- Fork lines -->
+  <line x1="126" y1="98" x2="140" y2="88" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="126" y1="98" x2="140" y2="112" stroke="#94a3b8" stroke-width="1.5"/>
+  <!-- Train branch -->
+  <rect x="140" y="78" width="68" height="22" rx="4" fill="#bbf7d0" stroke="#10b981" stroke-width="1.5"/>
+  <text x="174" y="92" text-anchor="middle" font-size="10" fill="#065f46" font-weight="600">scale TRAIN</text>
+  <line x1="208" y1="89" x2="220" y2="89" stroke="#94a3b8" stroke-width="1.5"/>
+  <polygon points="220,85 228,89 220,93" fill="#94a3b8"/>
+  <rect x="228" y="78" width="44" height="22" rx="4" fill="#bbf7d0" stroke="#10b981" stroke-width="1.5"/>
+  <text x="250" y="92" text-anchor="middle" font-size="10" fill="#065f46" font-weight="600">val</text>
+  <!-- Val branch -->
+  <rect x="140" y="104" width="68" height="22" rx="4" fill="#e0e7ff" stroke="#6366f1" stroke-width="1.5"/>
+  <text x="174" y="118" text-anchor="middle" font-size="10" fill="#3730a3" font-weight="600">val (raw)</text>
+  <!-- Checkmark -->
+  
+  <!-- Bottom note -->
+  <text x="140" y="152" text-anchor="middle" font-size="11" fill="#64748b">Fit scaler on TRAIN only.</text>
+</svg>`,
   },
+  {
+    icon:"⚖️",title:"Feature Standardization",
+    explanation:`Our features have wildly different scales: age ranges 0–90, healthcare expenses range 0–500,000. Without scaling, large-scale features can dominate the gradient, making the model pay much more attention to expenses than age.\n\nZ-score standardization subtracts the feature mean and divides by the feature standard deviation. This puts each feature on a comparable scale, with mean around 0 and standard deviation around 1. For roughly normal features, most values will fall near \[-3, 3\], although outliers can go beyond that range. This helps the optimizer update model weights more evenly across features.\n\nCritically: you compute mean and std on the training set ONLY, then apply those same values to the validation set. Otherwise you leak validation information into training.`,
+    formula:`z = (x − mean_train) / std_train\n\n(Apply same mean/std to val too)`,
+    example:`standardize_features(X_train) is provided for you. It returns (X_scaled, means, stds). You then compute X_val_scaled = (X_val - means) / stds.`,
+    visual:`<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="180" fill="#f8fafc" rx="8"/>
+  <text x="68" y="10" text-anchor="middle" font-size="12" fill="#334155" font-weight="700">Before</text>
+  <text x="225" y="10" text-anchor="middle" font-size="12" fill="#334155" font-weight="700">After</text>
+  <!-- Before bars: wildly different heights -->
+  <rect x="15" y="122" width="22" height="24" fill="#4f46e5" rx="3"/>
+  <text x="26" y="161" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">age</text>
+  <text x="26" y="116" text-anchor="middle" font-size="9" fill="#4f46e5" font-weight="700">0–90</text>
+  <rect x="48" y="28" width="22" height="118" fill="#f59e0b" rx="3"/>
+  <text x="59" y="161" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">cost</text>
+  <text x="59" y="22" text-anchor="middle" font-size="9" fill="#d97706" font-weight="700">0–500k</text>
+  <rect x="81" y="80" width="22" height="66" fill="#10b981" rx="3"/>
+  <text x="92" y="161" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">bmi</text>
+  <text x="92" y="74" text-anchor="middle" font-size="9" fill="#059669" font-weight="700">10–50</text>
+  <!-- Arrow -->
+  <line x1="122" y1="90" x2="148" y2="90" stroke="#94a3b8" stroke-width="2.5"/>
+  <polygon points="148,86 157,90 148,94" fill="#94a3b8"/>
+  <text x="139" y="81" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">z-score</text>
+  <!-- After: bounds lines -->
+  <line x1="165" y1="40" x2="290" y2="40" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="4"/>
+  <line x1="165" y1="150" x2="290" y2="150" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="4"/>
+  
+  <!-- After bars: equal height -->
+  <rect x="175" y="72" width="22" height="78" fill="#4f46e5" rx="3"/>
+  <text x="186" y="161" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">age</text>
+  <rect x="207" y="70" width="22" height="80" fill="#f59e0b" rx="3"/>
+  <text x="218" y="161" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">cost</text>
+  <rect x="239" y="71" width="22" height="79" fill="#10b981" rx="3"/>
+  <text x="250" y="161" text-anchor="middle" font-size="10" fill="#475569" font-weight="600">bmi</text>
+  <text x="278" y="103" text-anchor="middle" font-size="11" fill="#10b981" font-weight="700">same</text>
+  <text x="278" y="116" text-anchor="middle" font-size="11" fill="#10b981" font-weight="700">scale!</text>
+</svg>`,
+  },
+  {
+    icon:"📉",title:"Gradient Descent",
+    explanation:`The model learns by repeatedly asking: "which direction reduces the loss?" It computes the gradient (the slope of the loss with respect to each weight) and takes a small step downhill.\n\nThe learning rate controls step size. Too small: slow convergence. Too large: the model overshoots the minimum and loss oscillates or diverges.\n\nAfter enough steps, the loss plateaus — the model has converged to its best weights for this data.`,
+    formula:`weights -= lr × ∇_weights\nbias    -= lr × ∇_bias\n\n∇_weights = Xᵀ · (pred - y) / N\n∇_bias    = mean(pred - y)`,
+    example:`In this assignment you will implement train_logistic_regression() which runs this update loop for 'iterations' steps.`,
+    visual:`<svg viewBox="0 0 300 185" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="185" fill="#f8fafc" rx="8"/>
+  <line x1="48" y1="18" x2="48" y2="155" stroke="#cbd5e1" stroke-width="1.5"/>
+  <line x1="48" y1="155" x2="282" y2="155" stroke="#cbd5e1" stroke-width="1.5"/>
+  <line x1="48" y1="85" x2="282" y2="85" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4"/>
+  <path d="M55,28 C85,52 138,108 268,148" stroke="#4f46e5" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <circle cx="78" cy="42" r="6" fill="#f59e0b"/>
+  <circle cx="118" cy="72" r="6" fill="#f59e0b"/>
+  <circle cx="168" cy="100" r="6" fill="#f59e0b"/>
+  <circle cx="228" cy="130" r="8" fill="#10b981"/>
+  <line x1="78" y1="42" x2="118" y2="72" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5"/>
+  <line x1="118" y1="72" x2="168" y2="100" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5"/>
+  <line x1="168" y1="100" x2="228" y2="130" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5"/>
+  <text x="240" y="126" font-size="11" fill="#10b981" font-weight="700">converged</text>
+  <text x="26" y="90" font-size="11" fill="#64748b" text-anchor="middle" transform="rotate(-90,26,90)">Loss</text>
+  <text x="165" y="174" font-size="11" fill="#64748b" text-anchor="middle">Training Steps →</text>
+  <text x="84" y="36" font-size="11" fill="#f59e0b" font-weight="700">step 1</text>
+  <text x="42" y="25" font-size="10" fill="#94a3b8" text-anchor="end">high</text>
+  <text x="42" y="157" font-size="10" fill="#94a3b8" text-anchor="end">low</text>
+</svg>`,
+  },
+  {
+    icon:"📊",title:"Log Loss (BCE)",
+    explanation:`Binary cross-entropy (log loss) is what the model minimises during training. It measures how surprised the model is at the true labels.\n\nIf a patient truly has pain (y=1) and the model says p=0.99, the loss is tiny: -log(0.99) ≈ 0.01. If the model says p=0.01, the loss is enormous: -log(0.01) ≈ 4.6. Confident wrong predictions are punished severely.\n\nThis is why gradient descent on log loss pushes the model toward confident correct predictions, not just correct ones.`,
+    formula:`loss = −mean[y·log(p) + (1−y)·log(1−p)]\n\nFor y=1: term = −log(p)  → 0 as p→1\nFor y=0: term = −log(1−p) → 0 as p→0`,
+    example:`Your logistic_regression_gradients() implements the gradient of this loss. The gradient is surprisingly clean: error = (predictions − y), then grad_weights = Xᵀ·error/N.`,
+    visual:`<svg viewBox="0 0 280 195" xmlns="http://www.w3.org/2000/svg">
+  <rect width="280" height="195" fill="#f8fafc" rx="8"/>
+  <line x1="45" y1="18" x2="45" y2="158" stroke="#cbd5e1" stroke-width="1.5"/>
+  <line x1="45" y1="158" x2="262" y2="158" stroke="#cbd5e1" stroke-width="1.5"/>
+  <!-- -log(p) curve: high at left (p→0), low at right (p→1) -->
+  <path d="M55,152 C88,148 158,118 244,28" fill="none" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+  <!-- Asymptote indicator -->
+  <line x1="244" y1="28" x2="244" y2="158" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4" opacity="0.5"/>
+  <!-- Annotations right (loss → ∞) -->
+  <rect x="155" y="12" width="88" height="28" rx="4" fill="#fef2f2"/>
+  <text x="199" y="24" text-anchor="middle" font-size="10" fill="#ef4444" font-weight="700">p → 0, y = 1</text>
+  <text x="199" y="36" text-anchor="middle" font-size="10" fill="#ef4444" font-weight="700">loss → ∞</text>
+  <!-- Low loss annotation left (p≈1) -->
+  <circle cx="62" cy="152" r="7" fill="#10b981" stroke="white" stroke-width="2"/>
+  <text x="74" y="148" font-size="11" fill="#10b981" font-weight="700">p ≈ 1 → low loss</text>
+  <!-- Axis labels -->
+  <text x="154" y="182" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">Predicted prob. p  (y = 1)</text>
+  <text x="18" y="92" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600" transform="rotate(-90,18,92)">−log(p)</text>
+  <text x="38" y="25" font-size="10" fill="#94a3b8" text-anchor="end">∞</text>
+  <text x="38" y="160" font-size="10" fill="#94a3b8" text-anchor="end">0</text>
+  <text x="42" y="172" font-size="10" fill="#94a3b8">0</text>
+  <text x="252" y="172" font-size="10" fill="#94a3b8">1</text>
+</svg>`,
+  },
+  {
+    icon:"🌡️",title:"Decision Threshold",
+    explanation:`Logistic regression outputs a probability p ∈ (0, 1). To make a binary prediction (pain or not), you apply a threshold: if p ≥ threshold, predict pain=1.\n\nThe default threshold is 0.5, but it can be tuned. Lowering it makes the model more aggressive at flagging pain — higher recall but lower precision. Raising it makes the model more conservative — fewer false alarms but more missed cases.\n\nIn healthcare, the cost of a missed pain patient (FN) may far exceed the cost of a false alarm (FP), justifying a lower threshold.`,
+    formula:`y_pred = 1   if p ≥ threshold\ny_pred = 0   if p < threshold\n\nDefault: threshold = 0.50`,
+    example:`confusion_counts() takes binary predictions, so you must first apply a threshold: y_pred = (probs >= 0.5).astype(int). The AI-Sandbox uses threshold=0.5 throughout.`,
+    visual:`<svg viewBox="0 0 280 190" xmlns="http://www.w3.org/2000/svg">
+  <rect width="280" height="190" fill="#f8fafc" rx="8"/>
+  <!-- Pain=0 distribution (left bell) -->
+  <path d="M14,150 C28,148 58,58 90,150" fill="#fecaca" fill-opacity="0.85" stroke="#ef4444" stroke-width="2"/>
+  <!-- Pain=1 distribution (right bell) -->
+  <path d="M96,150 C128,58 158,148 188,150" fill="#bbf7d0" fill-opacity="0.85" stroke="#10b981" stroke-width="2"/>
+  <!-- Overlap shading -->
+  <path d="M96,150 C108,95 120,68 130,150" fill="#fde68a" fill-opacity="0.6"/>
+  <!-- Threshold line -->
+  <line x1="130" y1="25" x2="130" y2="154" stroke="#f59e0b" stroke-width="3" stroke-dasharray="6"/>
+  <!-- Threshold label box -->
+  <rect x="106" y="10" width="48" height="24" rx="5" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="130" y="19" text-anchor="middle" font-size="10" fill="#b45309" font-weight="700">threshold</text>
+  <text x="130" y="30" text-anchor="middle" font-size="12" fill="#d97706" font-weight="800">0.50</text>
+  <!-- Distribution labels -->
+  <text x="52" y="100" text-anchor="middle" font-size="13" fill="#991b1b" font-weight="700">Pain = 0</text>
+  <text x="142" y="100" text-anchor="middle" font-size="13" fill="#065f46" font-weight="700">Pain = 1</text>
+  <!-- Legend -->
+  <rect x="10" y="160" width="52" height="16" fill="#fecaca" rx="3" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="36" y="172" text-anchor="middle" font-size="10" fill="#991b1b" font-weight="600">FP region</text>
+  <rect x="148" y="160" width="52" height="16" fill="#bbf7d0" rx="3" stroke="#10b981" stroke-width="1.5"/>
+  <text x="174" y="172" text-anchor="middle" font-size="10" fill="#065f46" font-weight="600">TP region</text>
+  <text x="140" y="186" text-anchor="middle" font-size="11" fill="#64748b">Predicted probability p →</text>
+</svg>`,
+  },
+  {
+    icon:"🔢",title:"Confusion Matrix",
+    explanation:`A confusion matrix shows the four ways a binary classifier can be right or wrong. It is the foundation of every evaluation metric.\n\nTP (True Positive): model says pain=1, patient has pain. Correct.\nFP (False Positive): model says pain=1, patient is healthy. False alarm.\nTN (True Negative): model says pain=0, patient is healthy. Correct.\nFN (False Negative): model says pain=0, patient has pain. Dangerous miss.\n\nIn healthcare, FN is often the most costly error: missing a pain patient who needed intervention.`,
+    formula:`Accuracy  = (TP + TN) / total\nPrecision = TP / (TP + FP)\nRecall    = TP / (TP + FN)\nSpecificity = TN / (TN + FP)`,
+    example:`confusion_counts(y_true, y_pred) returns (TP, FP, TN, FN) as plain ints. Implementation: use numpy boolean operations like np.sum((y_pred==1) & (y_true==1)).`,
+    visual:`<svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg">
+  <rect width="280" height="220" fill="#f8fafc" rx="8"/>
+  <!-- Header -->
+  <text x="162" y="18" text-anchor="middle" font-size="12" fill="#334155" font-weight="700">Predicted</text>
+  <text x="108" y="30" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">Pain = 1</text>
+  <text x="218" y="30" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">Pain = 0</text>
+  <text x="20" y="97" text-anchor="middle" font-size="12" fill="#334155" font-weight="700" transform="rotate(-90,28,97)">Actual</text>
+  <text x="44" y="82" text-anchor="end" font-size="11" fill="#64748b" font-weight="600">Pain=1</text>
+  <text x="44" y="148" text-anchor="end" font-size="11" fill="#64748b" font-weight="600">Pain=0</text>
+  <!-- TP cell -->
+  <rect x="50" y="34" width="108" height="90" rx="6" fill="#bbf7d0" stroke="#86efac" stroke-width="1.5"/>
+  <text x="104" y="74" text-anchor="middle" font-size="20" font-weight="800" fill="#065f46">TP</text>
+  <text x="104" y="92" text-anchor="middle" font-size="11" fill="#047857" font-weight="600">True Positive</text>
+  <text x="104" y="108" text-anchor="middle" font-size="10" fill="#059669">pain caught ✓</text>
+  <!-- FN cell -->
+  <rect x="162" y="34" width="108" height="90" rx="6" fill="#fecaca" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="216" y="74" text-anchor="middle" font-size="20" font-weight="800" fill="#991b1b">FN</text>
+  <text x="216" y="92" text-anchor="middle" font-size="11" fill="#b91c1c" font-weight="600">False Negative</text>
+  <text x="216" y="108" text-anchor="middle" font-size="10" fill="#dc2626">pain missed ✗</text>
+  <!-- FP cell -->
+  <rect x="50" y="128" width="108" height="82" rx="6" fill="#fef3c7" stroke="#fcd34d" stroke-width="1.5"/>
+  <text x="104" y="163" text-anchor="middle" font-size="20" font-weight="800" fill="#92400e">FP</text>
+  <text x="104" y="181" text-anchor="middle" font-size="11" fill="#b45309" font-weight="600">False Positive</text>
+  <text x="104" y="197" text-anchor="middle" font-size="10" fill="#d97706">false alarm</text>
+  <!-- TN cell -->
+  <rect x="162" y="128" width="108" height="82" rx="6" fill="#bbf7d0" stroke="#86efac" stroke-width="1.5"/>
+  <text x="216" y="163" text-anchor="middle" font-size="20" font-weight="800" fill="#065f46">TN</text>
+  <text x="216" y="181" text-anchor="middle" font-size="11" fill="#047857" font-weight="600">True Negative</text>
+  <text x="216" y="197" text-anchor="middle" font-size="10" fill="#059669">healthy cleared ✓</text>
+</svg>`,
+  },
+  {
+    icon:"🎯",title:"Precision vs Recall",
+    explanation:`Precision: of all patients the model flags as pain, what fraction actually have pain? (Avoid false alarms)\nRecall: of all patients who actually have pain, what fraction did the model catch? (Avoid missed cases)\n\nLowering the decision threshold catches more pain patients (high recall) but also flags more healthy patients (low precision). There is an inherent trade-off.\n\nF1 score is the harmonic mean of precision and recall. It punishes extreme imbalances — a model with perfect recall and zero precision gets F1=0.`,
+    formula:`Precision = TP / (TP + FP)\nRecall    = TP / (TP + FN)\nF1        = 2 × P × R / (P + R)`,
+    example:`At threshold=0.5 on this dataset you should see precision ≈ 0.68 and recall ≈ 0.77 at the optimal hyperparameters. Lowering the threshold increases recall but decreases precision.`,
+    visual:`<svg viewBox="0 0 280 195" xmlns="http://www.w3.org/2000/svg">
+  <rect width="280" height="195" fill="#f8fafc" rx="8"/>
+  <line x1="45" y1="18" x2="45" y2="158" stroke="#cbd5e1" stroke-width="1.5"/>
+  <line x1="45" y1="158" x2="262" y2="158" stroke="#cbd5e1" stroke-width="1.5"/>
+  <!-- P-R curve -->
+  <path d="M52,30 C78,38 130,88 262,152" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round"/>
+  <!-- High threshold point -->
+  <circle cx="82" cy="42" r="7" fill="#4f46e5" stroke="white" stroke-width="2"/>
+  <text x="95" y="38" font-size="11" fill="#4f46e5" font-weight="700">high threshold</text>
+  <text x="95" y="52" font-size="10" fill="#64748b">P=0.90  R=0.30</text>
+  <!-- t=0.5 point -->
+  <circle cx="162" cy="92" r="7" fill="#f59e0b" stroke="white" stroke-width="2"/>
+  <text x="172" y="88" font-size="11" fill="#d97706" font-weight="700">t = 0.5</text>
+  <text x="172" y="102" font-size="10" fill="#64748b">P=0.68  R=0.77</text>
+  <!-- Low threshold point -->
+  <circle cx="232" cy="136" r="7" fill="#ef4444" stroke="white" stroke-width="2"/>
+  <text x="202" y="152" font-size="11" fill="#ef4444" font-weight="700">low threshold</text>
+  <!-- Axis labels -->
+  <text x="154" y="182" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">Recall →</text>
+  <text x="18" y="92" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600" transform="rotate(-90,18,92)">Precision</text>
+  <text x="37" y="22" font-size="10" fill="#64748b">1.0</text>
+  <text x="37" y="160" font-size="10" fill="#64748b">0</text>
+</svg>`,
+  },
+  {
+    icon:"📐",title:"AUC-ROC",
+    explanation:`AUC (Area Under the ROC Curve) measures the model's ability to rank positive patients above negative ones — regardless of any threshold.\n\nFormally: pick one pain patient and one non-pain patient at random. AUC = P(score_pain > score_no_pain). AUC=0.5 is random guessing; AUC=1.0 is perfect ranking.\n\nThe ROC curve sweeps the decision threshold from 0 to 1 and plots true positive rate vs false positive rate. AUC is the area under this curve. It is threshold-independent, making it the gold standard for comparing classifiers.`,
+    formula:`AUC = P(score_pos > score_neg)\n\n= Σ (sp>sn: 1, sp==sn: 0.5, sp<sn: 0)\n  ─────────────────────────────────\n       N_pos × N_neg`,
+    example:`You implement roc_auc(y_true, scores) using a double loop over positive/negative pairs. At this dataset size (~64 val patients) the double loop runs in milliseconds.`,
+    visual:`<svg viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="280" height="200" fill="#f8fafc" rx="8"/>
+  <line x1="45" y1="18" x2="45" y2="162" stroke="#cbd5e1" stroke-width="1.5"/>
+  <line x1="45" y1="162" x2="262" y2="162" stroke="#cbd5e1" stroke-width="1.5"/>
+  <!-- Random diagonal -->
+  <line x1="45" y1="162" x2="262" y2="18" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5"/>
+  <!-- ROC curve -->
+  <path d="M45,162 C68,145 94,94 132,54 S202,28 262,18" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round"/>
+  <!-- Shaded AUC area -->
+  <path d="M45,162 C68,145 94,94 132,54 S202,28 262,18 L262,162 Z" fill="#4f46e5" opacity="0.14"/>
+  <!-- AUC label -->
+  <text x="170" y="118" text-anchor="middle" font-size="15" fill="#4f46e5" font-weight="800">AUC</text>
+  <!-- Operating point at t=0.5 -->
+  <circle cx="118" cy="74" r="7" fill="#f59e0b" stroke="white" stroke-width="2"/>
+  <text x="130" y="68" font-size="10" fill="#d97706" font-weight="700">t = 0.5</text>
+  <!-- Random label -->
+  <text x="168" y="148" text-anchor="middle" font-size="10" fill="#94a3b8" font-style="italic">random</text>
+  <!-- Axis labels -->
+  <text x="154" y="186" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">False Positive Rate →</text>
+  <text x="16" y="96" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600" transform="rotate(-90,16,96)">True Positive Rate</text>
+  <text x="37" y="22" font-size="10" fill="#64748b">1.0</text>
+  <text x="37" y="165" font-size="10" fill="#64748b">0</text>
+  <text x="254" y="176" font-size="10" fill="#64748b">1.0</text>
+</svg>`,
+  },
+
 ];
 
 // ============================================================
@@ -1223,9 +1224,13 @@ function filterTable(){
       let val = p[col];
       if(col==='binary_label') val = lblBadge;
       else if(col==='is_female') val = val ? 'F' : 'M';
-      else if(col==='condition_text') val = `<span title="${(p[col]||'').replace(/"/g,"'")}">` + (p[col]||'').slice(0,45)+'…</span>';
+      else if(col==='condition_text'){
+        const full = p[col]||'';
+        val = `<span title="${full.replace(/"/g,"'")}">` + full.slice(0,110) + (full.length>110?'…':'') + '</span>';
+      }
       else if(typeof val==='number') val = Number.isInteger(val) ? val : val.toFixed(2);
-      return `<td class="${ci===0?'first-col':''}">${val??''}</td>`;
+      const colCls = (ci===0?'first-col ':'') + (col==='condition_text'?'cond-col':'');
+      return `<td class="${colCls}">${val??''}</td>`;
     }).join('') + '</tr>';
   }).join('');
   document.getElementById('tbl-body').innerHTML = rows ||
