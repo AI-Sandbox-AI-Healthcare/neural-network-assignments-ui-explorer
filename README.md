@@ -59,6 +59,8 @@ https://ai-sandbox-ai-healthcare.github.io/neural-network-assignments-ui-explore
 
 https://ai-sandbox-ai-healthcare.github.io/neural-network-assignments-ui-explorer/assignment-1/
 
+https://ai-sandbox-ai-healthcare.github.io/neural-network-assignments-ui-explorer/assignment-2/
+
 ---
 
 ## Future assignments
