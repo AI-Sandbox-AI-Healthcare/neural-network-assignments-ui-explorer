@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI-Sandbox -- Assignment 2</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:18px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:#1e293b;display:flex;min-height:100vh;font-size:14px}
+#sidebar{width:264px;min-width:264px;background:#e8dfd0;color:#2e1f10;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;border-right:1px solid #cfc0a4}
+#sidebar h1{font-size:.95rem;font-weight:800;padding:16px 16px 2px;color:#1e1208;letter-spacing:.03em}
+#sidebar .subtitle{font-size:.7rem;color:#7a6450;padding:0 16px 14px;border-bottom:1px solid #cfc0a4;font-weight:500}
+.sid-s{padding:12px 14px;border-bottom:1px solid #cfc0a4}
+.sid-lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:#6b5440;margin-bottom:5px;font-weight:700}
+.sid-s input{width:100%;padding:7px 9px;border-radius:6px;border:1px solid #c4ae8c;background:#e0d6c4;color:#2e1f10;font-size:.82rem}
+.sid-s input:focus{outline:none;border-color:#4f46e5}
+.sid-s button{width:100%;margin-top:7px;padding:7px;background:#4f46e5;color:white;border:none;border-radius:6px;cursor:pointer;font-size:.8rem;font-weight:700}
+.sid-s button:hover{background:#4338ca}
+#seed-disp{font-size:.74rem;color:#4f46e5;margin-top:6px;display:none;font-weight:600}
+.oracle-s{padding:12px 14px;border-bottom:1px solid #cfc0a4;display:none}
+.oracle-row{display:flex;justify-content:space-between;margin-bottom:6px}
+.oracle-row .nm{font-size:.8rem;color:#5c4430;font-weight:600}
+.oracle-row .vl{font-size:.88rem;font-weight:800;color:#4f46e5}
+.oracle-row .vl.hit{color:#10b981}
+.fc-prog-s{padding:12px 14px;border-bottom:1px solid #cfc0a4}
+.fc-prog-bar-wrap{background:#cfc0a4;border-radius:99px;height:6px;overflow:hidden;margin:6px 0 4px}
+.fc-prog-bar-fill{height:100%;background:#4f46e5;border-radius:99px;transition:width .4s}
+.fc-prog-txt{font-size:.72rem;color:#6b5440;font-weight:500}
+/* ---- Persistent top completion bar (like Assignment 1) ---- */
+#top-complete-bar{position:fixed;top:0;left:0;right:0;height:46px;z-index:500;display:none;align-items:center;justify-content:center;gap:10px;
+  background:linear-gradient(90deg,#053b2c,#065f46 45%,#0d9668 85%,#10b981);
+  color:#ecfdf5;font-weight:700;font-size:.86rem;box-shadow:0 6px 20px rgba(2,6,23,.3);border-bottom:1px solid rgba(236,253,245,.28)}
+#top-complete-bar .tcb-check{flex:none;width:22px;height:22px;border-radius:999px;background:#ecfdf5;color:#065f46;
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900}
+#top-complete-bar b{color:#fff}
+body.has-completion-bar{padding-top:46px}
+body.has-completion-bar #sidebar{height:calc(100vh - 46px)}
+/* ---- Pipeline Stages (Overview tab) ---- */
+.pipeline{display:flex;align-items:center;flex-wrap:wrap;gap:6px;padding:14px 18px;background:white;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.pipe-step{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:82px}
+.pipe-step .p-icon{font-size:1.9rem}
+.pipe-step .p-name{font-size:.68rem;font-weight:700;color:#334155;text-align:center}
+.pipe-step .p-sub{font-size:.6rem;color:#94a3b8;text-align:center}
+.pipe-arrow{font-size:1.1rem;color:#94a3b8;padding:0 2px}
+/* ---- Ratio explainer (Dataset Explorer tab) ---- */
+.ratio-demo{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:820px){.ratio-demo{grid-template-columns:1fr}}
+.ratio-step{border:1px solid #e2e8f0;border-radius:8px;padding:10px;background:#fbfbfd}
+.ratio-tag{font-size:.74rem;font-weight:800;color:#4f46e5;margin-bottom:6px}
+.ratio-bars{display:flex;align-items:flex-end;gap:12px;height:90px;justify-content:center}
+.ratio-bars .rb{width:26px;border-radius:5px 5px 0 0;position:relative}
+.ratio-bars .rb::after{content:attr(data-lbl);position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:.58rem;color:#64748b}
+.ratio-bars .rb-pos{background:linear-gradient(180deg,#6366f1,#4f46e5)}
+.ratio-bars .rb-neg{background:linear-gradient(180deg,#cbd5e1,#94a3b8)}
+.ratio-note{font-size:.7rem;color:#334155;line-height:1.45;margin-top:10px}
+.ratio-note b{color:#b45309}
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.tab-nav{background:white;border-bottom:2px solid #e2e8f0;display:flex;padding:0 20px;position:sticky;top:0;z-index:20;gap:4px;flex-wrap:wrap}
+.tab-btn{padding:12px 16px;font-size:.82rem;font-weight:600;color:#64748b;cursor:pointer;border:none;background:none;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap}
+.tab-btn.active{color:#4f46e5;border-bottom-color:#4f46e5}
+.tab-btn:hover:not(.active){color:#334155}
+.tab-pane{display:none;padding:22px;overflow-y:auto;flex:1}
+.tab-pane.active{display:block}
+.card{background:white;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:18px;margin-bottom:16px}
+.card-title{font-size:.9rem;font-weight:700;color:#1e293b;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.badge{font-size:.67rem;background:#ede9fe;color:#4f46e5;padding:2px 7px;border-radius:99px;font-weight:700}
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+@media(max-width:900px){.info-grid{grid-template-columns:1fr}}
+.info-card{background:white;border-radius:10px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.08);border-top:3px solid #4f46e5}
+.info-card.g{border-top-color:#10b981}.info-card.a{border-top-color:#f59e0b}
+.info-card h3{font-size:.82rem;font-weight:700;color:#1e293b;margin-bottom:8px}
+.info-card p{font-size:.78rem;color:#475569;line-height:1.55}
+.concepts-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.prog-info{font-size:.8rem;color:#64748b}
+.complete-banner{background:#ecfdf5;border:1.5px solid #10b981;border-radius:8px;padding:10px 14px;font-size:.82rem;color:#065f46;display:none;margin-bottom:12px;font-weight:600}
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.concept-card{background:white;border-radius:10px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.08);cursor:pointer;transition:transform .15s,box-shadow .15s;border:2px solid transparent;position:relative;text-align:center}
+.concept-card:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,.12)}
+.concept-card.done{border-color:#10b981}
+.concept-card.done::after{content:'✓';position:absolute;top:6px;right:8px;color:#10b981;font-size:.85rem;font-weight:800}
+.concept-card .c-icon{font-size:1.8rem;margin-bottom:7px}
+.concept-card .c-title{font-size:.75rem;font-weight:700;color:#1e293b;line-height:1.3}
+.concept-card .c-tap{font-size:.63rem;color:#94a3b8;margin-top:5px}
+#modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;align-items:center;justify-content:center}
+#modal-overlay.open{display:flex}
+#modal-box{background:white;border-radius:14px;width:min(780px,95vw);max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal-header{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid #e2e8f0;position:sticky;top:0;background:white;z-index:1}
+.modal-header h2{font-size:1.05rem;font-weight:800;color:#1e293b}
+.modal-close{background:none;border:none;font-size:1.3rem;cursor:pointer;color:#94a3b8;padding:4px 8px;border-radius:6px}
+.modal-close:hover{background:#f1f5f9;color:#1e293b}
+.modal-body{padding:22px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media(max-width:640px){.modal-body{grid-template-columns:1fr}}
+.modal-left .section-lbl{font-size:.65rem;text-transform:uppercase;letter-spacing:.09em;color:#94a3b8;font-weight:700;margin:14px 0 6px}
+.modal-left .section-lbl:first-child{margin-top:0}
+.modal-left p{font-size:.82rem;color:#334155;line-height:1.6;margin-bottom:6px}
+.modal-left .formula{font-family:monospace;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px 12px;font-size:.8rem;color:#4f46e5;margin:8px 0;white-space:pre-line}
+.modal-left .example-box{background:#fef9e7;border-left:3px solid #f59e0b;border-radius:0 7px 7px 0;padding:10px 12px;font-size:.78rem;color:#78350f;line-height:1.5;margin-top:10px}
+.modal-right svg{width:100%;height:auto}
+.modal-right .caption{font-size:.72rem;color:#64748b;text-align:center;margin-top:6px}
+.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.stat-chip{background:white;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.07);padding:12px 16px;text-align:center;min-width:100px}
+.stat-chip .n{font-size:1.4rem;font-weight:800;color:#4f46e5}
+.stat-chip .l{font-size:.68rem;color:#64748b;margin-top:2px}
+.stat-chip.green .n{color:#10b981}.stat-chip.amber .n{color:#f59e0b}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:820px){.two-col{grid-template-columns:1fr}}
+.balance-chart{display:flex;align-items:flex-end;justify-content:center;gap:48px;height:190px;margin:16px 0 4px;padding:0 16px}
+.bal-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;flex:1;max-width:130px}
+.bal-bar-v{width:100%;border-radius:8px 8px 0 0;display:flex;align-items:flex-start;justify-content:center;padding-top:8px;transition:height .5s ease;min-height:26px}
+.bal-bar-v.bp{background:linear-gradient(180deg,#6366f1,#4f46e5)}
+.bal-bar-v.bn{background:linear-gradient(180deg,#cbd5e1,#94a3b8)}
+.bal-val{color:#fff;font-weight:800;font-size:1rem}
+.bal-col-lbl{margin-top:12px;font-size:.85rem;color:#334155;font-weight:700;text-align:center;line-height:1.5}
+.bal-col-lbl span{color:#64748b;font-weight:500;font-size:.78rem}
+.tbl-controls{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.tbl-controls input{flex:1;min-width:180px;padding:6px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:.78rem}
+.tbl-wrap{overflow:auto;border:1px solid #e2e8f0;border-radius:8px;max-height:380px}
+table{border-collapse:collapse;font-size:.75rem;white-space:nowrap}
+thead th{background:#f8fafc;padding:7px 10px;text-align:left;font-weight:600;color:#64748b;position:sticky;top:0;border-bottom:1px solid #e2e8f0;z-index:1}
+tbody tr:nth-child(even){background:#fafafa}
+tbody td{padding:5px 10px;border-bottom:1px solid #f1f5f9;max-width:260px;overflow:hidden;text-overflow:ellipsis}
+.lbl-pos{background:#ede9fe;color:#4f46e5;padding:1px 7px;border-radius:99px;font-size:.68rem;font-weight:700}
+.lbl-neg{background:#f1f5f9;color:#94a3b8;padding:1px 7px;border-radius:99px;font-size:.68rem}
+.reminder-banner{background:#fef9e7;border:1.5px solid #f59e0b;border-radius:8px;padding:10px 14px;font-size:.8rem;color:#92400e;margin-bottom:16px;display:none}
+.train-layout{display:grid;grid-template-columns:300px 1fr;gap:16px;align-items:stretch}
+.train-layout>.card{margin-bottom:0}
+.train-layout>div{display:flex;flex-direction:column;gap:16px}
+.train-layout>div>.card{flex:1;margin-bottom:0}
+@media(max-width:760px){.train-layout{grid-template-columns:1fr}.train-layout>div{display:block}.train-layout>div>.card{margin-bottom:16px}}
+.train-layout>.card,.train-layout>div>.card{display:flex;flex-direction:column}
+.train-layout .card-title{margin-bottom:14px}
+#slider-wrap,#metric-bars{flex:1;display:flex;flex-direction:column;justify-content:space-evenly;gap:8px}
+.slider-row{margin-bottom:0}
+.slider-row label{display:flex;justify-content:space-between;font-size:.8rem;font-weight:600;color:#334155;margin-bottom:4px}
+.slider-row label span{color:#4f46e5;font-weight:700}
+input[type=range]{width:100%;accent-color:#4f46e5;cursor:pointer}
+.slider-hints{display:flex;justify-content:space-between;font-size:.63rem;color:#94a3b8;margin-top:1px}
+.m-row{margin-bottom:0}
+.m-row .ml{display:flex;justify-content:space-between;font-size:.75rem;margin-bottom:3px}
+.m-row .ml .mn{color:#64748b;font-weight:600}
+.m-row .ml .mv .cur{color:#1e293b;font-weight:700}
+.m-row .ml .mv .tgt{color:#94a3b8;margin-left:8px}
+.prog-track{height:7px;background:#f1f5f9;border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;background:#4f46e5;border-radius:99px;transition:width .4s}
+.prog-fill.good{background:#10b981}.prog-fill.warn{background:#f59e0b}
+.hint-box{background:#fef9e7;border-left:3px solid #f59e0b;border-radius:0 7px 7px 0;padding:9px 12px;font-size:.78rem;color:#92400e;margin:16px 0;line-height:1.5;display:none}
+.optimal-banner{background:#ecfdf5;border:2px solid #10b981;border-radius:10px;padding:16px;text-align:center;display:none;margin:16px 0}
+.optimal-banner h3{color:#065f46;font-size:.95rem;margin-bottom:4px}
+.optimal-banner p{color:#047857;font-size:.78rem}
+.optimal-banner button{margin-top:8px;background:#10b981;color:#fff;border:none;padding:7px 14px;border-radius:8px;font-weight:700;cursor:pointer}
+.vis-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:16px 0}
+@media(max-width:860px){.vis-grid{grid-template-columns:1fr}}
+.vis-card{background:white;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:14px}
+.vis-title{font-size:.8rem;font-weight:700;color:#334155;margin-bottom:8px}
+.vis-caption{font-size:.71rem;color:#64748b;margin-top:6px;line-height:1.45;min-height:26px}
+.fi-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:.7rem}
+.fi-bar-row .fi-name{width:150px;text-align:right;color:#475569;flex-shrink:0}
+.fi-bar-track{flex:1;background:#f1f5f9;border-radius:4px;height:14px;overflow:hidden}
+.fi-bar-fill{height:100%;background:#4f46e5;border-radius:4px}
+.fi-bar-row .fi-val{width:44px;color:#94a3b8}
+.cm-cells{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.cm-cell{border-radius:7px;padding:8px 5px;text-align:center}
+.cm-cell .cnt{font-size:1.4rem;font-weight:800}
+.cm-cell .lbl{font-size:.62rem;margin-top:3px;opacity:.9}
+.cm-tp,.cm-tn{background:#dcfce7;color:#166534}
+.cm-fn{background:#fee2e2;color:#991b1b}.cm-fp{background:#fef3c7;color:#92400e}
+.log-wrap{max-height:220px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:7px;font-size:.72rem}
+.log-wrap table{width:100%}
+.opt-y{color:#10b981;font-weight:700}.opt-n{color:#94a3b8}
+.arena-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:760px){.arena-grid{grid-template-columns:1fr}}
+.arena-panel{background:white;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:14px;border-top:3px solid #4f46e5}
+.arena-panel.b{border-top-color:#f59e0b}
+.arena-panel h4{font-size:.82rem;margin-bottom:10px}
+.arena-ctl{display:flex;justify-content:space-between;align-items:center;font-size:.76rem;margin-bottom:7px;gap:8px}
+.arena-ctl select,.arena-ctl button.tgl{padding:4px 8px;border-radius:6px;border:1px solid #cbd5e1;background:#f8fafc;font-size:.74rem;cursor:pointer}
+.arena-ctl button.tgl.on{background:#4f46e5;color:#fff;border-color:#4f46e5}
+.arena-prog{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:12px 16px;margin-bottom:14px}
+#arena-prog-txt{font-size:.82rem;font-weight:700;color:#334155;display:block;margin-bottom:8px}
+.arena-prog-track{height:8px;background:#f1f5f9;border-radius:99px;overflow:hidden}
+.arena-prog-fill{height:100%;background:#4f46e5;border-radius:99px;transition:width .4s}
+.arena-prog-fill.full{background:#10b981}
+.preset-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+@media(max-width:560px){.preset-grid{grid-template-columns:repeat(2,1fr)}}
+.preset-btn{display:flex;flex-direction:column;align-items:center;text-align:center;gap:1px;padding:8px 8px;border:2px solid #c4b5fd;background:#f5f3ff;color:#4338ca;border-radius:9px;cursor:pointer;transition:transform .12s,box-shadow .12s}
+.preset-btn:hover{transform:translateY(-2px);box-shadow:0 5px 14px rgba(79,70,229,.18)}
+.preset-btn.done{background:#ecfdf5;border-color:#10b981;color:#065f46}
+.preset-btn .pb-icon{font-size:1.05rem}
+.preset-btn .pb-title{font-size:.8rem;font-weight:800;line-height:1.15}
+.preset-btn.done .pb-title::after{content:' ✓';color:#10b981}
+.preset-btn .pb-sub{font-size:.6rem;font-weight:500;opacity:.8;line-height:1.2}
+#arena-panels{display:none;margin-bottom:14px}
+#arena-panels.locked{opacity:.92}
+#arena-panels-note{font-size:.74rem;color:#94a3b8;font-weight:600;margin-bottom:8px}
+#tryown{display:none;margin-top:14px}
+#tryown .card-title{font-size:1rem}
+.arena-lock-note{font-size:.76rem;color:#64748b;margin:2px 0 10px}
+.arena-run{background:#4f46e5;color:#fff;border:none;padding:6px 14px;border-radius:7px;font-weight:700;cursor:pointer;font-size:.78rem}
+.arena-run:disabled{background:#cbd5e1;cursor:not-allowed}
+#arena-best{margin-left:10px;font-size:.8rem;font-weight:700;color:#94a3b8}
+#arena-best.hit{color:#059669}
+.arena-caption{background:#faf5ff;border-left:3px solid #a78bfa;border-radius:0 6px 6px 0;padding:10px 12px;font-size:.8rem;color:#5b21b6;line-height:1.55;margin-top:12px;display:none}
+.arena-auc-bars{display:flex;gap:20px;justify-content:center;align-items:flex-end;height:120px;margin-top:12px}
+.arena-auc-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.arena-auc-bar{width:60px;border-radius:6px 6px 0 0;transition:height .5s}
+.arena-auc-bar.a{background:#4f46e5}.arena-auc-bar.b{background:#f59e0b}
+.legend{font-size:.7rem;color:#64748b;margin-top:6px;text-align:center}
+</style>
+</head>
+<body>
+<div id="top-complete-bar" role="status">
+  <div class="tcb-check">&#10003;</div>
+  <div>Exploration complete &mdash; <b>optimal parameters</b> ready to copy below</div>
+</div>
+<aside id="sidebar">
+  <h1>ISTA 457 / INFO 557 · Neural Networks</h1>
+  <p class="subtitle">Assignment 2 &mdash; Tame the Tabular Baselines</p>
+  <div class="sid-s">
+    <div class="sid-lbl">Your Student ID</div>
+    <input type="text" id="sid-input" placeholder="e.g. jdoe" />
+    <button onclick="setStudentId()">Set ID &rarr;</button>
+    <div id="seed-disp"></div>
+  </div>
+  <div class="oracle-s" id="oracle-s">
+    <div class="sid-lbl">Your Target (Oracle)</div>
+    <div class="oracle-row"><span class="nm">F1 Score</span><span class="vl" id="o-f1">--</span></div>
+    <div class="oracle-row"><span class="nm">Accuracy</span><span class="vl" id="o-acc">--</span></div>
+    <div class="oracle-row"><span class="nm">AUC</span><span class="vl" id="o-auc">--</span></div>
+  </div>
+  <div class="fc-prog-s">
+    <div class="sid-lbl">Concept Progress</div>
+    <div class="fc-prog-bar-wrap"><div class="fc-prog-bar-fill" id="fc-fill" style="width:0%"></div></div>
+    <div class="fc-prog-txt" id="fc-txt">0 / 10 concepts explored</div>
+  </div>
+</aside>
+
+<div id="main">
+  <nav class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab(0)">Overview &amp; Concepts</button>
+    <button class="tab-btn" onclick="switchTab(1)">Dataset Explorer</button>
+    <button class="tab-btn" onclick="switchTab(2)">Baseline Trainer</button>
+    <button class="tab-btn" onclick="switchTab(3)">Architecture Arena</button>
+  </nav>
+
+  <!-- TAB 1 -->
+  <div class="tab-pane active" id="tab-0">
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>🏥 The Problem</h3>
+        <p>Identify patients with chronic pain from their electronic health records (EHR).
+        Chronic pain affects roughly 20% of adults but is often under-detected until
+        crisis &mdash; early identification enables proactive care and cuts long-term costs.
+        <br><br>
+        It's still a binary classification task (pain = 1 or pain = 0). What's new: address
+        the class-imbalance issue, and the model is more than one linear line &mdash; a
+        Random Forest first, then a small feed-forward network you design.</p>
+      </div>
+      <div class="info-card g">
+        <h3>📊 The Dataset: Same 320 Patients</h3>
+        <p>The exact Assignment 1 dataset, label, and personal seed. 19 usable numeric
+        features per patient. Your NetID hashes (SHA-256 &rarr; 100&ndash;999) to the
+        same train/validation split the pipeline and autograder use.</p>
+      </div>
+      <div class="info-card a">
+        <h3>🔬 The Task: Building on Assignment 1</h3>
+        <p>Assignment 1 built one logistic-regression line from scratch. Assignment 2 adds
+        three things: measure the class imbalance and correct it (class weights or
+        oversampling); train a Random Forest and read which clinical signals it relies on;
+        then design a small feed-forward network, testing depth vs. width, ReLU vs. tanh,
+        dropout, and early stopping one change at a time.</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Pipeline Stages</div>
+      <div class="pipeline">
+        <div class="pipe-step"><div class="p-icon">📝</div><div class="p-name">Raw Text</div><div class="p-sub">condition_text</div></div>
+        <div class="pipe-arrow">&#8594;</div>
+        <div class="pipe-step"><div class="p-icon">🔍</div><div class="p-name">Keyword Label</div><div class="p-sub">load_patient_features</div></div>
+        <div class="pipe-arrow">&#8594;</div>
+        <div class="pipe-step"><div class="p-icon">✂️</div><div class="p-name">Stratified Split</div><div class="p-sub">split_train_val</div></div>
+        <div class="pipe-arrow">&#8594;</div>
+        <div class="pipe-step"><div class="p-icon">📈</div><div class="p-name">Oversample</div><div class="p-sub">random_oversample</div></div>
+        <div class="pipe-arrow">&#8594;</div>
+        <div class="pipe-step"><div class="p-icon">🌲</div><div class="p-name">Random Forest</div><div class="p-sub">train_random_forest</div></div>
+        <div class="pipe-arrow">&#8594;</div>
+        <div class="pipe-step"><div class="p-icon">🎯</div><div class="p-name">Evaluate</div><div class="p-sub">F1 · AUC</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="concepts-header">
+        <div class="card-title" style="margin-bottom:0">Key Concepts <span class="badge" id="concepts-badge">0/10</span></div>
+        <div class="prog-info">Open all 10 to unlock the completion banner.</div>
+      </div>
+      <div class="complete-banner" id="complete-banner">All 10 concepts explored! Move on to the Baseline Trainer.</div>
+      <div class="concept-grid" id="concept-grid"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2 -->
+  <div class="tab-pane" id="tab-1">
+    <div class="stats-row">
+      <div class="stat-chip"><div class="n" id="s-total">--</div><div class="l">Patients</div></div>
+      <div class="stat-chip green"><div class="n" id="s-pos">--</div><div class="l">Pain=1</div></div>
+      <div class="stat-chip amber"><div class="n" id="s-neg">--</div><div class="l">Pain=0</div></div>
+      <div class="stat-chip"><div class="n" id="s-rate">--</div><div class="l">Positive rate</div></div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Class Balance &mdash; Rebalance Preview</div>
+        <div class="balance-chart">
+          <div class="bal-col">
+            <div class="bal-bar-v bp" id="bar-pos" style="height:40%"><span class="bal-val" id="bal-pos-val">40%</span></div>
+            <div class="bal-col-lbl">Pain=1<br><span id="bal-pos-n">--</span> rows</div>
+          </div>
+          <div class="bal-col">
+            <div class="bal-bar-v bn" id="bar-neg" style="height:60%"><span class="bal-val" id="bal-neg-val">60%</span></div>
+            <div class="bal-col-lbl">Pain=0<br><span id="bal-neg-n">--</span> rows</div>
+          </div>
+        </div>
+        <div class="slider-row" style="margin-top:12px">
+          <label>Target minority : majority ratio <span id="rb-val">0.00</span></label>
+          <input type="range" id="rb-sl" min="0" max="1" step="0.05" value="0"
+            oninput="document.getElementById('rb-val').textContent=parseFloat(this.value).toFixed(2);drawRebalance()">
+          <div class="slider-hints"><span>raw</span><span>0.5</span><span>fully balanced</span></div>
+        </div>
+        <p style="font-size:.76rem;color:#64748b;line-height:1.5">Oversampling duplicates
+        minority rows with replacement. At ratio 1.0 both classes have the same row count &mdash;
+        that is what <code>random_oversample()</code> produces.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Target minority : majority ratio &mdash; what it does</div>
+        <p style="font-size:.76rem;color:#64748b;margin-bottom:10px">
+        <code>random_oversample()</code> copies chronic-pain (minority) rows until they
+        reach this fraction of the majority-class count. <strong>Only the training set
+        changes</strong> &mdash; the validation set keeps the real ~40/60 mix so scores
+        stay honest. Slide the control on the left; here is what three settings look like:</p>
+        <div class="ratio-demo">
+          <div class="ratio-step">
+            <div class="ratio-tag">ratio 0.00</div>
+            <div class="ratio-bars">
+              <div class="rb rb-pos" style="height:34%" data-lbl="pain=1"></div>
+              <div class="rb rb-neg" style="height:85%" data-lbl="pain=0"></div>
+            </div>
+            <div class="ratio-note"><b>&rarr; raw data.</b> The model barely sees pain
+            cases and defaults to &ldquo;no pain&rdquo;: high accuracy, poor recall &amp; F1.</div>
+          </div>
+          <div class="ratio-step">
+            <div class="ratio-tag">ratio 0.50</div>
+            <div class="ratio-bars">
+              <div class="rb rb-pos" style="height:56%" data-lbl="pain=1"></div>
+              <div class="rb rb-neg" style="height:85%" data-lbl="pain=0"></div>
+            </div>
+            <div class="ratio-note"><b>&rarr; half-balanced.</b> Minority padded to 50% of
+            the majority. Recall climbs; a few more false alarms appear.</div>
+          </div>
+          <div class="ratio-step">
+            <div class="ratio-tag">ratio 1.00</div>
+            <div class="ratio-bars">
+              <div class="rb rb-pos" style="height:85%" data-lbl="pain=1"></div>
+              <div class="rb rb-neg" style="height:85%" data-lbl="pain=0"></div>
+            </div>
+            <div class="ratio-note"><b>&rarr; fully balanced.</b> Equal counts &mdash; the
+            best F1 for most seeds, and exactly what <code>random_oversample()</code> produces.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Patient Table <span id="tbl-badge" class="badge"></span></div>
+      <div class="tbl-controls"><input type="text" id="tbl-search" placeholder="Search condition text..." oninput="filterTable()"></div>
+      <div class="tbl-wrap"><table id="patient-table"><thead id="tbl-head"></thead><tbody id="tbl-body"></tbody></table></div>
+    </div>
+  </div>
+
+  <!-- TAB 3 -->
+  <div class="tab-pane" id="tab-2">
+    <div class="reminder-banner" id="reminder-banner">📚 You haven't opened all 10 concept cards yet. <span id="reminder-count"></span></div>
+    <div class="card" style="background:#ede9fe;border:1px solid #c4b5fd">
+      <div style="font-size:.8rem;color:#3730a3;line-height:1.6"><strong>How to use this tab:</strong>
+      Set your Student ID in the sidebar, then tune the <strong>Random Forest baseline</strong>
+      &mdash; <code>n_estimators</code>, <code>max_depth</code>, and how much to oversample
+      the minority class. The feature-importance chart, ROC curve and confusion matrix update
+      live; make all three bars green to earn the &ldquo;Optimal Performance Reached!&rdquo;
+      banner, then copy your parameters.</div>
+    </div>
+    <div class="train-layout">
+      <div class="card">
+        <div class="card-title">🌲 Random Forest &mdash; Parameters</div>
+        <div id="slider-wrap">
+        <div class="slider-row">
+          <label>n_estimators <span id="ne-val">100</span></label>
+          <input type="range" id="ne-sl" min="10" max="300" step="10" value="100"
+            oninput="document.getElementById('ne-val').textContent=this.value;scheduleEval()">
+          <div class="slider-hints"><span>10</span><span>150</span><span>300</span></div>
+        </div>
+        <div class="slider-row">
+          <label>max_depth <span id="md-val">6</span></label>
+          <input type="range" id="md-sl" min="2" max="20" step="1" value="6"
+            oninput="document.getElementById('md-val').textContent=this.value;scheduleEval()">
+          <div class="slider-hints"><span>2</span><span>11</span><span>20</span></div>
+        </div>
+        <div class="slider-row">
+          <label>oversample_ratio <span id="or-val">0.00</span></label>
+          <input type="range" id="or-sl" min="0" max="1" step="0.05" value="0"
+            oninput="document.getElementById('or-val').textContent=parseFloat(this.value).toFixed(2);scheduleEval()">
+          <div class="slider-hints"><span>0.0</span><span>0.5</span><span>1.0</span></div>
+        </div>
+        </div>
+      </div>
+      <div>
+        <div class="card" id="not-set-msg"><p style="color:#94a3b8;text-align:center;padding:20px 0">Enter your Student ID in the sidebar to begin.</p></div>
+        <div class="card" id="metrics-panel" style="display:none">
+          <div class="card-title">Current vs Target &mdash; Random Forest vs your oracle</div>
+          <div id="metric-bars"></div>
+        </div>
+      </div>
+    </div>
+    <div class="hint-box" id="hint-box"></div>
+    <div class="optimal-banner" id="opt-banner">
+      <h3>Optimal Performance Reached!</h3>
+      <p id="opt-msg">Your Random Forest matches the oracle for your seed.</p>
+      <p id="reveal-params" style="font-size:.73rem;margin-top:4px"></p>
+      <button onclick="copyParams()">Copy params for get_sandbox_params()</button>
+    </div>
+    <div class="vis-grid" id="vis-panels" style="display:none">
+      <div class="vis-card">
+        <div class="vis-title">🌲 Feature Importance (top 10)</div>
+        <div id="fi-chart"></div>
+      </div>
+      <div class="vis-card">
+        <div class="vis-title">📐 ROC Curve</div>
+        <canvas id="roc-canvas" width="300" height="170" style="width:100%;height:auto"></canvas>
+        <div class="vis-caption" id="roc-caption"></div>
+      </div>
+      <div class="vis-card">
+        <div class="vis-title">🔢 Confusion Matrix</div>
+        <div class="cm-cells">
+          <div class="cm-cell cm-tp" id="cm-tp"><div class="cnt">--</div><div class="lbl">TP pain caught</div></div>
+          <div class="cm-cell cm-fn" id="cm-fn"><div class="cnt">--</div><div class="lbl">FN pain missed</div></div>
+          <div class="cm-cell cm-fp" id="cm-fp"><div class="cnt">--</div><div class="lbl">FP false alarm</div></div>
+          <div class="cm-cell cm-tn" id="cm-tn"><div class="cnt">--</div><div class="lbl">TN healthy cleared</div></div>
+        </div>
+        <div class="vis-caption" id="cm-caption"></div>
+      </div>
+    </div>
+    <div class="card" id="log-card" style="display:none">
+      <div class="card-title">Interaction Log <span class="badge" id="log-cnt">0</span></div>
+      <div class="log-wrap"><table>
+        <thead><tr><th>#</th><th>n_est</th><th>max_depth</th><th>ratio</th><th>AUC</th><th>F1</th><th>Acc%</th><th>Optimal</th></tr></thead>
+        <tbody id="log-body"></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <!-- TAB 4 -->
+  <div class="tab-pane" id="tab-3">
+    <div class="card" style="background:#ede9fe;border:1px solid #c4b5fd">
+      <div style="font-size:.8rem;color:#3730a3;line-height:1.6"><strong>Architecture Arena.</strong>
+      <strong>How this unfolds:</strong> (1)&nbsp;click each of the four comparison buttons
+      below &mdash; every one trains <em>Model&nbsp;A</em> vs <em>Model&nbsp;B</em> that
+      differ by exactly ONE setting, so you can see how depth/width, activation, dropout
+      and early stopping each move the validation <strong>F1</strong>. These are the same
+      four pairs you will build in part 2 - code. Each click reveals the
+      Model&nbsp;A / Model&nbsp;B panels (locked) and draws the loss curves at the bottom.
+      (2)&nbsp;Once all four are done the panels unlock &mdash; mix any options and hit
+      <strong>Train Both</strong>.
+      <strong>Your goal there: land a combination with validation F1&nbsp;&ge;&nbsp;0.787.</strong>
+      Finishing all four comparisons <em>and</em> one custom run completes this tab.</div>
+    </div>
+
+    <div class="arena-prog">
+      <span id="arena-prog-txt">0 / 5 &mdash; run the four comparisons first</span>
+      <div class="arena-prog-track"><div class="arena-prog-fill" id="arena-prog-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="preset-grid" id="preset-row">
+      <button class="preset-btn" data-preset="deepwide" onclick="runPreset('deepwide')">
+        <span class="pb-icon">📐</span><span class="pb-title">Deep vs Wide</span>
+        <span class="pb-sub">[32,32,32,16] &nbsp;vs&nbsp; [96]</span></button>
+      <button class="preset-btn" data-preset="relutanh" onclick="runPreset('relutanh')">
+        <span class="pb-icon">〰️</span><span class="pb-title">ReLU vs Tanh</span>
+        <span class="pb-sub">same net, different hidden activation</span></button>
+      <button class="preset-btn" data-preset="dropout" onclick="runPreset('dropout')">
+        <span class="pb-icon">🎲</span><span class="pb-title">Dropout vs None</span>
+        <span class="pb-sub">Dropout 0.3 after each hidden layer</span></button>
+      <button class="preset-btn" data-preset="earlystop" onclick="runPreset('earlystop')">
+        <span class="pb-icon">🛑</span><span class="pb-title">Early Stopping vs None</span>
+        <span class="pb-sub">patience 5 on validation loss</span></button>
+    </div>
+
+    <div id="arena-panels" class="locked">
+      <div id="arena-panels-note">🔒 Options locked &mdash; run all four comparisons to unlock editing.</div>
+      <div class="arena-grid">
+        <div class="arena-panel" id="panel-a">
+          <h4>Model A</h4>
+          <div class="arena-ctl"><span>Architecture</span>
+            <select id="a-preset"><option value="deep">Deep [32,32,32,16]</option><option value="wide">Wide [96]</option></select></div>
+          <div class="arena-ctl"><span>Activation</span>
+            <select id="a-act"><option value="relu">ReLU</option><option value="tanh">tanh</option></select></div>
+          <div class="arena-ctl"><span>Dropout 0.3</span><button class="tgl" id="a-drop" onclick="tgl(this)">off</button></div>
+          <div class="arena-ctl"><span>Early stopping</span><button class="tgl" id="a-early" onclick="tgl(this)">off</button></div>
+        </div>
+        <div class="arena-panel b" id="panel-b">
+          <h4>Model B</h4>
+          <div class="arena-ctl"><span>Architecture</span>
+            <select id="b-preset"><option value="wide">Wide [96]</option><option value="deep">Deep [32,32,32,16]</option></select></div>
+          <div class="arena-ctl"><span>Activation</span>
+            <select id="b-act"><option value="relu">ReLU</option><option value="tanh">tanh</option></select></div>
+          <div class="arena-ctl"><span>Dropout 0.3</span><button class="tgl" id="b-drop" onclick="tgl(this)">off</button></div>
+          <div class="arena-ctl"><span>Early stopping</span><button class="tgl" id="b-early" onclick="tgl(this)">off</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tryown">
+      <div class="card-title">🔧 Try your own pair
+        <span id="arena-best">Best F1 so far: --</span></div>
+      <p class="arena-lock-note">Pick any combination on Model A and Model B above, then
+      <strong>Train Both</strong>. Goal: reach validation <strong>F1 ≥ 0.787</strong>.</p>
+      <button class="arena-run" id="arena-run-btn" onclick="trainCustom()">Train Both</button>
+    </div>
+
+    <div class="card" id="arena-result" style="display:none;margin-top:16px">
+      <div class="vis-title">Training loss &mdash; solid = train, dashed = validation</div>
+      <canvas id="arena-canvas" width="640" height="250" style="width:100%;height:auto"></canvas>
+      <div class="legend">Model A = indigo &nbsp;·&nbsp; Model B = amber</div>
+      <div class="arena-auc-bars" id="arena-auc" style="display:none">
+        <div class="arena-auc-col"><div class="arena-auc-bar a" id="auc-a" style="height:0"></div><div style="font-size:.7rem;margin-top:4px">A · F1 <span id="auc-a-v"></span></div></div>
+        <div class="arena-auc-col"><div class="arena-auc-bar b" id="auc-b" style="height:0"></div><div style="font-size:.7rem;margin-top:4px">B · F1 <span id="auc-b-v"></span></div></div>
+      </div>
+      <div class="arena-caption" id="arena-caption"></div>
+    </div>
+  </div>
+</div>
+
+<div id="modal-overlay" onclick="closeModal()">
+  <div id="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-header"><h2 id="modal-title"></h2>
+      <button class="modal-close" onclick="closeModal()">&#10005;</button></div>
+    <div class="modal-body"><div class="modal-left" id="modal-left"></div><div class="modal-right" id="modal-right"></div></div>
+  </div>
+</div>
+
+<script src="static_api_shim.js"></script>
+<script>
+const state={studentId:null,seed:null,oracle:null,current:null,isOptimal:false,
+  evalTimer:null,explored:new Set(),log:[],presetsRun:new Set(),
+  arenaUnlocked:false,customRuns:0,arenaBestF1:0};
+const ARENA_GOAL_F1=0.787;
+
+const FEATURE_COLS=new Set(["age","is_female","number_of_unique_meds","number_of_encounters",
+"number_of_procedures","unique_procedures","pain_severity","body_height","body_weight",
+"body_mass_index","systolic_blood_pressure","diastolic_blood_pressure","heart_rate",
+"respiratory_rate","qaly","daly","qols","healthcare_expenses","healthcare_coverage"]);
+
+function svg(inner){return '<svg viewBox="0 0 280 170" xmlns="http://www.w3.org/2000/svg"><rect width="280" height="170" fill="#f8fafc" rx="8"/>'+inner+'</svg>';}
+const CONCEPTS=[
+ {icon:"⚖️",title:"Class Imbalance",
+  explanation:`When one class is much rarer than the other, a model can score high accuracy by ignoring the rare class entirely.\n\nHere ~40% of patients are chronic-pain-positive. "Always predict negative" already looks ~60% accurate but catches zero real cases — useless in a clinic.`,
+  formula:`positive_rate = n_positive / n_total\nmajority-only accuracy = n_majority / n_total`,
+  example:`In Assignment 2 you quantify this in compute_class_weights() and fix it with random_oversample().`,
+  visual:svg('<rect x="40" y="40" width="60" height="100" fill="#94a3b8" rx="4"/><rect x="150" y="90" width="60" height="50" fill="#4f46e5" rx="4"/><text x="70" y="155" text-anchor="middle" font-size="10" fill="#475569">Pain=0 (60%)</text><text x="180" y="155" text-anchor="middle" font-size="10" fill="#475569">Pain=1 (40%)</text>')},
+ {icon:"🏋️",title:"Class Weighting",
+  explanation:`Instead of changing the data, you can change the loss: multiply each example's error by a class weight so mistakes on the rare class cost more.\n\nInverse-frequency weighting sets weight_c = n_samples / (n_classes · count_c). The rare class gets a weight above 1, the common class below 1.`,
+  formula:`weight_c = n_samples / (n_classes * count_c)`,
+  example:`compute_class_weights(labels) returns {0: w0, 1: w1} as plain-int keys.`,
+  visual:svg('<text x="140" y="50" text-anchor="middle" font-size="12" fill="#4f46e5">w0 = N / (2 · count0)</text><text x="140" y="90" text-anchor="middle" font-size="12" fill="#4f46e5">w1 = N / (2 · count1)</text><text x="140" y="130" text-anchor="middle" font-size="11" fill="#475569">rare class → larger weight</text>')},
+ {icon:"📈",title:"Oversampling vs. SMOTE",
+  explanation:`Random oversampling makes exact copies of existing minority rows (sampling with replacement) until the classes are balanced. Simple and exact — but the model sees the very same points many times.\n\nSMOTE instead invents new minority points, each placed somewhere on the straight line between two real minority neighbours. It avoids exact duplicates but can blur the class boundary. Assignment 2 uses plain random oversampling.`,
+  formula:`oversample: copy row i  ->  row i, row i, row i ...\nSMOTE:      new = a + t·(b - a),  0 < t < 1  (a, b real minority rows)`,
+  example:`random_oversample(features, labels, seed) appends duplicated rows after the originals — no new points, no shuffle.`,
+  visual:svg('<line x1="140" y1="12" x2="140" y2="158" stroke="#e2e8f0"/>'
+    +'<text x="70" y="24" text-anchor="middle" font-size="10" font-weight="700" fill="#4f46e5">Random oversampling</text>'
+    +'<text x="210" y="24" text-anchor="middle" font-size="10" font-weight="700" fill="#f59e0b">SMOTE</text>'
+    +'<circle cx="58" cy="98" r="9" fill="#4f46e5"/><circle cx="63" cy="92" r="9" fill="none" stroke="#4f46e5" stroke-dasharray="3"/><circle cx="68" cy="86" r="9" fill="none" stroke="#4f46e5" stroke-dasharray="3"/>'
+    +'<text x="70" y="132" text-anchor="middle" font-size="9" fill="#475569">same row, copied ×N</text>'
+    +'<text x="70" y="145" text-anchor="middle" font-size="9" fill="#475569">(no new points)</text>'
+    +'<circle cx="172" cy="66" r="8" fill="#f59e0b"/><circle cx="246" cy="120" r="8" fill="#f59e0b"/>'
+    +'<line x1="172" y1="66" x2="246" y2="120" stroke="#f59e0b" stroke-dasharray="4"/>'
+    +'<circle cx="196" cy="83" r="6" fill="none" stroke="#f59e0b" stroke-width="2"/><circle cx="221" cy="101" r="6" fill="none" stroke="#f59e0b" stroke-width="2"/>'
+    +'<text x="210" y="140" text-anchor="middle" font-size="9" fill="#475569">new points on the line</text>'
+    +'<text x="210" y="153" text-anchor="middle" font-size="9" fill="#475569">between real neighbours</text>')},
+ {icon:"🌲",title:"Bagging & Random Forests",
+  explanation:`A Random Forest trains many decision trees, each on a bootstrap sample of the rows and a random subset of features at every split, then averages their probabilities.\n\nAveraging decorrelated trees lowers variance: the forest generalises far better than any single deep tree, with almost no tuning.`,
+  formula:`p(x) = (1/T) Σ_t  tree_t(x)`,
+  example:`train_random_forest() wraps sklearn's RandomForestClassifier(n_estimators, max_depth, random_state=seed).`,
+  visual:svg('<path d="M60 130 L60 90 M60 90 L45 70 M60 90 L75 70" stroke="#10b981" stroke-width="3" fill="none"/><path d="M140 130 L140 90 M140 90 L125 70 M140 90 L155 70" stroke="#10b981" stroke-width="3" fill="none"/><path d="M220 130 L220 90 M220 90 L205 70 M220 90 L235 70" stroke="#10b981" stroke-width="3" fill="none"/><text x="140" y="155" text-anchor="middle" font-size="10" fill="#475569">average of many trees</text>')},
+ {icon:"🔎",title:"Feature Importance",
+  explanation:`After fitting, a Random Forest reports how much each feature reduced impurity across all splits, normalised to sum to 1.\n\nRanking these turns a black box into an explanation: which clinical signals actually drive the chronic-pain prediction.`,
+  formula:`importances = model.feature_importances_   (sums to 1)`,
+  example:`get_feature_importances(model, names) zips scores with names and sorts descending.`,
+  visual:svg('<rect x="20" y="30" width="180" height="14" fill="#4f46e5" rx="3"/><rect x="20" y="60" width="120" height="14" fill="#6366f1" rx="3"/><rect x="20" y="90" width="70" height="14" fill="#94a3b8" rx="3"/><rect x="20" y="120" width="40" height="14" fill="#cbd5e1" rx="3"/>')},
+ {icon:"📐",title:"Depth vs. Width Trade-off",
+  explanation:`A deep-and-narrow network ([32,32,32,16]) composes many simple transformations; a wide-and-shallow one ([96]) learns many features in parallel.\n\nWith the same parameter budget, deep nets often generalise better on structured data but are slower to train and more sensitive to initialisation. Wide nets converge fast but overfit small datasets sooner.`,
+  formula:`deep:  [32, 32, 32, 16]\nwide:  [96]`,
+  example:`build_feedforward_model(input_dim, hidden_units, ...) — pass either list.`,
+  visual:svg('<circle cx="60" cy="40" r="6" fill="#4f46e5"/><circle cx="60" cy="70" r="6" fill="#4f46e5"/><circle cx="60" cy="100" r="6" fill="#4f46e5"/><circle cx="60" cy="130" r="6" fill="#4f46e5"/><text x="60" y="20" text-anchor="middle" font-size="9" fill="#475569">wide</text><circle cx="150" cy="55" r="6" fill="#f59e0b"/><circle cx="150" cy="95" r="6" fill="#f59e0b"/><circle cx="200" cy="55" r="6" fill="#f59e0b"/><circle cx="200" cy="95" r="6" fill="#f59e0b"/><text x="175" y="20" text-anchor="middle" font-size="9" fill="#475569">deep</text>')},
+ {icon:"〰️",title:"ReLU vs. Tanh",
+  explanation:`ReLU (max(0,x)) is cheap, non-saturating for positive inputs, and the default for hidden layers — but "dead" units can occur.\n\nTanh squashes to (-1,1) and is zero-centred, which can help shallow nets, but it saturates for large |x|, slowing deep training (vanishing gradients).`,
+  formula:`relu(x) = max(0, x)\ntanh(x) = (e^x - e^-x)/(e^x + e^-x)`,
+  example:`Pass activation="relu" or "tanh" to build_feedforward_model().`,
+  visual:svg('<path d="M20 120 L140 120 L220 40" stroke="#4f46e5" stroke-width="3" fill="none"/><path d="M20 130 C90 130 90 50 260 50" stroke="#f59e0b" stroke-width="3" fill="none"/><text x="230" y="35" font-size="10" fill="#4f46e5">ReLU</text><text x="210" y="65" font-size="10" fill="#f59e0b">tanh</text>')},
+ {icon:"🎲",title:"Dropout as Regularization",
+  explanation:`Dropout randomly zeroes a fraction of unit activations each training step, so the network can't rely on any single unit and must learn redundant, robust features.\n\nAt test time dropout is off and activations are scaled — the effect is an implicit ensemble. It mostly helps wide / over-parameterised nets.`,
+  formula:`train: a = a · mask / (1 - p),   mask ~ Bernoulli(1-p)\ntest:  a = a`,
+  example:`If dropout_rate > 0, add nn.Dropout after every hidden linear+activation block (not the output).`,
+  visual:svg('<circle cx="60" cy="50" r="7" fill="#4f46e5"/><circle cx="60" cy="90" r="7" fill="#cbd5e1"/><circle cx="60" cy="130" r="7" fill="#4f46e5"/><circle cx="150" cy="50" r="7" fill="#cbd5e1"/><circle cx="150" cy="90" r="7" fill="#4f46e5"/><circle cx="150" cy="130" r="7" fill="#4f46e5"/><text x="140" y="20" text-anchor="middle" font-size="10" fill="#475569">grey = dropped this step</text>')},
+ {icon:"🛑",title:"Early Stopping",
+  explanation:`Track validation loss each epoch. When it stops improving for "patience" epochs, halt training and restore the best weights.\n\nThis prevents the model from continuing to fit noise once generalisation has peaked — a free regulariser that also saves time.`,
+  formula:`stop when val_loss has not improved for `+`patience`+` epochs (here patience = 5)`,
+  example:`The Arena's early-stopping toggle monitors validation loss with patience 5.`,
+  visual:svg('<path d="M20 130 C80 40 120 40 140 60 C170 90 210 120 260 140" stroke="#f59e0b" stroke-width="3" fill="none"/><path d="M20 130 C80 60 200 40 260 30" stroke="#4f46e5" stroke-width="3" fill="none"/><line x1="140" y1="20" x2="140" y2="150" stroke="#ef4444" stroke-dasharray="4"/><text x="145" y="30" font-size="10" fill="#ef4444">stop</text>')},
+ {icon:"🎯",title:"Accuracy vs. AUC Under Imbalance",
+  explanation:`Accuracy counts correct labels at a fixed 0.5 threshold, so a majority-only model looks good under imbalance.\n\nAUC measures ranking quality across every threshold: the probability a random positive scores above a random negative. F1 balances precision and recall on the positive class. Both stay honest when classes are skewed.`,
+  formula:`AUC = P(score_pos > score_neg)\nF1 = 2·P·R / (P + R)`,
+  example:`metrics_utils.roc_auc / precision_recall_f1 — imported unchanged from Assignment 1.`,
+  visual:svg('<line x1="30" y1="140" x2="30" y2="20" stroke="#cbd5e1"/><line x1="30" y1="140" x2="250" y2="140" stroke="#cbd5e1"/><path d="M30 140 C60 60 120 30 250 20" stroke="#4f46e5" stroke-width="3" fill="none"/><line x1="30" y1="140" x2="250" y2="20" stroke="#cbd5e1" stroke-dasharray="4"/><text x="150" y="90" font-size="12" fill="#4f46e5">AUC</text>')},
+];
+
+// ---- tabs ----
+function switchTab(i){
+  document.querySelectorAll('.tab-btn').forEach((b,j)=>b.classList.toggle('active',i===j));
+  document.querySelectorAll('.tab-pane').forEach((p,j)=>p.classList.toggle('active',i===j));
+  if(i===2) updateReminder();
+}
+
+// ---- concepts ----
+function renderConcepts(){
+  document.getElementById('concept-grid').innerHTML=CONCEPTS.map((c,i)=>
+    `<div class="concept-card" id="cc-${i}" onclick="openConcept(${i})">
+      <div class="c-icon">${c.icon}</div><div class="c-title">${c.title}</div>
+      <div class="c-tap">Click to explore</div></div>`).join('');
+}
+function openConcept(i){
+  const c=CONCEPTS[i];
+  document.getElementById('modal-title').textContent=c.icon+'  '+c.title;
+  document.getElementById('modal-left').innerHTML=
+    `<div class="section-lbl">What it is</div><p>${c.explanation.replace(/\n/g,'</p><p>')}</p>`+
+    `<div class="section-lbl">The Math</div><div class="formula">${c.formula}</div>`+
+    `<div class="section-lbl">In Assignment 2</div><div class="example-box">${c.example}</div>`;
+  document.getElementById('modal-right').innerHTML=c.visual+`<div class="caption">Figure: ${c.title}</div>`;
+  document.getElementById('modal-overlay').classList.add('open');
+  if(!state.explored.has(i)){
+    state.explored.add(i);
+    document.getElementById('cc-'+i).classList.add('done');
+    updateConceptProgress();
+  }
+}
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+function updateConceptProgress(){
+  const n=state.explored.size,t=CONCEPTS.length;
+  document.getElementById('fc-fill').style.width=(n/t*100)+'%';
+  document.getElementById('fc-txt').textContent=`${n} / ${t} concepts explored`;
+  document.getElementById('concepts-badge').textContent=`${n}/${t}`;
+  if(n>=t) document.getElementById('complete-banner').style.display='block';
+  updateCompletion();
+}
+function updateReminder(){
+  const n=state.explored.size,b=document.getElementById('reminder-banner');
+  if(n<CONCEPTS.length){b.style.display='block';
+    document.getElementById('reminder-count').textContent=`(${n}/${CONCEPTS.length})`;}
+  else b.style.display='none';
+}
+
+// ---- dataset explorer ----
+let allPatients=[],allColumns=[],rawPos=0,rawNeg=0;
+async function loadData(){
+  const d=await (await fetch('/api/data')).json();
+  allPatients=d.patients; allColumns=d.columns;
+  rawPos=d.n_positive; rawNeg=d.n_negative;
+  document.getElementById('s-total').textContent=d.n_total;
+  document.getElementById('s-pos').textContent=d.n_positive;
+  document.getElementById('s-neg').textContent=d.n_negative;
+  document.getElementById('s-rate').textContent=(d.positive_rate*100).toFixed(0)+'%';
+  document.getElementById('bal-pos-n').textContent=d.n_positive;
+  document.getElementById('bal-neg-n').textContent=d.n_negative;
+  drawRebalance();
+  renderHeader(); filterTable();
+}
+function drawRebalance(){
+  const r=parseFloat(document.getElementById('rb-sl').value);
+  const maj=Math.max(rawPos,rawNeg), minRaw=Math.min(rawPos,rawNeg);
+  const minNew=Math.max(minRaw,Math.round(r*maj));
+  const posNew=rawPos<rawNeg?minNew:rawPos, negNew=rawNeg<rawPos?minNew:rawNeg;
+  const tot=posNew+negNew;
+  const pp=Math.round(posNew/tot*100), np=100-pp;
+  document.getElementById('bar-pos').style.height=Math.max(8,pp)+'%';
+  document.getElementById('bar-neg').style.height=Math.max(8,np)+'%';
+  document.getElementById('bal-pos-val').textContent=pp+'%';
+  document.getElementById('bal-neg-val').textContent=np+'%';
+  document.getElementById('bal-pos-n').textContent=posNew;
+  document.getElementById('bal-neg-n').textContent=negNew;
+}
+function renderHeader(){
+  const ordered=['binary_label','id',...allColumns.filter(c=>c!=='binary_label'&&c!=='id')];
+  document.getElementById('tbl-head').innerHTML='<tr>'+ordered.map(c=>
+    `<th style="${FEATURE_COLS.has(c)?'color:#4f46e5':''}">${c}</th>`).join('')+'</tr>';
+  window._cols=ordered;
+}
+function filterTable(){
+  const q=document.getElementById('tbl-search').value.toLowerCase();
+  const rows=allPatients.filter(p=>!q||(p.condition_text||'').toLowerCase().includes(q));
+  document.getElementById('tbl-badge').textContent=rows.length+' shown';
+  document.getElementById('tbl-body').innerHTML=rows.map(p=>'<tr>'+window._cols.map(c=>{
+    let v=p[c];
+    if(c==='binary_label') v=parseInt(v)===1?'<span class="lbl-pos">pain=1</span>':'<span class="lbl-neg">pain=0</span>';
+    else if(c==='is_female') v=v?'F':'M';
+    else if(typeof v==='number') v=Number.isInteger(v)?v:v.toFixed(2);
+    return `<td>${v??''}</td>`;
+  }).join('')+'</tr>').join('')||'<tr><td colspan="30" style="text-align:center;color:#94a3b8;padding:16px">No matches</td></tr>';
+}
+// ---- sidebar / assign ----
+async function setStudentId(){
+  const id=document.getElementById('sid-input').value.trim();
+  if(!id){alert('Enter your student ID.');return;}
+  const d=await (await fetch('/api/assign',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({student_id:id})})).json();
+  if(d.error){alert('Error: '+d.error);return;}
+  state.studentId=id; state.seed=d.seed; state.oracle=d.oracle;
+  const o=d.oracle;
+  document.getElementById('seed-disp').style.display='block';
+  document.getElementById('seed-disp').textContent=`Seed ${d.seed} · train ${o.train_n} / val ${o.val_n}`;
+  document.getElementById('oracle-s').style.display='block';
+  document.getElementById('o-f1').textContent='>= '+o.f1.toFixed(3);
+  document.getElementById('o-acc').textContent='>= '+(o.accuracy*100).toFixed(1)+'%';
+  document.getElementById('o-auc').textContent='>= '+o.auc.toFixed(3);
+  document.getElementById('not-set-msg').style.display='none';
+  document.getElementById('metrics-panel').style.display='flex';
+  runEval();
+}
+
+// ---- baseline trainer ----
+function scheduleEval(){clearTimeout(state.evalTimer);state.evalTimer=setTimeout(runEval,300);}
+async function runEval(){
+  if(!state.seed)return;
+  const ne=+document.getElementById('ne-sl').value;
+  const md=+document.getElementById('md-sl').value;
+  const or=parseFloat(document.getElementById('or-sl').value);
+  const d=await (await fetch('/api/evaluate',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({seed:state.seed,n_estimators:ne,max_depth:md,oversample_ratio:or,val_fraction:0.20})})).json();
+  if(d.error){console.error(d.error);return;}
+  state.current=d; state.isOptimal=d.is_optimal;
+  document.getElementById('vis-panels').style.display='grid';
+  updateMetricBars(d,state.oracle);
+  drawFeatureImportance(d.feature_importances);
+  drawROC(d.roc_curve,d.auc);
+  updateCM(d.tp,d.fp,d.tn,d.fn,d.accuracy);
+  logRow(ne,md,or,d);
+  updateCompletion();
+}
+function updateMetricBars(m,o){
+  const bars=[
+    {n:'F1',c:m.f1,t:o.f1},
+    {n:'Accuracy',c:m.accuracy,t:o.accuracy,pct:true},
+    {n:'AUC',c:m.auc,t:o.auc},
+  ];
+  document.getElementById('metric-bars').innerHTML=bars.map(b=>{
+    const ratio=Math.min(b.c/b.t,1.05), pct=Math.round(ratio*100);
+    // 0.995 = server GREEN constant; a bar is green iff the server calls it optimal.
+    const cls=ratio>=0.995?'good':(ratio>=0.9?'warn':'');
+    const cs=b.pct?(b.c*100).toFixed(1)+'%':b.c.toFixed(3);
+    const ts=b.pct?(b.t*100).toFixed(1)+'%':b.t.toFixed(3);
+    return `<div class="m-row"><div class="ml"><span class="mn">${b.n}</span>
+      <span class="mv"><span class="cur">${cs}</span><span class="tgt">target &ge; ${ts}</span></span></div>
+      <div class="prog-track"><div class="prog-fill ${cls}" style="width:${Math.min(pct,100)}%"></div></div></div>`;
+  }).join('');
+  const hb=document.getElementById('hint-box');
+  if(m.hint&&!m.is_optimal){hb.style.display='block';hb.textContent='💡 '+m.hint;}else hb.style.display='none';
+  const ob=document.getElementById('opt-banner');
+  ob.style.display=m.is_optimal?'block':'none';
+  if(m.is_optimal){
+    document.getElementById('reveal-params').textContent=
+      `n_estimators=${document.getElementById('ne-sl').value}, max_depth=${document.getElementById('md-sl').value}, oversample_ratio=${parseFloat(document.getElementById('or-sl').value).toFixed(2)}`;
+  }
+  ['o-f1','o-acc','o-auc'].forEach(id=>document.getElementById(id).classList.toggle('hit',m.is_optimal));
+}
+function drawFeatureImportance(fi){
+  const top=fi.slice(0,10), max=Math.max(...top.map(x=>x[1]))||1;
+  document.getElementById('fi-chart').innerHTML=top.map(([n,v])=>
+    `<div class="fi-bar-row"><div class="fi-name">${n}</div>
+     <div class="fi-bar-track"><div class="fi-bar-fill" style="width:${v/max*100}%"></div></div>
+     <div class="fi-val">${v.toFixed(3)}</div></div>`).join('');
+}
+function drawROC(pts,auc){
+  const cv=document.getElementById('roc-canvas'),x=cv.getContext('2d'),W=cv.width,H=cv.height,P=28;
+  x.clearRect(0,0,W,H);
+  const tx=f=>P+(W-2*P)*f, ty=t=>H-P-(H-2*P)*t;
+  x.strokeStyle='#e2e8f0';x.beginPath();x.moveTo(P,P);x.lineTo(P,H-P);x.lineTo(W-P,H-P);x.stroke();
+  x.strokeStyle='#cbd5e1';x.setLineDash([4,3]);x.beginPath();x.moveTo(P,H-P);x.lineTo(W-P,P);x.stroke();x.setLineDash([]);
+  if(pts&&pts.length){
+    x.fillStyle='rgba(79,70,229,.12)';x.beginPath();x.moveTo(P,H-P);
+    pts.forEach(([f,t])=>x.lineTo(tx(f),ty(t)));x.lineTo(W-P,H-P);x.closePath();x.fill();
+    x.strokeStyle='#4f46e5';x.lineWidth=2;x.beginPath();
+    pts.forEach(([f,t],i)=>i?x.lineTo(tx(f),ty(t)):x.moveTo(tx(f),ty(t)));x.stroke();
+  }
+  x.fillStyle='#4f46e5';x.font='bold 11px sans-serif';x.fillText('AUC = '+auc.toFixed(3),P+6,P+14);
+  const o=state.oracle;
+  document.getElementById('roc-caption').textContent=
+    o? (auc>=o.auc-0.005?'✓ at or above oracle target ('+o.auc.toFixed(3)+')':'gap '+(o.auc-auc).toFixed(3)+' to oracle ('+o.auc.toFixed(3)+')') : '';
+}
+function updateCM(tp,fp,tn,fn,acc){
+  document.getElementById('cm-tp').innerHTML=`<div class="cnt">${tp}</div><div class="lbl">TP pain caught</div>`;
+  document.getElementById('cm-fn').innerHTML=`<div class="cnt">${fn}</div><div class="lbl">FN pain missed</div>`;
+  document.getElementById('cm-fp').innerHTML=`<div class="cnt">${fp}</div><div class="lbl">FP false alarm</div>`;
+  document.getElementById('cm-tn').innerHTML=`<div class="cnt">${tn}</div><div class="lbl">TN healthy cleared</div>`;
+  const miss=Math.round(fn/Math.max(tp+fn,1)*100);
+  document.getElementById('cm-caption').textContent=`Accuracy ${(acc*100).toFixed(1)}% · miss rate ${miss}% of real pain patients`;
+}
+function logRow(ne,md,or,d){
+  state.log.push({ne,md,or,auc:d.auc,f1:d.f1,acc:d.accuracy,opt:d.is_optimal});
+  document.getElementById('log-card').style.display='block';
+  document.getElementById('log-cnt').textContent=state.log.length;
+  document.getElementById('log-body').innerHTML=[...state.log].reverse().map((e,i)=>
+    `<tr><td>${state.log.length-i}</td><td>${e.ne}</td><td>${e.md}</td><td>${e.or.toFixed(2)}</td>
+     <td>${e.auc.toFixed(3)}</td><td>${e.f1.toFixed(3)}</td><td>${(e.acc*100).toFixed(1)}</td>
+     <td>${e.opt?'<span class="opt-y">OPTIMAL</span>':'<span class="opt-n">--</span>'}</td></tr>`).join('');
+}
+function copyParams(){
+  const sid=state.studentId||'your_id';
+  const s=`return {\n  "student_id": "${sid}",\n  "n_estimators": ${document.getElementById('ne-sl').value},\n  "max_depth": ${document.getElementById('md-sl').value},\n  "oversample_ratio": ${parseFloat(document.getElementById('or-sl').value).toFixed(2)},\n  "val_fraction": 0.20,\n}`;
+  navigator.clipboard?.writeText(s).then(()=>alert('Copied:\n\n'+s)).catch(()=>alert(s));
+}
+function arenaComplete(){ return state.presetsRun.size>=4 && state.customRuns>=1; }
+function updateCompletion(){
+  const done=state.isOptimal && state.explored.size>=CONCEPTS.length && arenaComplete();
+  document.getElementById('top-complete-bar').style.display=done?'flex':'none';
+  document.body.classList.toggle('has-completion-bar',done);
+}
+
+// ---- architecture arena ----
+function tgl(btn){
+  if(btn.disabled)return;
+  btn.classList.toggle('on');
+  btn.textContent=btn.classList.contains('on')?'on':'off';
+}
+function setArenaLocked(locked){
+  ['a-preset','a-act','b-preset','b-act','a-drop','a-early','b-drop','b-early','arena-run-btn']
+    .forEach(id=>document.getElementById(id).disabled=locked);
+}
+function cfg(p){
+  return {preset:document.getElementById(p+'-preset').value,
+    activation:document.getElementById(p+'-act').value,
+    dropout:document.getElementById(p+'-drop').classList.contains('on'),
+    early_stopping:document.getElementById(p+'-early').classList.contains('on')};
+}
+function setCfg(p,c){
+  document.getElementById(p+'-preset').value=c.preset;
+  document.getElementById(p+'-act').value=c.activation;
+  ['drop','early'].forEach(k=>{
+    const b=document.getElementById(p+'-'+k),on=(k==='drop'?c.dropout:c.early_stopping);
+    b.classList.toggle('on',on);b.textContent=on?'on':'off';
+  });
+}
+const PRESET_PAIRS={
+  deepwide:[{preset:'deep',activation:'relu',dropout:false,early_stopping:false},{preset:'wide',activation:'relu',dropout:false,early_stopping:false}],
+  relutanh:[{preset:'deep',activation:'relu',dropout:false,early_stopping:false},{preset:'deep',activation:'tanh',dropout:false,early_stopping:false}],
+  dropout:[{preset:'wide',activation:'relu',dropout:false,early_stopping:false},{preset:'wide',activation:'relu',dropout:true,early_stopping:false}],
+  earlystop:[{preset:'wide',activation:'tanh',dropout:false,early_stopping:false},{preset:'wide',activation:'tanh',dropout:false,early_stopping:true}],
+};
+function updateArenaProgress(){
+  const p=state.presetsRun.size, c=Math.min(state.customRuns,1), n=p+c;
+  const fill=document.getElementById('arena-prog-fill');
+  fill.style.width=(n/5*100)+'%';
+  fill.classList.toggle('full',n>=5);
+  // Reveal + unlock the "Try your own pair" panels once all four comparisons are done.
+  if(p>=4 && !state.arenaUnlocked){
+    state.arenaUnlocked=true;
+    setArenaLocked(false);
+    document.getElementById('arena-panels').classList.remove('locked');
+    document.getElementById('arena-panels-note').style.display='none';
+    document.getElementById('tryown').style.display='block';
+  }
+  let txt;
+  if(p<4) txt=`${n} / 5 — run the four comparisons (${p}/4)`;
+  else if(c<1) txt='4 / 5 — now mix any options and hit Train Both';
+  else txt='5 / 5 — Architecture Arena complete ✓';
+  document.getElementById('arena-prog-txt').textContent=txt;
+  updateCompletion();
+}
+function runPreset(name){
+  const [a,b]=PRESET_PAIRS[name];
+  document.getElementById('arena-panels').style.display='block';
+  setCfg('a',a); setCfg('b',b);
+  trainBoth().then(()=>{
+    state.presetsRun.add(name);
+    document.querySelector(`.preset-grid button[data-preset="${name}"]`).classList.add('done');
+    updateArenaProgress();
+  });
+}
+function trainCustom(){
+  trainBoth().then(d=>{
+    if(!d) return;
+    state.customRuns++;
+    // "Best F1 so far" tracks only the student's own combinations, not the presets.
+    state.arenaBestF1=Math.max(state.arenaBestF1, d.a.val_f1, d.b.val_f1);
+    const el=document.getElementById('arena-best');
+    const hit=state.arenaBestF1>=ARENA_GOAL_F1;
+    el.classList.toggle('hit',hit);
+    el.textContent=(hit?'Goal reached ✓  ':'Best F1 so far: ')+state.arenaBestF1.toFixed(3)
+      +(hit?'':'  (goal '+ARENA_GOAL_F1.toFixed(3)+')');
+    updateArenaProgress();
+  });
+}
+async function trainBoth(){
+  const d=await (await fetch('/api/arena',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({seed:state.seed||100,a:cfg('a'),b:cfg('b')})})).json();
+  if(d.error){alert(d.error);return null;}
+  document.getElementById('arena-result').style.display='block';
+  drawArena(d);
+  document.getElementById('arena-caption').style.display='block';
+  document.getElementById('arena-caption').textContent=d.caption;
+  const mx=Math.max(d.a.val_f1,d.b.val_f1,0.8);
+  document.getElementById('arena-auc').style.display='flex';
+  document.getElementById('auc-a').style.height=(d.a.val_f1/mx*100)+'%';
+  document.getElementById('auc-b').style.height=(d.b.val_f1/mx*100)+'%';
+  document.getElementById('auc-a-v').textContent=d.a.val_f1.toFixed(3);
+  document.getElementById('auc-b-v').textContent=d.b.val_f1.toFixed(3);
+  return d;
+}
+function drawArena(d){
+  const cv=document.getElementById('arena-canvas'),x=cv.getContext('2d'),W=cv.width,H=cv.height,P=34;
+  x.clearRect(0,0,W,H);
+  const all=[...d.a.train_loss,...d.a.val_loss,...d.b.train_loss,...d.b.val_loss];
+  const mn=Math.min(...all),mx=Math.max(...all),rng=mx-mn||1,E=d.epochs;
+  const tx=i=>P+(W-2*P)*i/(E-1), ty=v=>H-P-(H-2*P)*(v-mn)/rng;
+  x.strokeStyle='#e2e8f0';x.beginPath();x.moveTo(P,P);x.lineTo(P,H-P);x.lineTo(W-P,H-P);x.stroke();
+  x.fillStyle='#94a3b8';x.font='9px sans-serif';x.textAlign='left';
+  x.fillText(mx.toFixed(2),4,P+4);x.fillText(mn.toFixed(2),4,H-P);
+  // x-axis: epoch tick numbers
+  x.textAlign='center';
+  const ticks=[1]; for(let e=10;e<E;e+=10) ticks.push(e); ticks.push(E);
+  ticks.forEach(e=>{
+    const xx=tx(e-1);
+    x.strokeStyle='#e2e8f0';x.beginPath();x.moveTo(xx,H-P);x.lineTo(xx,H-P+4);x.stroke();
+    x.fillText(e,xx,H-P+15);
+  });
+  x.textAlign='left';x.fillText('epoch →',W-P-42,H-6);
+  function line(arr,color,dash){
+    x.strokeStyle=color;x.lineWidth=2;x.setLineDash(dash?[5,4]:[]);
+    x.beginPath();arr.forEach((v,i)=>i?x.lineTo(tx(i),ty(v)):x.moveTo(tx(i),ty(v)));x.stroke();x.setLineDash([]);
+  }
+  line(d.a.train_loss,'#4f46e5',false); line(d.a.val_loss,'#4f46e5',true);
+  line(d.b.train_loss,'#f59e0b',false); line(d.b.val_loss,'#f59e0b',true);
+  [[d.a,'#4f46e5'],[d.b,'#f59e0b']].forEach(([p,c])=>{
+    if(p.early_stopping&&p.stopped_epoch<E){
+      x.strokeStyle=c;x.setLineDash([2,2]);x.beginPath();
+      x.moveTo(tx(p.stopped_epoch-1),P);x.lineTo(tx(p.stopped_epoch-1),H-P);x.stroke();x.setLineDash([]);
+    }
+  });
+}
+
+// ---- init ----
+renderConcepts(); loadData(); setArenaLocked(true); updateArenaProgress();
+document.getElementById('sid-input').addEventListener('keydown',e=>{if(e.key==='Enter')setStudentId();});
+</script>
+</body>
+</html>
