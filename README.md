@@ -7,6 +7,25 @@ notes below.
 
 ---
 
+## GitHub Pages
+
+Every explorer also runs entirely in the browser with no backend —
+`static_api_shim.js` overrides `fetch` and answers the `/api/*` routes
+client-side.
+
+- Landing page: https://ai-sandbox-ai-healthcare.github.io/neural-network-assignments-ui-explorer/
+
+- Assignment 1: https://ai-sandbox-ai-healthcare.github.io/neural-network-assignments-ui-explorer/assignment-1/
+
+- Assignment 2: https://ai-sandbox-ai-healthcare.github.io/neural-network-assignments-ui-explorer/assignment-2/
+
+- Assignment 3: https://ai-sandbox-ai-healthcare.github.io/neural-network-assignments-ui-explorer/assignment-3/
+
+Each `docs/assignment-N/` page is generated from that assignment's
+`run_sandbox.py` by `assignment-N-ui-explorer/generate_docs_site.py` — run it after changing a UI, then publish the `docs/` folder. 
+
+---
+
 ## Assignment 1 — Chronic Pain Classifier (`assignment-1-ui-explorer/`)
 
 A logistic-regression-from-scratch exercise on a synthetic EHR dataset
@@ -27,7 +46,8 @@ lets them:
 
 ### Running locally
 
-Requirements: Python 3.10+.
+Requirements: Python 3.10 – 3.13 (`requirements.txt` includes PyTorch, whose
+wheels are not yet published for 3.14).
 
 **Windows (PowerShell):**
 
@@ -51,14 +71,6 @@ Open `http://localhost:3001` in a browser (it should also open
 automatically). Enter any student ID in the sidebar to see a seeded target
 and start training.
 
-### GitHub Pages
-
-The full interactive explorer, running entirely in-browser (no server) —
-
-https://ai-sandbox-ai-healthcare.github.io/neural-network-assignments-ui-explorer/
-
-https://ai-sandbox-ai-healthcare.github.io/neural-network-assignments-ui-explorer/assignment-1/
-
 ---
 
 ## Assignment 2 — Tame the Tabular Baselines (`assignment-2-ui-explorer/`)
@@ -79,8 +91,8 @@ imbalance". Students:
   and confusion matrix against a personal **Random Forest oracle**.
 - **Architecture Arena** — run four preset feedforward comparisons
   (deep vs. wide, ReLU vs. tanh, dropout vs. none, early stopping vs. none),
-  each with auto-generated "What changed?" narration; free-mix mode unlocks
-  after all four.
+  each with auto-generated "What changed?" narration; a free-mix mode then
+  unlocks so students can try any combination and re-run.
 
 ### Running locally
 
@@ -108,27 +120,6 @@ python assignment-2-ui-explorer/run_sandbox.py
 Open `http://localhost:3002` (it should open automatically). Enter any
 student ID for a seeded Random Forest target.
 
-### GitHub Pages (static build)
-
-`docs/assignment-2/` is a self‑contained copy that runs the **same UI** with
-no backend — `static_api_shim.js` overrides `fetch` and answers `/api/*` in
-the browser. `/api/data`, `/api/assign` and `/api/arena` are exact (the arena
-is fully precomputed); `/api/evaluate` is a modelled response surface
-anchored to each seed's real Random‑Forest oracle (a live scikit‑learn fit
-can't run in a browser), so the tune → *Optimal Performance Reached!* →
-copy‑params loop behaves the same.
-
-Regenerate it whenever `run_sandbox.py`, `reference.py` or the oracle change:
-
-```bash
-python assignment-2-ui-explorer/generate_oracle.py       # if not already present
-python assignment-2-ui-explorer/generate_docs_site.py    # writes docs/assignment-2/
-```
-
-Then publish the `docs/` folder with GitHub Pages.
-
-https://ai-sandbox-ai-healthcare.github.io/neural-network-assignments-ui-explorer/assignment-2/
-
 ---
 
 ## Assignment 3 — Model the Patient Journey (`assignment-3-ui-explorer/`)
@@ -138,11 +129,10 @@ patient is now a **sequence of 1–6 clinical visits** (`patient_visits.csv`).
 Students:
 
 - **Overview & Concepts** — three intro cards (the problem / the dataset / the
-  approach), a full-width **Pipeline Stages** strip, and **8 concept cards**:
+  approach), a **Pipeline Stages** strip, and **8 concept cards**:
   sequential clinical data, padding, masking, LSTM gates, GRU gates,
   bidirectional processing, 1D convolution as a visit-pattern detector,
-  overfitting in small sequence datasets. All 8 must be opened to unlock the
-  completion banner.
+  overfitting in small sequence datasets.
 - **Patient Timeline Explorer** — a bold "click a patient" instruction, a
   scrollable patient list, a per-patient visit timeline (markers on top,
   pain-score chart below, split 50/50), and a sequence-length histogram with a
@@ -158,15 +148,15 @@ Students:
   from the Sequence Explorer and **nothing runs until it is set**. An always-on
   **Conv1D baseline** on the same sequences, live Current-vs-Target bars,
   overlapping loss curves, an ROC curve, a confusion matrix, an auto-generated
-  "What's happening?" caption, and a **LSTM/GRU vs. Conv1D architecture
-  comparison table** (memory-based vs. pattern-finding, strengths / weaknesses /
-  runtime). The 💡 hint always points at a knob to turn (`hidden_units`,
-  `cell_type`, `bidirectional`, or `max_seq_len` when it is below 5).
+  "What's happening?" caption, and an **LSTM/GRU vs. Conv1D architecture
+  comparison table** (memory-based vs. pattern-finding: strengths / weaknesses /
+  runtime).
 
 ### Running locally
 
 Requirements: Python 3.10+ (no deep-learning framework needed — the Arena is a
-deterministic analytic simulation).
+deterministic analytic simulation; the real LSTM/GRU is built in
+`neural-network-assignment-3/pipeline/pipeline.py`).
 
 **Windows (PowerShell):**
 
@@ -189,35 +179,3 @@ python assignment-3-ui-explorer/run_sandbox.py
 Open `http://localhost:3003` (it should open automatically). Enter any student
 ID for a seeded sequence-model target.
 
-### GitHub Pages (static build)
-
-`docs/assignment-3/index.html` is **`run_sandbox.py`'s `HTML_TEMPLATE`
-byte-for-byte**, with a single extra line — `<script
-src="static_api_shim.js"></script>` — so the hosted page is identical to the
-local one except that the shim overrides `fetch` (GitHub Pages has no Flask
-backend). `static_api_shim.js` and `oracle_table.json` are verbatim copies.
-`/api/data` and `/api/assign` are exact; `/api/evaluate` is a modelled response
-surface anchored to each seed's real precomputed oracle target (a live PyTorch
-fit can't run in a browser), so the tune → *Optimal Performance Reached!* →
-copy-params loop behaves the same. Its `makeHint()` mirrors `reference._hint()`.
-
-Regenerate it whenever `run_sandbox.py`, `reference.py`, `static_api_shim.js`,
-the oracle or the visit data change:
-
-```bash
-python assignment-3-ui-explorer/generate_visits.py       # if patient_visits.csv is missing
-python assignment-3-ui-explorer/generate_oracle.py       # if not already present
-python assignment-3-ui-explorer/generate_docs_site.py    # writes + verifies docs/assignment-3/
-```
-
-`generate_docs_site.py` ends with a `verify()` step that asserts the docs page
-is the local page plus exactly that one `<script>` line and that the copied
-assets are byte-identical. Then publish the `docs/` folder with GitHub Pages.
-
-https://ai-sandbox-ai-healthcare.github.io/neural-network-assignments-ui-explorer/assignment-3/
-
----
-
-## Future assignments
-
-Additional assignments should follow the same pattern.
