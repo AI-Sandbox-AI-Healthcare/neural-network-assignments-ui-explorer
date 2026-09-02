@@ -1,0 +1,9002 @@
+{
+ "100": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9268,
+  "f1": 0.8008,
+  "accuracy": 0.8032,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "101": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8637,
+  "f1": 0.7433,
+  "accuracy": 0.773,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "102": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8846,
+  "f1": 0.7691,
+  "accuracy": 0.7728,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "103": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8412,
+  "f1": 0.7156,
+  "accuracy": 0.696,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "104": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9074,
+  "f1": 0.8013,
+  "accuracy": 0.8028,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "105": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8577,
+  "f1": 0.7566,
+  "accuracy": 0.7887,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "106": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9338,
+  "f1": 0.8594,
+  "accuracy": 0.8636,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "107": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8309,
+  "f1": 0.7261,
+  "accuracy": 0.7423,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "108": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9117,
+  "f1": 0.7603,
+  "accuracy": 0.7739,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "109": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9034,
+  "f1": 0.7624,
+  "accuracy": 0.7584,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "110": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.803,
+  "f1": 0.6906,
+  "accuracy": 0.7115,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "111": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.922,
+  "f1": 0.8488,
+  "accuracy": 0.8494,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "112": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8187,
+  "f1": 0.7053,
+  "accuracy": 0.7424,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "113": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8553,
+  "f1": 0.7031,
+  "accuracy": 0.7275,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "114": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8584,
+  "f1": 0.7798,
+  "accuracy": 0.7879,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "115": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8511,
+  "f1": 0.7746,
+  "accuracy": 0.7728,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "116": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9095,
+  "f1": 0.823,
+  "accuracy": 0.8341,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "117": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8618,
+  "f1": 0.794,
+  "accuracy": 0.8034,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "118": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9069,
+  "f1": 0.8132,
+  "accuracy": 0.819,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "119": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8367,
+  "f1": 0.7871,
+  "accuracy": 0.8021,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "120": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8557,
+  "f1": 0.7028,
+  "accuracy": 0.7273,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "121": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8452,
+  "f1": 0.7223,
+  "accuracy": 0.728,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "122": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8939,
+  "f1": 0.8236,
+  "accuracy": 0.833,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "123": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.829,
+  "f1": 0.6794,
+  "accuracy": 0.6981,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "124": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8358,
+  "f1": 0.7042,
+  "accuracy": 0.7428,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "125": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9456,
+  "f1": 0.7883,
+  "accuracy": 0.774,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "126": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8762,
+  "f1": 0.7614,
+  "accuracy": 0.7594,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "127": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8575,
+  "f1": 0.7678,
+  "accuracy": 0.7748,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "128": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8712,
+  "f1": 0.7617,
+  "accuracy": 0.7586,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "129": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8991,
+  "f1": 0.8325,
+  "accuracy": 0.848,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "130": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9199,
+  "f1": 0.8073,
+  "accuracy": 0.8182,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "131": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8759,
+  "f1": 0.7515,
+  "accuracy": 0.7737,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "132": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8537,
+  "f1": 0.7134,
+  "accuracy": 0.7277,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "133": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.7969,
+  "f1": 0.7448,
+  "accuracy": 0.742,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "134": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8988,
+  "f1": 0.7692,
+  "accuracy": 0.7586,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "135": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8571,
+  "f1": 0.7386,
+  "accuracy": 0.7279,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "136": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9297,
+  "f1": 0.8155,
+  "accuracy": 0.8181,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "137": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7706,
+  "f1": 0.7199,
+  "accuracy": 0.712,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "138": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.887,
+  "f1": 0.7662,
+  "accuracy": 0.7875,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "139": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8853,
+  "f1": 0.7214,
+  "accuracy": 0.7277,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "140": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9094,
+  "f1": 0.8089,
+  "accuracy": 0.818,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "141": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9219,
+  "f1": 0.8143,
+  "accuracy": 0.8181,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "142": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.807,
+  "f1": 0.7111,
+  "accuracy": 0.7134,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "143": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8757,
+  "f1": 0.7293,
+  "accuracy": 0.7575,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "144": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9175,
+  "f1": 0.7379,
+  "accuracy": 0.7275,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "145": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.869,
+  "f1": 0.7504,
+  "accuracy": 0.7418,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "146": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8588,
+  "f1": 0.7493,
+  "accuracy": 0.7432,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "147": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9427,
+  "f1": 0.8228,
+  "accuracy": 0.8339,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "148": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8345,
+  "f1": 0.7379,
+  "accuracy": 0.7576,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "149": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8317,
+  "f1": 0.7381,
+  "accuracy": 0.7577,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "150": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.7992,
+  "f1": 0.7684,
+  "accuracy": 0.774,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "151": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8043,
+  "f1": 0.7068,
+  "accuracy": 0.6965,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "152": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9187,
+  "f1": 0.8427,
+  "accuracy": 0.8483,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "153": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8723,
+  "f1": 0.7677,
+  "accuracy": 0.7717,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "154": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.909,
+  "f1": 0.7749,
+  "accuracy": 0.773,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "155": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8012,
+  "f1": 0.6964,
+  "accuracy": 0.6668,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "156": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8849,
+  "f1": 0.7513,
+  "accuracy": 0.7736,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "157": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.7759,
+  "f1": 0.6883,
+  "accuracy": 0.682,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "158": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8639,
+  "f1": 0.712,
+  "accuracy": 0.7124,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "159": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8739,
+  "f1": 0.7757,
+  "accuracy": 0.7727,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "160": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8949,
+  "f1": 0.7681,
+  "accuracy": 0.7731,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "161": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8424,
+  "f1": 0.7734,
+  "accuracy": 0.7874,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "162": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8722,
+  "f1": 0.7487,
+  "accuracy": 0.7877,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "163": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9209,
+  "f1": 0.8207,
+  "accuracy": 0.8191,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "164": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8636,
+  "f1": 0.7311,
+  "accuracy": 0.7277,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "165": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.91,
+  "f1": 0.7872,
+  "accuracy": 0.8028,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "166": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.848,
+  "f1": 0.7472,
+  "accuracy": 0.7581,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "167": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8593,
+  "f1": 0.7517,
+  "accuracy": 0.7423,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "168": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8492,
+  "f1": 0.7531,
+  "accuracy": 0.7726,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "169": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8509,
+  "f1": 0.6926,
+  "accuracy": 0.7262,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "170": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8676,
+  "f1": 0.7503,
+  "accuracy": 0.7427,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "171": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9137,
+  "f1": 0.7953,
+  "accuracy": 0.8031,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "172": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8306,
+  "f1": 0.7486,
+  "accuracy": 0.7582,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "173": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.7597,
+  "f1": 0.6454,
+  "accuracy": 0.6511,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "174": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.823,
+  "f1": 0.6914,
+  "accuracy": 0.7118,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "175": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9067,
+  "f1": 0.7882,
+  "accuracy": 0.7876,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "176": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9279,
+  "f1": 0.821,
+  "accuracy": 0.8179,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "177": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8602,
+  "f1": 0.7429,
+  "accuracy": 0.7737,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "178": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9371,
+  "f1": 0.8242,
+  "accuracy": 0.8334,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "179": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9096,
+  "f1": 0.7547,
+  "accuracy": 0.7586,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "180": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.837,
+  "f1": 0.7079,
+  "accuracy": 0.7582,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "181": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9103,
+  "f1": 0.8233,
+  "accuracy": 0.834,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "182": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8403,
+  "f1": 0.7678,
+  "accuracy": 0.7725,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "183": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8958,
+  "f1": 0.8154,
+  "accuracy": 0.8195,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "184": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9107,
+  "f1": 0.7799,
+  "accuracy": 0.8031,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "185": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8427,
+  "f1": 0.787,
+  "accuracy": 0.8026,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "186": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8986,
+  "f1": 0.7938,
+  "accuracy": 0.787,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "187": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8437,
+  "f1": 0.7097,
+  "accuracy": 0.7118,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "188": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9235,
+  "f1": 0.8754,
+  "accuracy": 0.878,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "189": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8996,
+  "f1": 0.7945,
+  "accuracy": 0.8028,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "190": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9029,
+  "f1": 0.7655,
+  "accuracy": 0.7886,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "191": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7793,
+  "f1": 0.6687,
+  "accuracy": 0.6817,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "192": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9034,
+  "f1": 0.7801,
+  "accuracy": 0.7891,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "193": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8985,
+  "f1": 0.815,
+  "accuracy": 0.818,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "194": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.7984,
+  "f1": 0.678,
+  "accuracy": 0.6969,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "195": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9218,
+  "f1": 0.8139,
+  "accuracy": 0.8188,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "196": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9188,
+  "f1": 0.7871,
+  "accuracy": 0.8036,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "197": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9192,
+  "f1": 0.8683,
+  "accuracy": 0.8643,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "198": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.835,
+  "f1": 0.7467,
+  "accuracy": 0.758,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "199": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8412,
+  "f1": 0.6903,
+  "accuracy": 0.7125,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "200": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.7889,
+  "f1": 0.6773,
+  "accuracy": 0.6823,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "201": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8586,
+  "f1": 0.7727,
+  "accuracy": 0.7882,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "202": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8907,
+  "f1": 0.7584,
+  "accuracy": 0.7425,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "203": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8525,
+  "f1": 0.7339,
+  "accuracy": 0.7422,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "204": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8838,
+  "f1": 0.7384,
+  "accuracy": 0.7585,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "205": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8662,
+  "f1": 0.7878,
+  "accuracy": 0.8025,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "206": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9273,
+  "f1": 0.8242,
+  "accuracy": 0.8327,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "207": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8449,
+  "f1": 0.7006,
+  "accuracy": 0.7117,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "208": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7822,
+  "f1": 0.6765,
+  "accuracy": 0.6825,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "209": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9186,
+  "f1": 0.7692,
+  "accuracy": 0.7576,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "210": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9232,
+  "f1": 0.7744,
+  "accuracy": 0.7727,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "211": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8195,
+  "f1": 0.735,
+  "accuracy": 0.7433,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "212": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8678,
+  "f1": 0.773,
+  "accuracy": 0.7881,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "213": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.7743,
+  "f1": 0.71,
+  "accuracy": 0.7125,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "214": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8472,
+  "f1": 0.781,
+  "accuracy": 0.7873,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "215": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8285,
+  "f1": 0.7174,
+  "accuracy": 0.6979,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "216": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9206,
+  "f1": 0.8053,
+  "accuracy": 0.8025,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "217": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8701,
+  "f1": 0.7522,
+  "accuracy": 0.7719,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "218": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.861,
+  "f1": 0.7476,
+  "accuracy": 0.7584,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "219": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8212,
+  "f1": 0.7213,
+  "accuracy": 0.7279,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "220": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8332,
+  "f1": 0.7425,
+  "accuracy": 0.7418,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "221": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.884,
+  "f1": 0.7886,
+  "accuracy": 0.8042,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "222": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9118,
+  "f1": 0.81,
+  "accuracy": 0.8183,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "223": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9099,
+  "f1": 0.817,
+  "accuracy": 0.8337,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "224": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8837,
+  "f1": 0.7474,
+  "accuracy": 0.7572,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "225": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.83,
+  "f1": 0.7543,
+  "accuracy": 0.7568,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "226": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8951,
+  "f1": 0.7668,
+  "accuracy": 0.7875,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "227": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9202,
+  "f1": 0.8093,
+  "accuracy": 0.8178,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "228": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8739,
+  "f1": 0.7739,
+  "accuracy": 0.7882,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "229": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8389,
+  "f1": 0.6907,
+  "accuracy": 0.7127,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "230": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8548,
+  "f1": 0.7516,
+  "accuracy": 0.7723,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "231": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8344,
+  "f1": 0.7672,
+  "accuracy": 0.7737,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "232": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9118,
+  "f1": 0.834,
+  "accuracy": 0.8332,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "233": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8782,
+  "f1": 0.7938,
+  "accuracy": 0.7885,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "234": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8653,
+  "f1": 0.7598,
+  "accuracy": 0.7726,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "235": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8832,
+  "f1": 0.7883,
+  "accuracy": 0.7731,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "236": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9039,
+  "f1": 0.8096,
+  "accuracy": 0.8185,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "237": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8824,
+  "f1": 0.7942,
+  "accuracy": 0.803,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "238": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8859,
+  "f1": 0.815,
+  "accuracy": 0.8196,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "239": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8441,
+  "f1": 0.7223,
+  "accuracy": 0.7283,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "240": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8634,
+  "f1": 0.7814,
+  "accuracy": 0.7743,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "241": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.7974,
+  "f1": 0.7099,
+  "accuracy": 0.7129,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "242": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.899,
+  "f1": 0.8231,
+  "accuracy": 0.8332,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "243": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8962,
+  "f1": 0.7798,
+  "accuracy": 0.8038,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "244": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8331,
+  "f1": 0.7649,
+  "accuracy": 0.7874,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "245": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8297,
+  "f1": 0.7278,
+  "accuracy": 0.7129,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "246": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.7802,
+  "f1": 0.6811,
+  "accuracy": 0.7124,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "247": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8523,
+  "f1": 0.7423,
+  "accuracy": 0.7436,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "248": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8877,
+  "f1": 0.8156,
+  "accuracy": 0.8194,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "249": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8816,
+  "f1": 0.7741,
+  "accuracy": 0.7883,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "250": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8298,
+  "f1": 0.6914,
+  "accuracy": 0.7133,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "251": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8908,
+  "f1": 0.8179,
+  "accuracy": 0.834,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "252": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8847,
+  "f1": 0.774,
+  "accuracy": 0.788,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "253": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8668,
+  "f1": 0.7384,
+  "accuracy": 0.7584,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "254": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8351,
+  "f1": 0.7998,
+  "accuracy": 0.8035,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "255": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8328,
+  "f1": 0.7304,
+  "accuracy": 0.7281,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "256": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9416,
+  "f1": 0.8439,
+  "accuracy": 0.8493,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "257": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8332,
+  "f1": 0.6987,
+  "accuracy": 0.6977,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "258": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8172,
+  "f1": 0.7522,
+  "accuracy": 0.7725,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "259": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8961,
+  "f1": 0.7615,
+  "accuracy": 0.7584,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "260": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9038,
+  "f1": 0.7821,
+  "accuracy": 0.7733,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "261": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8117,
+  "f1": 0.6795,
+  "accuracy": 0.6976,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "262": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.932,
+  "f1": 0.8112,
+  "accuracy": 0.8347,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "263": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9046,
+  "f1": 0.8129,
+  "accuracy": 0.8027,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "264": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8545,
+  "f1": 0.7872,
+  "accuracy": 0.8037,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "265": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9278,
+  "f1": 0.8287,
+  "accuracy": 0.8333,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "266": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8322,
+  "f1": 0.7059,
+  "accuracy": 0.683,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "267": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.918,
+  "f1": 0.7674,
+  "accuracy": 0.7729,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "268": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8819,
+  "f1": 0.7181,
+  "accuracy": 0.7126,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "269": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8413,
+  "f1": 0.7061,
+  "accuracy": 0.7419,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "270": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8592,
+  "f1": 0.7597,
+  "accuracy": 0.7729,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "271": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8144,
+  "f1": 0.7017,
+  "accuracy": 0.7125,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "272": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8588,
+  "f1": 0.7731,
+  "accuracy": 0.8024,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "273": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8673,
+  "f1": 0.7519,
+  "accuracy": 0.7728,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "274": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8583,
+  "f1": 0.7488,
+  "accuracy": 0.7883,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "275": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8884,
+  "f1": 0.7884,
+  "accuracy": 0.7881,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "276": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9285,
+  "f1": 0.8396,
+  "accuracy": 0.8479,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "277": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8635,
+  "f1": 0.7748,
+  "accuracy": 0.7723,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "278": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9224,
+  "f1": 0.7753,
+  "accuracy": 0.7726,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "279": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8793,
+  "f1": 0.7732,
+  "accuracy": 0.789,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "280": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8667,
+  "f1": 0.7701,
+  "accuracy": 0.7568,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "281": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8946,
+  "f1": 0.7344,
+  "accuracy": 0.7422,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "282": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.7865,
+  "f1": 0.6887,
+  "accuracy": 0.6966,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "283": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8776,
+  "f1": 0.7101,
+  "accuracy": 0.7123,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "284": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.825,
+  "f1": 0.6814,
+  "accuracy": 0.7276,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "285": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9141,
+  "f1": 0.767,
+  "accuracy": 0.7732,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "286": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.833,
+  "f1": 0.723,
+  "accuracy": 0.7277,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "287": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9118,
+  "f1": 0.787,
+  "accuracy": 0.7882,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "288": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8796,
+  "f1": 0.7515,
+  "accuracy": 0.7729,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "289": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9043,
+  "f1": 0.773,
+  "accuracy": 0.788,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "290": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8281,
+  "f1": 0.689,
+  "accuracy": 0.6984,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "291": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9357,
+  "f1": 0.8078,
+  "accuracy": 0.8036,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "292": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8121,
+  "f1": 0.7158,
+  "accuracy": 0.7428,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "293": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8422,
+  "f1": 0.6987,
+  "accuracy": 0.6977,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "294": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9131,
+  "f1": 0.7955,
+  "accuracy": 0.8038,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "295": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8918,
+  "f1": 0.7828,
+  "accuracy": 0.7734,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "296": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8694,
+  "f1": 0.7038,
+  "accuracy": 0.7284,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "297": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8322,
+  "f1": 0.7156,
+  "accuracy": 0.7426,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "298": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8443,
+  "f1": 0.7188,
+  "accuracy": 0.7117,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "299": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8302,
+  "f1": 0.6992,
+  "accuracy": 0.6973,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "300": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8806,
+  "f1": 0.7389,
+  "accuracy": 0.7579,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "301": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8397,
+  "f1": 0.7884,
+  "accuracy": 0.804,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "302": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8372,
+  "f1": 0.7072,
+  "accuracy": 0.6981,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "303": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8616,
+  "f1": 0.6984,
+  "accuracy": 0.6973,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "304": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8409,
+  "f1": 0.7515,
+  "accuracy": 0.7728,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "305": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8643,
+  "f1": 0.7216,
+  "accuracy": 0.7267,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "306": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9146,
+  "f1": 0.7941,
+  "accuracy": 0.8036,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "307": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8656,
+  "f1": 0.7392,
+  "accuracy": 0.7285,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "308": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9064,
+  "f1": 0.8005,
+  "accuracy": 0.8043,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "309": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8986,
+  "f1": 0.8432,
+  "accuracy": 0.8492,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "310": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8016,
+  "f1": 0.6842,
+  "accuracy": 0.7424,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "311": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8465,
+  "f1": 0.8097,
+  "accuracy": 0.8333,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "312": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9182,
+  "f1": 0.8012,
+  "accuracy": 0.8033,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "313": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.836,
+  "f1": 0.6792,
+  "accuracy": 0.6965,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "314": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8471,
+  "f1": 0.7433,
+  "accuracy": 0.7415,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "315": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.863,
+  "f1": 0.7565,
+  "accuracy": 0.7585,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "316": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9074,
+  "f1": 0.8012,
+  "accuracy": 0.8031,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "317": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.874,
+  "f1": 0.7817,
+  "accuracy": 0.7725,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "318": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8736,
+  "f1": 0.7435,
+  "accuracy": 0.7429,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "319": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.85,
+  "f1": 0.7222,
+  "accuracy": 0.728,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "320": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8292,
+  "f1": 0.734,
+  "accuracy": 0.7427,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "321": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8884,
+  "f1": 0.8031,
+  "accuracy": 0.834,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "322": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8771,
+  "f1": 0.8232,
+  "accuracy": 0.834,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "323": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8275,
+  "f1": 0.7008,
+  "accuracy": 0.7136,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "324": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8378,
+  "f1": 0.7471,
+  "accuracy": 0.7588,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "325": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8461,
+  "f1": 0.7756,
+  "accuracy": 0.7737,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "326": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8669,
+  "f1": 0.7607,
+  "accuracy": 0.7582,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "327": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.933,
+  "f1": 0.8543,
+  "accuracy": 0.8634,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "328": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8599,
+  "f1": 0.7037,
+  "accuracy": 0.7277,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "329": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.821,
+  "f1": 0.6783,
+  "accuracy": 0.697,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "330": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9249,
+  "f1": 0.8006,
+  "accuracy": 0.8038,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "331": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8978,
+  "f1": 0.7808,
+  "accuracy": 0.7726,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "332": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8692,
+  "f1": 0.7936,
+  "accuracy": 0.8025,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "333": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8828,
+  "f1": 0.7653,
+  "accuracy": 0.7876,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "334": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8956,
+  "f1": 0.7217,
+  "accuracy": 0.7271,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "335": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8007,
+  "f1": 0.7293,
+  "accuracy": 0.7573,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "336": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9057,
+  "f1": 0.7739,
+  "accuracy": 0.7894,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "337": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8981,
+  "f1": 0.7511,
+  "accuracy": 0.7733,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "338": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8944,
+  "f1": 0.7349,
+  "accuracy": 0.7425,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "339": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8252,
+  "f1": 0.7606,
+  "accuracy": 0.7727,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "340": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8748,
+  "f1": 0.7738,
+  "accuracy": 0.7731,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "341": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8386,
+  "f1": 0.7104,
+  "accuracy": 0.712,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "342": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8583,
+  "f1": 0.734,
+  "accuracy": 0.742,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "343": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8208,
+  "f1": 0.6664,
+  "accuracy": 0.682,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "344": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8111,
+  "f1": 0.7195,
+  "accuracy": 0.7571,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "345": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9278,
+  "f1": 0.8263,
+  "accuracy": 0.8192,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "346": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8505,
+  "f1": 0.762,
+  "accuracy": 0.7586,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "347": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8867,
+  "f1": 0.8019,
+  "accuracy": 0.8032,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "348": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8674,
+  "f1": 0.7014,
+  "accuracy": 0.7268,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "349": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8199,
+  "f1": 0.728,
+  "accuracy": 0.7121,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "350": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8332,
+  "f1": 0.7233,
+  "accuracy": 0.7277,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "351": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8499,
+  "f1": 0.7128,
+  "accuracy": 0.7275,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "352": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9639,
+  "f1": 0.8699,
+  "accuracy": 0.8786,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "353": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.883,
+  "f1": 0.7238,
+  "accuracy": 0.6973,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "354": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8837,
+  "f1": 0.7596,
+  "accuracy": 0.7733,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "355": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8633,
+  "f1": 0.762,
+  "accuracy": 0.7572,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "356": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8021,
+  "f1": 0.6564,
+  "accuracy": 0.7127,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "357": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8005,
+  "f1": 0.6673,
+  "accuracy": 0.667,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "358": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8721,
+  "f1": 0.7218,
+  "accuracy": 0.7262,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "359": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8551,
+  "f1": 0.7599,
+  "accuracy": 0.7726,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "360": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9259,
+  "f1": 0.8018,
+  "accuracy": 0.8034,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "361": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8655,
+  "f1": 0.7379,
+  "accuracy": 0.7573,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "362": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8025,
+  "f1": 0.7288,
+  "accuracy": 0.758,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "363": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8825,
+  "f1": 0.8024,
+  "accuracy": 0.819,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "364": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8372,
+  "f1": 0.7891,
+  "accuracy": 0.7881,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "365": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8884,
+  "f1": 0.7594,
+  "accuracy": 0.7735,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "366": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8169,
+  "f1": 0.699,
+  "accuracy": 0.6964,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "367": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8463,
+  "f1": 0.7434,
+  "accuracy": 0.7727,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "368": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8919,
+  "f1": 0.7473,
+  "accuracy": 0.7579,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "369": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8953,
+  "f1": 0.7879,
+  "accuracy": 0.7883,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "370": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8432,
+  "f1": 0.7427,
+  "accuracy": 0.7428,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "371": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8812,
+  "f1": 0.7807,
+  "accuracy": 0.7881,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "372": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9122,
+  "f1": 0.828,
+  "accuracy": 0.8342,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "373": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8142,
+  "f1": 0.7102,
+  "accuracy": 0.7124,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "374": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.921,
+  "f1": 0.8165,
+  "accuracy": 0.8182,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "375": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8678,
+  "f1": 0.7945,
+  "accuracy": 0.8185,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "376": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8756,
+  "f1": 0.7813,
+  "accuracy": 0.789,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "377": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8752,
+  "f1": 0.7431,
+  "accuracy": 0.7724,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "378": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8269,
+  "f1": 0.6889,
+  "accuracy": 0.6963,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "379": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8946,
+  "f1": 0.844,
+  "accuracy": 0.8486,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "380": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8178,
+  "f1": 0.724,
+  "accuracy": 0.7722,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "381": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9556,
+  "f1": 0.826,
+  "accuracy": 0.8186,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "382": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.7824,
+  "f1": 0.6805,
+  "accuracy": 0.7122,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "383": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8915,
+  "f1": 0.7881,
+  "accuracy": 0.7872,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "384": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8452,
+  "f1": 0.7386,
+  "accuracy": 0.7593,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "385": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8269,
+  "f1": 0.7217,
+  "accuracy": 0.7256,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "386": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8656,
+  "f1": 0.7679,
+  "accuracy": 0.7735,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "387": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8815,
+  "f1": 0.7805,
+  "accuracy": 0.7874,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "388": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9356,
+  "f1": 0.8217,
+  "accuracy": 0.8187,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "389": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8566,
+  "f1": 0.7055,
+  "accuracy": 0.682,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "390": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8381,
+  "f1": 0.7285,
+  "accuracy": 0.7584,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "391": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8462,
+  "f1": 0.7099,
+  "accuracy": 0.7134,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "392": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.7902,
+  "f1": 0.6683,
+  "accuracy": 0.6972,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "393": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.836,
+  "f1": 0.7525,
+  "accuracy": 0.7735,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "394": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8055,
+  "f1": 0.7423,
+  "accuracy": 0.742,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "395": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7878,
+  "f1": 0.6685,
+  "accuracy": 0.6969,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "396": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9043,
+  "f1": 0.8146,
+  "accuracy": 0.8184,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "397": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8314,
+  "f1": 0.7474,
+  "accuracy": 0.7595,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "398": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9386,
+  "f1": 0.8343,
+  "accuracy": 0.8337,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "399": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8314,
+  "f1": 0.7287,
+  "accuracy": 0.7265,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "400": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7853,
+  "f1": 0.657,
+  "accuracy": 0.6818,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "401": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8685,
+  "f1": 0.7745,
+  "accuracy": 0.7732,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "402": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8305,
+  "f1": 0.6899,
+  "accuracy": 0.6967,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "403": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8257,
+  "f1": 0.7247,
+  "accuracy": 0.7433,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "404": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9051,
+  "f1": 0.814,
+  "accuracy": 0.8185,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "405": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8907,
+  "f1": 0.7481,
+  "accuracy": 0.7568,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "406": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9366,
+  "f1": 0.8629,
+  "accuracy": 0.8633,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "407": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8389,
+  "f1": 0.7227,
+  "accuracy": 0.7275,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "408": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8583,
+  "f1": 0.7255,
+  "accuracy": 0.7426,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "409": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9038,
+  "f1": 0.7621,
+  "accuracy": 0.7576,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "410": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8953,
+  "f1": 0.8018,
+  "accuracy": 0.803,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "411": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9078,
+  "f1": 0.8002,
+  "accuracy": 0.8035,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "412": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8828,
+  "f1": 0.7628,
+  "accuracy": 0.7579,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "413": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8962,
+  "f1": 0.755,
+  "accuracy": 0.7582,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "414": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.878,
+  "f1": 0.761,
+  "accuracy": 0.7565,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "415": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.6797,
+  "f1": 0.5884,
+  "accuracy": 0.5596,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "416": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7722,
+  "f1": 0.6687,
+  "accuracy": 0.7133,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "417": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8758,
+  "f1": 0.7754,
+  "accuracy": 0.7731,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "418": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8297,
+  "f1": 0.6805,
+  "accuracy": 0.7128,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "419": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8156,
+  "f1": 0.7547,
+  "accuracy": 0.7569,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "420": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8868,
+  "f1": 0.8502,
+  "accuracy": 0.8496,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "421": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8997,
+  "f1": 0.7884,
+  "accuracy": 0.7869,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "422": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8431,
+  "f1": 0.6967,
+  "accuracy": 0.6821,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "423": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.872,
+  "f1": 0.7474,
+  "accuracy": 0.758,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "424": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9603,
+  "f1": 0.8384,
+  "accuracy": 0.8338,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "425": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8831,
+  "f1": 0.7428,
+  "accuracy": 0.7729,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "426": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8198,
+  "f1": 0.7123,
+  "accuracy": 0.7277,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "427": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8519,
+  "f1": 0.7605,
+  "accuracy": 0.7733,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "428": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.905,
+  "f1": 0.7598,
+  "accuracy": 0.7731,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "429": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8119,
+  "f1": 0.7008,
+  "accuracy": 0.7131,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "430": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9049,
+  "f1": 0.8209,
+  "accuracy": 0.8189,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "431": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8468,
+  "f1": 0.7501,
+  "accuracy": 0.7427,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "432": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8818,
+  "f1": 0.794,
+  "accuracy": 0.8024,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "433": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8898,
+  "f1": 0.7813,
+  "accuracy": 0.7889,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "434": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.888,
+  "f1": 0.8092,
+  "accuracy": 0.8186,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "435": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8848,
+  "f1": 0.7017,
+  "accuracy": 0.7121,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "436": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9113,
+  "f1": 0.818,
+  "accuracy": 0.8338,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "437": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8231,
+  "f1": 0.735,
+  "accuracy": 0.7423,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "438": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8841,
+  "f1": 0.7749,
+  "accuracy": 0.7732,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "439": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.902,
+  "f1": 0.7731,
+  "accuracy": 0.7887,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "440": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9296,
+  "f1": 0.8548,
+  "accuracy": 0.8647,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "441": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8474,
+  "f1": 0.7279,
+  "accuracy": 0.7137,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "442": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8143,
+  "f1": 0.7419,
+  "accuracy": 0.742,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "443": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8913,
+  "f1": 0.8014,
+  "accuracy": 0.8026,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "444": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8134,
+  "f1": 0.7005,
+  "accuracy": 0.7119,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "445": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8431,
+  "f1": 0.7506,
+  "accuracy": 0.7421,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "446": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.855,
+  "f1": 0.7095,
+  "accuracy": 0.7134,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "447": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9434,
+  "f1": 0.8702,
+  "accuracy": 0.8782,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "448": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9507,
+  "f1": 0.8071,
+  "accuracy": 0.8039,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "449": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8836,
+  "f1": 0.7461,
+  "accuracy": 0.7273,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "450": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8543,
+  "f1": 0.6882,
+  "accuracy": 0.6971,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "451": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.7924,
+  "f1": 0.7007,
+  "accuracy": 0.7135,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "452": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8241,
+  "f1": 0.7259,
+  "accuracy": 0.7429,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "453": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8578,
+  "f1": 0.7723,
+  "accuracy": 0.7876,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "454": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.859,
+  "f1": 0.7557,
+  "accuracy": 0.7574,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "455": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8579,
+  "f1": 0.7817,
+  "accuracy": 0.7879,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "456": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8455,
+  "f1": 0.7523,
+  "accuracy": 0.7739,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "457": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8135,
+  "f1": 0.7296,
+  "accuracy": 0.7279,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "458": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.785,
+  "f1": 0.6795,
+  "accuracy": 0.6972,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "459": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9468,
+  "f1": 0.8707,
+  "accuracy": 0.8786,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "460": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8853,
+  "f1": 0.801,
+  "accuracy": 0.8034,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "461": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8886,
+  "f1": 0.7946,
+  "accuracy": 0.8027,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "462": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9084,
+  "f1": 0.7883,
+  "accuracy": 0.804,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "463": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8424,
+  "f1": 0.7582,
+  "accuracy": 0.7888,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "464": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8921,
+  "f1": 0.7674,
+  "accuracy": 0.7726,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "465": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7664,
+  "f1": 0.6235,
+  "accuracy": 0.6358,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "466": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8994,
+  "f1": 0.8075,
+  "accuracy": 0.803,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "467": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8489,
+  "f1": 0.7157,
+  "accuracy": 0.7427,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "468": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8761,
+  "f1": 0.7801,
+  "accuracy": 0.7891,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "469": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9045,
+  "f1": 0.7673,
+  "accuracy": 0.7732,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "470": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9027,
+  "f1": 0.8201,
+  "accuracy": 0.8181,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "471": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.883,
+  "f1": 0.7744,
+  "accuracy": 0.7884,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "472": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8195,
+  "f1": 0.7026,
+  "accuracy": 0.7277,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "473": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.845,
+  "f1": 0.7351,
+  "accuracy": 0.7427,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "474": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8342,
+  "f1": 0.7338,
+  "accuracy": 0.7433,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "475": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8096,
+  "f1": 0.6917,
+  "accuracy": 0.7135,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "476": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8557,
+  "f1": 0.7244,
+  "accuracy": 0.7424,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "477": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8542,
+  "f1": 0.7469,
+  "accuracy": 0.7585,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "478": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8935,
+  "f1": 0.7878,
+  "accuracy": 0.7877,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "479": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8539,
+  "f1": 0.7505,
+  "accuracy": 0.743,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "480": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8221,
+  "f1": 0.6777,
+  "accuracy": 0.6807,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "481": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9179,
+  "f1": 0.7646,
+  "accuracy": 0.7878,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "482": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8392,
+  "f1": 0.726,
+  "accuracy": 0.7428,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "483": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8391,
+  "f1": 0.7382,
+  "accuracy": 0.7574,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "484": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8836,
+  "f1": 0.7812,
+  "accuracy": 0.7737,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "485": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8482,
+  "f1": 0.7939,
+  "accuracy": 0.8037,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "486": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9173,
+  "f1": 0.8296,
+  "accuracy": 0.8347,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "487": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8483,
+  "f1": 0.7948,
+  "accuracy": 0.8179,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "488": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8977,
+  "f1": 0.8077,
+  "accuracy": 0.8034,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "489": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8514,
+  "f1": 0.7616,
+  "accuracy": 0.7575,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "490": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8159,
+  "f1": 0.7675,
+  "accuracy": 0.7735,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "491": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8469,
+  "f1": 0.7422,
+  "accuracy": 0.7731,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "492": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8245,
+  "f1": 0.7053,
+  "accuracy": 0.6814,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "493": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8339,
+  "f1": 0.7215,
+  "accuracy": 0.7285,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "494": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8539,
+  "f1": 0.7241,
+  "accuracy": 0.6974,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "495": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8849,
+  "f1": 0.7607,
+  "accuracy": 0.7725,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "496": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8602,
+  "f1": 0.7596,
+  "accuracy": 0.7731,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "497": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8907,
+  "f1": 0.7964,
+  "accuracy": 0.8038,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "498": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8729,
+  "f1": 0.8041,
+  "accuracy": 0.8325,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "499": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9209,
+  "f1": 0.8074,
+  "accuracy": 0.8032,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "500": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8406,
+  "f1": 0.7604,
+  "accuracy": 0.7734,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "501": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.7934,
+  "f1": 0.7185,
+  "accuracy": 0.7121,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "502": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8456,
+  "f1": 0.7606,
+  "accuracy": 0.7728,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "503": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8295,
+  "f1": 0.7138,
+  "accuracy": 0.727,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "504": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8736,
+  "f1": 0.746,
+  "accuracy": 0.7278,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "505": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7923,
+  "f1": 0.6673,
+  "accuracy": 0.6651,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "506": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7986,
+  "f1": 0.7264,
+  "accuracy": 0.7131,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "507": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9074,
+  "f1": 0.7572,
+  "accuracy": 0.7428,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "508": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9069,
+  "f1": 0.8203,
+  "accuracy": 0.8179,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "509": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8836,
+  "f1": 0.769,
+  "accuracy": 0.7578,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "510": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8307,
+  "f1": 0.6989,
+  "accuracy": 0.6973,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "511": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.897,
+  "f1": 0.787,
+  "accuracy": 0.8029,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "512": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9164,
+  "f1": 0.8073,
+  "accuracy": 0.8182,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "513": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8509,
+  "f1": 0.7476,
+  "accuracy": 0.7575,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "514": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7856,
+  "f1": 0.7383,
+  "accuracy": 0.7579,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "515": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9093,
+  "f1": 0.8091,
+  "accuracy": 0.8193,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "516": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8727,
+  "f1": 0.7636,
+  "accuracy": 0.8026,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "517": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9231,
+  "f1": 0.8476,
+  "accuracy": 0.8481,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "518": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8633,
+  "f1": 0.7322,
+  "accuracy": 0.7731,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "519": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.867,
+  "f1": 0.6989,
+  "accuracy": 0.6969,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "520": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8517,
+  "f1": 0.7559,
+  "accuracy": 0.7581,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "521": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8636,
+  "f1": 0.7336,
+  "accuracy": 0.7734,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "522": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.7982,
+  "f1": 0.6659,
+  "accuracy": 0.6357,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "523": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.848,
+  "f1": 0.7423,
+  "accuracy": 0.7431,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "524": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9064,
+  "f1": 0.7547,
+  "accuracy": 0.7579,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "525": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.83,
+  "f1": 0.7318,
+  "accuracy": 0.7282,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "526": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8823,
+  "f1": 0.7388,
+  "accuracy": 0.7281,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "527": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8894,
+  "f1": 0.7463,
+  "accuracy": 0.7587,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "528": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8977,
+  "f1": 0.7423,
+  "accuracy": 0.7423,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "529": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.904,
+  "f1": 0.7517,
+  "accuracy": 0.7733,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "530": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8969,
+  "f1": 0.802,
+  "accuracy": 0.8032,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "531": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8871,
+  "f1": 0.8603,
+  "accuracy": 0.8637,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "532": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8361,
+  "f1": 0.6877,
+  "accuracy": 0.6821,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "533": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8259,
+  "f1": 0.7336,
+  "accuracy": 0.7729,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "534": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8755,
+  "f1": 0.7436,
+  "accuracy": 0.7414,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "535": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9246,
+  "f1": 0.8597,
+  "accuracy": 0.8642,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "536": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8654,
+  "f1": 0.7343,
+  "accuracy": 0.7433,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "537": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8373,
+  "f1": 0.7335,
+  "accuracy": 0.7127,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "538": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9043,
+  "f1": 0.7502,
+  "accuracy": 0.742,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "539": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8838,
+  "f1": 0.8015,
+  "accuracy": 0.8039,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "540": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.866,
+  "f1": 0.7432,
+  "accuracy": 0.7437,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "541": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8762,
+  "f1": 0.774,
+  "accuracy": 0.7725,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "542": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8889,
+  "f1": 0.7747,
+  "accuracy": 0.7876,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "543": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.905,
+  "f1": 0.7955,
+  "accuracy": 0.804,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "544": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9317,
+  "f1": 0.8336,
+  "accuracy": 0.8342,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "545": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8378,
+  "f1": 0.7428,
+  "accuracy": 0.7725,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "546": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.89,
+  "f1": 0.7749,
+  "accuracy": 0.773,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "547": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8244,
+  "f1": 0.7352,
+  "accuracy": 0.7425,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "548": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.84,
+  "f1": 0.7481,
+  "accuracy": 0.7878,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "549": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8907,
+  "f1": 0.8118,
+  "accuracy": 0.8029,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "550": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8419,
+  "f1": 0.7307,
+  "accuracy": 0.7568,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "551": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.839,
+  "f1": 0.722,
+  "accuracy": 0.7274,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "552": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9059,
+  "f1": 0.7626,
+  "accuracy": 0.7584,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "553": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8894,
+  "f1": 0.7945,
+  "accuracy": 0.8038,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "554": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.905,
+  "f1": 0.7884,
+  "accuracy": 0.8024,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "555": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8933,
+  "f1": 0.7528,
+  "accuracy": 0.7587,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "556": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8553,
+  "f1": 0.7128,
+  "accuracy": 0.7282,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "557": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8584,
+  "f1": 0.7166,
+  "accuracy": 0.6976,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "558": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8745,
+  "f1": 0.7547,
+  "accuracy": 0.7584,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "559": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8958,
+  "f1": 0.7875,
+  "accuracy": 0.7868,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "560": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9371,
+  "f1": 0.8542,
+  "accuracy": 0.8643,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "561": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8864,
+  "f1": 0.7605,
+  "accuracy": 0.7727,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "562": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8977,
+  "f1": 0.8067,
+  "accuracy": 0.8033,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "563": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9064,
+  "f1": 0.808,
+  "accuracy": 0.818,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "564": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7811,
+  "f1": 0.6935,
+  "accuracy": 0.7272,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "565": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7961,
+  "f1": 0.6341,
+  "accuracy": 0.6513,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "566": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8301,
+  "f1": 0.7137,
+  "accuracy": 0.7282,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "567": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8577,
+  "f1": 0.7622,
+  "accuracy": 0.7583,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "568": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8848,
+  "f1": 0.8316,
+  "accuracy": 0.8334,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "569": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9023,
+  "f1": 0.7951,
+  "accuracy": 0.8188,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "570": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8261,
+  "f1": 0.7108,
+  "accuracy": 0.7117,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "571": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.843,
+  "f1": 0.7355,
+  "accuracy": 0.7414,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "572": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9565,
+  "f1": 0.8338,
+  "accuracy": 0.8335,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "573": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8632,
+  "f1": 0.7875,
+  "accuracy": 0.8042,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "574": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8436,
+  "f1": 0.794,
+  "accuracy": 0.8033,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "575": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8656,
+  "f1": 0.76,
+  "accuracy": 0.7742,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "576": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8718,
+  "f1": 0.7748,
+  "accuracy": 0.7726,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "577": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8562,
+  "f1": 0.7679,
+  "accuracy": 0.7722,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "578": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8608,
+  "f1": 0.7426,
+  "accuracy": 0.7427,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "579": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.866,
+  "f1": 0.7011,
+  "accuracy": 0.7129,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "580": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8456,
+  "f1": 0.7588,
+  "accuracy": 0.7721,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "581": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8554,
+  "f1": 0.7685,
+  "accuracy": 0.7732,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "582": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8638,
+  "f1": 0.708,
+  "accuracy": 0.6976,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "583": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8947,
+  "f1": 0.8382,
+  "accuracy": 0.8486,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "584": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8417,
+  "f1": 0.7099,
+  "accuracy": 0.7578,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "585": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8602,
+  "f1": 0.7172,
+  "accuracy": 0.7422,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "586": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.897,
+  "f1": 0.7476,
+  "accuracy": 0.7574,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "587": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8871,
+  "f1": 0.8147,
+  "accuracy": 0.8177,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "588": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8909,
+  "f1": 0.8087,
+  "accuracy": 0.8193,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "589": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8912,
+  "f1": 0.7735,
+  "accuracy": 0.7872,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "590": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9075,
+  "f1": 0.7883,
+  "accuracy": 0.8043,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "591": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8069,
+  "f1": 0.7545,
+  "accuracy": 0.7572,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "592": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9128,
+  "f1": 0.8201,
+  "accuracy": 0.8188,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "593": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8781,
+  "f1": 0.7232,
+  "accuracy": 0.7281,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "594": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8291,
+  "f1": 0.7094,
+  "accuracy": 0.7119,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "595": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8809,
+  "f1": 0.7424,
+  "accuracy": 0.7421,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "596": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9179,
+  "f1": 0.8141,
+  "accuracy": 0.8045,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "597": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8482,
+  "f1": 0.7303,
+  "accuracy": 0.726,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "598": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8835,
+  "f1": 0.8144,
+  "accuracy": 0.8175,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "599": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8791,
+  "f1": 0.7863,
+  "accuracy": 0.7879,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "600": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8419,
+  "f1": 0.7417,
+  "accuracy": 0.7424,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "601": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.876,
+  "f1": 0.809,
+  "accuracy": 0.8175,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "602": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9045,
+  "f1": 0.7752,
+  "accuracy": 0.7724,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "603": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9014,
+  "f1": 0.8143,
+  "accuracy": 0.8186,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "604": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9466,
+  "f1": 0.8645,
+  "accuracy": 0.8637,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "605": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8306,
+  "f1": 0.6675,
+  "accuracy": 0.6963,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "606": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7829,
+  "f1": 0.692,
+  "accuracy": 0.713,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "607": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9045,
+  "f1": 0.7597,
+  "accuracy": 0.7742,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "608": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.868,
+  "f1": 0.7668,
+  "accuracy": 0.7739,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "609": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8454,
+  "f1": 0.7271,
+  "accuracy": 0.7585,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "610": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.891,
+  "f1": 0.8088,
+  "accuracy": 0.8181,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "611": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8729,
+  "f1": 0.7936,
+  "accuracy": 0.7883,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "612": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8194,
+  "f1": 0.7125,
+  "accuracy": 0.7278,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "613": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8052,
+  "f1": 0.6978,
+  "accuracy": 0.6965,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "614": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8481,
+  "f1": 0.7514,
+  "accuracy": 0.7731,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "615": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.876,
+  "f1": 0.7875,
+  "accuracy": 0.8035,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "616": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8672,
+  "f1": 0.7273,
+  "accuracy": 0.7119,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "617": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8847,
+  "f1": 0.7664,
+  "accuracy": 0.7735,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "618": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8219,
+  "f1": 0.7121,
+  "accuracy": 0.7272,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "619": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9298,
+  "f1": 0.7877,
+  "accuracy": 0.7881,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "620": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8897,
+  "f1": 0.727,
+  "accuracy": 0.7111,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "621": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9303,
+  "f1": 0.7949,
+  "accuracy": 0.8033,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "622": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8325,
+  "f1": 0.7172,
+  "accuracy": 0.741,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "623": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8909,
+  "f1": 0.7249,
+  "accuracy": 0.7433,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "624": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8226,
+  "f1": 0.7214,
+  "accuracy": 0.727,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "625": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9081,
+  "f1": 0.8596,
+  "accuracy": 0.8636,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "626": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8468,
+  "f1": 0.7131,
+  "accuracy": 0.7275,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "627": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8537,
+  "f1": 0.7629,
+  "accuracy": 0.7567,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "628": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8059,
+  "f1": 0.7086,
+  "accuracy": 0.7569,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "629": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8484,
+  "f1": 0.7507,
+  "accuracy": 0.7724,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "630": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9296,
+  "f1": 0.8386,
+  "accuracy": 0.8484,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "631": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8326,
+  "f1": 0.703,
+  "accuracy": 0.7274,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "632": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.834,
+  "f1": 0.6416,
+  "accuracy": 0.727,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "633": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9145,
+  "f1": 0.7929,
+  "accuracy": 0.7881,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "634": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8841,
+  "f1": 0.7871,
+  "accuracy": 0.7889,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "635": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8964,
+  "f1": 0.7463,
+  "accuracy": 0.7574,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "636": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8578,
+  "f1": 0.7457,
+  "accuracy": 0.726,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "637": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8359,
+  "f1": 0.6912,
+  "accuracy": 0.7134,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "638": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8807,
+  "f1": 0.7804,
+  "accuracy": 0.8029,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "639": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8309,
+  "f1": 0.7012,
+  "accuracy": 0.7127,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "640": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8143,
+  "f1": 0.7598,
+  "accuracy": 0.773,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "641": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8595,
+  "f1": 0.7879,
+  "accuracy": 0.7877,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "642": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8722,
+  "f1": 0.7682,
+  "accuracy": 0.7726,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "643": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8409,
+  "f1": 0.7606,
+  "accuracy": 0.7731,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "644": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7855,
+  "f1": 0.6888,
+  "accuracy": 0.6968,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "645": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8872,
+  "f1": 0.7805,
+  "accuracy": 0.7884,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "646": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8768,
+  "f1": 0.7663,
+  "accuracy": 0.7878,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "647": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8835,
+  "f1": 0.7814,
+  "accuracy": 0.7733,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "648": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8986,
+  "f1": 0.7544,
+  "accuracy": 0.7578,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "649": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8723,
+  "f1": 0.7598,
+  "accuracy": 0.7733,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "650": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.854,
+  "f1": 0.7345,
+  "accuracy": 0.7436,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "651": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8642,
+  "f1": 0.7476,
+  "accuracy": 0.7592,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "652": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9179,
+  "f1": 0.8158,
+  "accuracy": 0.8187,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "653": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8628,
+  "f1": 0.7286,
+  "accuracy": 0.7276,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "654": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9026,
+  "f1": 0.7868,
+  "accuracy": 0.7882,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "655": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8445,
+  "f1": 0.7252,
+  "accuracy": 0.7424,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "656": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8692,
+  "f1": 0.7614,
+  "accuracy": 0.758,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "657": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8821,
+  "f1": 0.8089,
+  "accuracy": 0.8182,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "658": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8643,
+  "f1": 0.7467,
+  "accuracy": 0.7579,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "659": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8528,
+  "f1": 0.7425,
+  "accuracy": 0.7425,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "660": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8941,
+  "f1": 0.7743,
+  "accuracy": 0.7732,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "661": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8424,
+  "f1": 0.7004,
+  "accuracy": 0.712,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "662": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8678,
+  "f1": 0.7394,
+  "accuracy": 0.757,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "663": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.838,
+  "f1": 0.7427,
+  "accuracy": 0.7424,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "664": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.876,
+  "f1": 0.7333,
+  "accuracy": 0.7432,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "665": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8856,
+  "f1": 0.7799,
+  "accuracy": 0.7885,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "666": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8885,
+  "f1": 0.829,
+  "accuracy": 0.8331,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "667": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9019,
+  "f1": 0.7627,
+  "accuracy": 0.7585,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "668": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8065,
+  "f1": 0.6878,
+  "accuracy": 0.6816,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "669": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8082,
+  "f1": 0.7673,
+  "accuracy": 0.7729,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "670": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8963,
+  "f1": 0.7734,
+  "accuracy": 0.7882,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "671": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8735,
+  "f1": 0.8188,
+  "accuracy": 0.834,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "672": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8246,
+  "f1": 0.7474,
+  "accuracy": 0.7577,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "673": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9109,
+  "f1": 0.8344,
+  "accuracy": 0.8335,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "674": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8497,
+  "f1": 0.7595,
+  "accuracy": 0.7727,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "675": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9249,
+  "f1": 0.8002,
+  "accuracy": 0.8033,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "676": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9451,
+  "f1": 0.8251,
+  "accuracy": 0.8195,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "677": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8883,
+  "f1": 0.7689,
+  "accuracy": 0.7729,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "678": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8791,
+  "f1": 0.7688,
+  "accuracy": 0.7723,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "679": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8156,
+  "f1": 0.669,
+  "accuracy": 0.6965,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "680": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8019,
+  "f1": 0.668,
+  "accuracy": 0.696,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "681": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8701,
+  "f1": 0.7877,
+  "accuracy": 0.8025,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "682": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8727,
+  "f1": 0.7881,
+  "accuracy": 0.7879,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "683": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8815,
+  "f1": 0.7604,
+  "accuracy": 0.7727,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "684": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8882,
+  "f1": 0.7806,
+  "accuracy": 0.7728,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "685": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7852,
+  "f1": 0.6442,
+  "accuracy": 0.6827,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "686": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8062,
+  "f1": 0.6569,
+  "accuracy": 0.7273,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "687": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.86,
+  "f1": 0.7416,
+  "accuracy": 0.7427,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "688": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.924,
+  "f1": 0.8523,
+  "accuracy": 0.8487,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "689": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8442,
+  "f1": 0.7375,
+  "accuracy": 0.7586,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "690": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8373,
+  "f1": 0.7459,
+  "accuracy": 0.7571,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "691": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9005,
+  "f1": 0.7872,
+  "accuracy": 0.8025,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "692": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7369,
+  "f1": 0.6776,
+  "accuracy": 0.6821,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "693": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8337,
+  "f1": 0.7353,
+  "accuracy": 0.7427,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "694": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8587,
+  "f1": 0.708,
+  "accuracy": 0.6968,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "695": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.7452,
+  "f1": 0.6556,
+  "accuracy": 0.6818,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "696": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8064,
+  "f1": 0.7195,
+  "accuracy": 0.7574,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "697": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8182,
+  "f1": 0.6562,
+  "accuracy": 0.6821,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "698": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9227,
+  "f1": 0.7873,
+  "accuracy": 0.8184,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "699": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8343,
+  "f1": 0.7079,
+  "accuracy": 0.6973,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "700": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8472,
+  "f1": 0.7383,
+  "accuracy": 0.7577,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "701": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8836,
+  "f1": 0.8292,
+  "accuracy": 0.8342,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "702": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8709,
+  "f1": 0.7426,
+  "accuracy": 0.7421,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "703": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8303,
+  "f1": 0.7252,
+  "accuracy": 0.7433,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "704": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8203,
+  "f1": 0.7002,
+  "accuracy": 0.7127,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "705": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9246,
+  "f1": 0.8015,
+  "accuracy": 0.8032,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "706": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8244,
+  "f1": 0.6981,
+  "accuracy": 0.6968,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "707": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9089,
+  "f1": 0.8078,
+  "accuracy": 0.8029,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "708": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8515,
+  "f1": 0.7596,
+  "accuracy": 0.7739,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "709": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9361,
+  "f1": 0.8916,
+  "accuracy": 0.8944,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "710": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8093,
+  "f1": 0.7303,
+  "accuracy": 0.7272,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "711": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8621,
+  "f1": 0.7509,
+  "accuracy": 0.743,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "712": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9266,
+  "f1": 0.8341,
+  "accuracy": 0.8338,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "713": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8811,
+  "f1": 0.7423,
+  "accuracy": 0.7434,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "714": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8934,
+  "f1": 0.8107,
+  "accuracy": 0.8332,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "715": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8521,
+  "f1": 0.8022,
+  "accuracy": 0.8029,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "716": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8883,
+  "f1": 0.7883,
+  "accuracy": 0.8032,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "717": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.948,
+  "f1": 0.8346,
+  "accuracy": 0.8341,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "718": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.88,
+  "f1": 0.7881,
+  "accuracy": 0.7882,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "719": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9118,
+  "f1": 0.7389,
+  "accuracy": 0.7586,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "720": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8604,
+  "f1": 0.8073,
+  "accuracy": 0.8031,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "721": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8477,
+  "f1": 0.7305,
+  "accuracy": 0.7278,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "722": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9014,
+  "f1": 0.8144,
+  "accuracy": 0.8179,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "723": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8996,
+  "f1": 0.7737,
+  "accuracy": 0.7881,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "724": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8441,
+  "f1": 0.782,
+  "accuracy": 0.7884,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "725": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8942,
+  "f1": 0.7484,
+  "accuracy": 0.7579,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "726": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8727,
+  "f1": 0.7368,
+  "accuracy": 0.727,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "727": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8497,
+  "f1": 0.7299,
+  "accuracy": 0.7264,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "728": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8737,
+  "f1": 0.7621,
+  "accuracy": 0.758,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "729": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8067,
+  "f1": 0.6665,
+  "accuracy": 0.6509,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "730": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.849,
+  "f1": 0.7285,
+  "accuracy": 0.7582,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "731": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8451,
+  "f1": 0.7618,
+  "accuracy": 0.773,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "732": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8877,
+  "f1": 0.769,
+  "accuracy": 0.7582,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "733": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8244,
+  "f1": 0.7468,
+  "accuracy": 0.7576,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "734": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8849,
+  "f1": 0.8055,
+  "accuracy": 0.8019,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "735": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9338,
+  "f1": 0.8155,
+  "accuracy": 0.8193,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "736": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8984,
+  "f1": 0.8021,
+  "accuracy": 0.8172,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "737": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8658,
+  "f1": 0.7164,
+  "accuracy": 0.7433,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "738": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8218,
+  "f1": 0.6681,
+  "accuracy": 0.6972,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "739": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8373,
+  "f1": 0.7511,
+  "accuracy": 0.7722,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "740": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8117,
+  "f1": 0.7158,
+  "accuracy": 0.6969,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "741": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9038,
+  "f1": 0.8153,
+  "accuracy": 0.8193,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "742": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8813,
+  "f1": 0.7731,
+  "accuracy": 0.7866,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "743": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8718,
+  "f1": 0.7225,
+  "accuracy": 0.7267,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "744": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.906,
+  "f1": 0.7935,
+  "accuracy": 0.8034,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "745": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8911,
+  "f1": 0.7899,
+  "accuracy": 0.8027,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "746": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8374,
+  "f1": 0.7629,
+  "accuracy": 0.7575,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "747": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.929,
+  "f1": 0.8188,
+  "accuracy": 0.8183,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "748": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8577,
+  "f1": 0.7421,
+  "accuracy": 0.7423,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "749": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8493,
+  "f1": 0.7437,
+  "accuracy": 0.7727,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "750": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.873,
+  "f1": 0.7626,
+  "accuracy": 0.7582,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "751": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8197,
+  "f1": 0.7398,
+  "accuracy": 0.7586,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "752": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9178,
+  "f1": 0.8345,
+  "accuracy": 0.8329,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "753": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9406,
+  "f1": 0.8013,
+  "accuracy": 0.8039,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "754": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9327,
+  "f1": 0.8399,
+  "accuracy": 0.8492,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "755": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9272,
+  "f1": 0.7809,
+  "accuracy": 0.7735,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "756": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8403,
+  "f1": 0.7602,
+  "accuracy": 0.7726,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "757": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.87,
+  "f1": 0.7605,
+  "accuracy": 0.7734,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "758": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9336,
+  "f1": 0.9117,
+  "accuracy": 0.9083,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "759": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8158,
+  "f1": 0.6786,
+  "accuracy": 0.6815,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "760": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9378,
+  "f1": 0.8005,
+  "accuracy": 0.8029,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "761": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8999,
+  "f1": 0.7684,
+  "accuracy": 0.7583,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "762": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.883,
+  "f1": 0.7433,
+  "accuracy": 0.772,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "763": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8753,
+  "f1": 0.7942,
+  "accuracy": 0.8034,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "764": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9057,
+  "f1": 0.8146,
+  "accuracy": 0.8193,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "765": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8831,
+  "f1": 0.7381,
+  "accuracy": 0.7267,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "766": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8875,
+  "f1": 0.7747,
+  "accuracy": 0.773,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "767": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8015,
+  "f1": 0.6932,
+  "accuracy": 0.7277,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "768": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8694,
+  "f1": 0.7093,
+  "accuracy": 0.6978,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "769": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8029,
+  "f1": 0.6909,
+  "accuracy": 0.7132,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "770": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8565,
+  "f1": 0.7749,
+  "accuracy": 0.7727,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "771": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.928,
+  "f1": 0.7856,
+  "accuracy": 0.789,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "772": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8045,
+  "f1": 0.6907,
+  "accuracy": 0.6974,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "773": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7859,
+  "f1": 0.679,
+  "accuracy": 0.6973,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "774": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8309,
+  "f1": 0.7387,
+  "accuracy": 0.7267,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "775": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.903,
+  "f1": 0.7867,
+  "accuracy": 0.7884,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "776": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8366,
+  "f1": 0.7385,
+  "accuracy": 0.7584,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "777": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8247,
+  "f1": 0.7296,
+  "accuracy": 0.758,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "778": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8908,
+  "f1": 0.7809,
+  "accuracy": 0.8024,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "779": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8291,
+  "f1": 0.746,
+  "accuracy": 0.7586,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "780": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.826,
+  "f1": 0.7617,
+  "accuracy": 0.7565,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "781": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.838,
+  "f1": 0.7655,
+  "accuracy": 0.7879,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "782": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8887,
+  "f1": 0.7653,
+  "accuracy": 0.7878,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "783": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.867,
+  "f1": 0.7382,
+  "accuracy": 0.7272,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "784": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8063,
+  "f1": 0.7079,
+  "accuracy": 0.6967,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "785": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8814,
+  "f1": 0.7385,
+  "accuracy": 0.7273,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "786": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8919,
+  "f1": 0.8438,
+  "accuracy": 0.8487,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "787": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8553,
+  "f1": 0.7131,
+  "accuracy": 0.7277,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "788": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8208,
+  "f1": 0.6973,
+  "accuracy": 0.6971,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "789": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8907,
+  "f1": 0.7322,
+  "accuracy": 0.7732,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "790": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8633,
+  "f1": 0.7811,
+  "accuracy": 0.7878,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "791": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8955,
+  "f1": 0.768,
+  "accuracy": 0.7728,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "792": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9582,
+  "f1": 0.8977,
+  "accuracy": 0.8935,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "793": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9095,
+  "f1": 0.8023,
+  "accuracy": 0.8189,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "794": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8755,
+  "f1": 0.7884,
+  "accuracy": 0.8035,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "795": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8477,
+  "f1": 0.7388,
+  "accuracy": 0.728,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "796": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8801,
+  "f1": 0.7957,
+  "accuracy": 0.8176,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "797": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8242,
+  "f1": 0.7187,
+  "accuracy": 0.7122,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "798": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8695,
+  "f1": 0.7349,
+  "accuracy": 0.7417,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "799": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8649,
+  "f1": 0.7471,
+  "accuracy": 0.7589,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "800": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8474,
+  "f1": 0.7153,
+  "accuracy": 0.7422,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "801": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8904,
+  "f1": 0.8445,
+  "accuracy": 0.8476,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "802": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8517,
+  "f1": 0.7747,
+  "accuracy": 0.7732,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "803": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.867,
+  "f1": 0.7665,
+  "accuracy": 0.7879,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "804": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9196,
+  "f1": 0.8325,
+  "accuracy": 0.8491,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "805": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8889,
+  "f1": 0.8388,
+  "accuracy": 0.8488,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "806": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.7918,
+  "f1": 0.7011,
+  "accuracy": 0.7116,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "807": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7897,
+  "f1": 0.7427,
+  "accuracy": 0.7434,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "808": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.7774,
+  "f1": 0.6567,
+  "accuracy": 0.6821,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "809": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8747,
+  "f1": 0.7813,
+  "accuracy": 0.7879,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "810": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.853,
+  "f1": 0.767,
+  "accuracy": 0.773,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "811": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.895,
+  "f1": 0.7548,
+  "accuracy": 0.7571,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "812": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8622,
+  "f1": 0.8009,
+  "accuracy": 0.8025,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "813": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8755,
+  "f1": 0.7743,
+  "accuracy": 0.7717,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "814": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8659,
+  "f1": 0.7298,
+  "accuracy": 0.7266,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "815": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8609,
+  "f1": 0.7131,
+  "accuracy": 0.7277,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "816": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8719,
+  "f1": 0.7928,
+  "accuracy": 0.7888,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "817": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8515,
+  "f1": 0.7942,
+  "accuracy": 0.788,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "818": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8604,
+  "f1": 0.7224,
+  "accuracy": 0.7273,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "819": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8572,
+  "f1": 0.7426,
+  "accuracy": 0.7729,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "820": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.7565,
+  "f1": 0.6333,
+  "accuracy": 0.6671,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "821": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8356,
+  "f1": 0.7595,
+  "accuracy": 0.7731,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "822": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8792,
+  "f1": 0.7878,
+  "accuracy": 0.788,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "823": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9053,
+  "f1": 0.7881,
+  "accuracy": 0.7884,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "824": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8187,
+  "f1": 0.7036,
+  "accuracy": 0.7279,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "825": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8481,
+  "f1": 0.703,
+  "accuracy": 0.7267,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "826": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8502,
+  "f1": 0.7225,
+  "accuracy": 0.7276,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "827": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8549,
+  "f1": 0.7188,
+  "accuracy": 0.7118,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "828": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8798,
+  "f1": 0.7559,
+  "accuracy": 0.7431,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "829": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9085,
+  "f1": 0.7505,
+  "accuracy": 0.7737,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "830": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9,
+  "f1": 0.7808,
+  "accuracy": 0.7875,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "831": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9178,
+  "f1": 0.7712,
+  "accuracy": 0.8031,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "832": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7931,
+  "f1": 0.6877,
+  "accuracy": 0.697,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "833": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8764,
+  "f1": 0.8149,
+  "accuracy": 0.8188,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "834": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9304,
+  "f1": 0.8208,
+  "accuracy": 0.8181,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "835": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8685,
+  "f1": 0.7661,
+  "accuracy": 0.7884,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "836": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8439,
+  "f1": 0.7368,
+  "accuracy": 0.7278,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "837": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8764,
+  "f1": 0.7417,
+  "accuracy": 0.7417,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "838": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7909,
+  "f1": 0.6569,
+  "accuracy": 0.6961,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "839": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8722,
+  "f1": 0.755,
+  "accuracy": 0.7576,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "840": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9651,
+  "f1": 0.854,
+  "accuracy": 0.8495,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "841": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8302,
+  "f1": 0.7286,
+  "accuracy": 0.7576,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "842": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8889,
+  "f1": 0.769,
+  "accuracy": 0.758,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "843": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8467,
+  "f1": 0.6888,
+  "accuracy": 0.6972,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "844": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9028,
+  "f1": 0.7661,
+  "accuracy": 0.7883,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "845": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8782,
+  "f1": 0.7537,
+  "accuracy": 0.758,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "846": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8786,
+  "f1": 0.7151,
+  "accuracy": 0.6977,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "847": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9155,
+  "f1": 0.8068,
+  "accuracy": 0.8032,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "848": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8567,
+  "f1": 0.7681,
+  "accuracy": 0.7732,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "849": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9307,
+  "f1": 0.8085,
+  "accuracy": 0.8179,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "850": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8523,
+  "f1": 0.7728,
+  "accuracy": 0.803,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "851": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7333,
+  "f1": 0.6235,
+  "accuracy": 0.6208,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "852": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8702,
+  "f1": 0.7313,
+  "accuracy": 0.7273,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "853": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9381,
+  "f1": 0.8341,
+  "accuracy": 0.8335,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "854": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.911,
+  "f1": 0.809,
+  "accuracy": 0.8182,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "855": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9307,
+  "f1": 0.809,
+  "accuracy": 0.8181,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "856": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8364,
+  "f1": 0.7032,
+  "accuracy": 0.7273,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "857": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8155,
+  "f1": 0.6993,
+  "accuracy": 0.6963,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "858": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8916,
+  "f1": 0.754,
+  "accuracy": 0.7583,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "859": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8276,
+  "f1": 0.7132,
+  "accuracy": 0.7282,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "860": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.881,
+  "f1": 0.7737,
+  "accuracy": 0.7879,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "861": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8513,
+  "f1": 0.7154,
+  "accuracy": 0.7421,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "862": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8835,
+  "f1": 0.7398,
+  "accuracy": 0.7585,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "863": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8338,
+  "f1": 0.743,
+  "accuracy": 0.7733,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "864": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8864,
+  "f1": 0.7129,
+  "accuracy": 0.7273,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "865": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9063,
+  "f1": 0.7543,
+  "accuracy": 0.7573,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "866": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8784,
+  "f1": 0.7676,
+  "accuracy": 0.7738,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "867": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8783,
+  "f1": 0.747,
+  "accuracy": 0.7578,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "868": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.882,
+  "f1": 0.7553,
+  "accuracy": 0.758,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "869": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8981,
+  "f1": 0.7951,
+  "accuracy": 0.8185,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "870": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8409,
+  "f1": 0.7095,
+  "accuracy": 0.7127,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "871": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8779,
+  "f1": 0.7957,
+  "accuracy": 0.8178,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "872": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9022,
+  "f1": 0.7616,
+  "accuracy": 0.7586,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "873": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8277,
+  "f1": 0.7222,
+  "accuracy": 0.7278,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "874": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8534,
+  "f1": 0.6449,
+  "accuracy": 0.6516,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "875": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8561,
+  "f1": 0.6977,
+  "accuracy": 0.7575,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "876": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.866,
+  "f1": 0.7868,
+  "accuracy": 0.7886,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "877": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8534,
+  "f1": 0.7465,
+  "accuracy": 0.7572,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "878": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8566,
+  "f1": 0.7246,
+  "accuracy": 0.7423,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "879": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.861,
+  "f1": 0.7663,
+  "accuracy": 0.7882,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "880": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8054,
+  "f1": 0.6558,
+  "accuracy": 0.6363,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "881": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8253,
+  "f1": 0.7254,
+  "accuracy": 0.7429,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "882": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8866,
+  "f1": 0.7951,
+  "accuracy": 0.8181,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "883": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8666,
+  "f1": 0.7467,
+  "accuracy": 0.7575,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "884": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8625,
+  "f1": 0.743,
+  "accuracy": 0.7421,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "885": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8769,
+  "f1": 0.7181,
+  "accuracy": 0.7115,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "886": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9024,
+  "f1": 0.7952,
+  "accuracy": 0.8025,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "887": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8203,
+  "f1": 0.7006,
+  "accuracy": 0.7117,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "888": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8446,
+  "f1": 0.7139,
+  "accuracy": 0.7283,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "889": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.828,
+  "f1": 0.7545,
+  "accuracy": 0.7565,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "890": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.844,
+  "f1": 0.7865,
+  "accuracy": 0.8033,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "891": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8007,
+  "f1": 0.7043,
+  "accuracy": 0.7278,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "892": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8294,
+  "f1": 0.76,
+  "accuracy": 0.7728,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "893": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8185,
+  "f1": 0.7294,
+  "accuracy": 0.7579,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "894": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8874,
+  "f1": 0.7514,
+  "accuracy": 0.7735,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "895": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8899,
+  "f1": 0.7812,
+  "accuracy": 0.7891,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "896": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8015,
+  "f1": 0.7225,
+  "accuracy": 0.7259,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "897": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7716,
+  "f1": 0.6334,
+  "accuracy": 0.6677,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "898": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8361,
+  "f1": 0.7419,
+  "accuracy": 0.7431,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "899": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8958,
+  "f1": 0.8376,
+  "accuracy": 0.8487,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "900": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8567,
+  "f1": 0.7728,
+  "accuracy": 0.7877,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "901": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8241,
+  "f1": 0.7188,
+  "accuracy": 0.7132,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "902": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9109,
+  "f1": 0.7869,
+  "accuracy": 0.8197,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "903": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8541,
+  "f1": 0.7258,
+  "accuracy": 0.7418,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "904": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.802,
+  "f1": 0.6659,
+  "accuracy": 0.6665,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "905": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8388,
+  "f1": 0.7341,
+  "accuracy": 0.7439,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "906": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8414,
+  "f1": 0.6681,
+  "accuracy": 0.6825,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "907": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.885,
+  "f1": 0.7413,
+  "accuracy": 0.7419,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "908": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.795,
+  "f1": 0.6318,
+  "accuracy": 0.6676,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "909": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9187,
+  "f1": 0.8013,
+  "accuracy": 0.803,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "910": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8731,
+  "f1": 0.7313,
+  "accuracy": 0.7276,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "911": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9025,
+  "f1": 0.7501,
+  "accuracy": 0.7416,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "912": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8951,
+  "f1": 0.7425,
+  "accuracy": 0.7428,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "913": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8976,
+  "f1": 0.7752,
+  "accuracy": 0.7886,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "914": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8228,
+  "f1": 0.7517,
+  "accuracy": 0.7737,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "915": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8693,
+  "f1": 0.7617,
+  "accuracy": 0.7579,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "916": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8501,
+  "f1": 0.7669,
+  "accuracy": 0.7731,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "917": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8069,
+  "f1": 0.7193,
+  "accuracy": 0.7572,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "918": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8764,
+  "f1": 0.7721,
+  "accuracy": 0.7876,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "919": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9277,
+  "f1": 0.8697,
+  "accuracy": 0.8793,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "920": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.902,
+  "f1": 0.8447,
+  "accuracy": 0.8644,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "921": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8301,
+  "f1": 0.723,
+  "accuracy": 0.728,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "922": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9027,
+  "f1": 0.7662,
+  "accuracy": 0.7888,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "923": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8631,
+  "f1": 0.7544,
+  "accuracy": 0.7578,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "924": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8931,
+  "f1": 0.7593,
+  "accuracy": 0.7725,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "925": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8312,
+  "f1": 0.731,
+  "accuracy": 0.7279,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "926": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8423,
+  "f1": 0.7621,
+  "accuracy": 0.7573,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "927": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8527,
+  "f1": 0.7369,
+  "accuracy": 0.7579,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "928": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8145,
+  "f1": 0.7245,
+  "accuracy": 0.7427,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "929": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8803,
+  "f1": 0.7677,
+  "accuracy": 0.7734,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "930": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8799,
+  "f1": 0.7628,
+  "accuracy": 0.757,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "931": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9381,
+  "f1": 0.8217,
+  "accuracy": 0.8194,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "932": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8648,
+  "f1": 0.7812,
+  "accuracy": 0.7883,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "933": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7539,
+  "f1": 0.6661,
+  "accuracy": 0.6523,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "934": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8082,
+  "f1": 0.6917,
+  "accuracy": 0.7123,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "935": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8845,
+  "f1": 0.7892,
+  "accuracy": 0.7886,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "936": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8764,
+  "f1": 0.7465,
+  "accuracy": 0.7579,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "937": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8638,
+  "f1": 0.7256,
+  "accuracy": 0.7413,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "938": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8887,
+  "f1": 0.731,
+  "accuracy": 0.7272,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "939": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8935,
+  "f1": 0.8053,
+  "accuracy": 0.8026,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "940": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8703,
+  "f1": 0.7809,
+  "accuracy": 0.7891,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "941": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9086,
+  "f1": 0.7391,
+  "accuracy": 0.7264,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "942": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.7963,
+  "f1": 0.6562,
+  "accuracy": 0.6524,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "943": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9103,
+  "f1": 0.7871,
+  "accuracy": 0.8031,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "944": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9049,
+  "f1": 0.8025,
+  "accuracy": 0.8182,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "945": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8737,
+  "f1": 0.7417,
+  "accuracy": 0.7725,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "946": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8505,
+  "f1": 0.7427,
+  "accuracy": 0.7722,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "947": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8523,
+  "f1": 0.7475,
+  "accuracy": 0.7581,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "948": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8388,
+  "f1": 0.7144,
+  "accuracy": 0.7433,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "949": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8524,
+  "f1": 0.7159,
+  "accuracy": 0.7419,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "950": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8978,
+  "f1": 0.7696,
+  "accuracy": 0.7575,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "951": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9036,
+  "f1": 0.8136,
+  "accuracy": 0.8043,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "952": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.909,
+  "f1": 0.7717,
+  "accuracy": 0.787,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "953": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8762,
+  "f1": 0.7466,
+  "accuracy": 0.7576,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "954": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8203,
+  "f1": 0.6781,
+  "accuracy": 0.6822,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "955": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8818,
+  "f1": 0.8095,
+  "accuracy": 0.8186,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "956": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8578,
+  "f1": 0.7883,
+  "accuracy": 0.8041,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "957": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8788,
+  "f1": 0.7715,
+  "accuracy": 0.8027,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "958": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8901,
+  "f1": 0.727,
+  "accuracy": 0.7128,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "959": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9015,
+  "f1": 0.8007,
+  "accuracy": 0.8039,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "960": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.89,
+  "f1": 0.8147,
+  "accuracy": 0.8175,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "961": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8846,
+  "f1": 0.788,
+  "accuracy": 0.8045,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "962": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8998,
+  "f1": 0.7476,
+  "accuracy": 0.7574,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "963": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8234,
+  "f1": 0.6875,
+  "accuracy": 0.6827,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "964": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.9176,
+  "f1": 0.8006,
+  "accuracy": 0.8038,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "965": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8824,
+  "f1": 0.7884,
+  "accuracy": 0.8026,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "966": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.852,
+  "f1": 0.7387,
+  "accuracy": 0.7573,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "967": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8739,
+  "f1": 0.7383,
+  "accuracy": 0.7278,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "968": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8679,
+  "f1": 0.7596,
+  "accuracy": 0.772,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "969": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8723,
+  "f1": 0.7808,
+  "accuracy": 0.8033,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "970": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8525,
+  "f1": 0.7606,
+  "accuracy": 0.7717,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "971": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8255,
+  "f1": 0.7765,
+  "accuracy": 0.7724,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "972": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8581,
+  "f1": 0.7429,
+  "accuracy": 0.7414,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "973": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8487,
+  "f1": 0.7658,
+  "accuracy": 0.7879,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "974": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8463,
+  "f1": 0.8016,
+  "accuracy": 0.8041,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "975": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.887,
+  "f1": 0.7421,
+  "accuracy": 0.7431,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "976": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.802,
+  "f1": 0.6698,
+  "accuracy": 0.7276,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "977": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8228,
+  "f1": 0.7301,
+  "accuracy": 0.7267,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "978": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8102,
+  "f1": 0.6692,
+  "accuracy": 0.6969,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "979": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8475,
+  "f1": 0.718,
+  "accuracy": 0.7422,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "980": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9117,
+  "f1": 0.8485,
+  "accuracy": 0.8491,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "981": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9034,
+  "f1": 0.7756,
+  "accuracy": 0.7727,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "982": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8342,
+  "f1": 0.7379,
+  "accuracy": 0.7578,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "983": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8314,
+  "f1": 0.7005,
+  "accuracy": 0.7124,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "984": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8773,
+  "f1": 0.7733,
+  "accuracy": 0.7733,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "985": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8961,
+  "f1": 0.7612,
+  "accuracy": 0.7734,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "986": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8389,
+  "f1": 0.7216,
+  "accuracy": 0.7267,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "987": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8667,
+  "f1": 0.7212,
+  "accuracy": 0.7278,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "988": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8715,
+  "f1": 0.7598,
+  "accuracy": 0.7734,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "989": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.9336,
+  "f1": 0.8068,
+  "accuracy": 0.804,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "990": {
+  "max_seq_len": 5,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8601,
+  "f1": 0.7596,
+  "accuracy": 0.7732,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "991": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8467,
+  "f1": 0.7301,
+  "accuracy": 0.7277,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "992": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8501,
+  "f1": 0.7302,
+  "accuracy": 0.7272,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "993": {
+  "max_seq_len": 6,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8938,
+  "f1": 0.8525,
+  "accuracy": 0.8655,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "994": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.9102,
+  "f1": 0.8169,
+  "accuracy": 0.833,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "995": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8523,
+  "f1": 0.7605,
+  "accuracy": 0.7727,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "996": {
+  "max_seq_len": 6,
+  "hidden_units": 32,
+  "cell_type": "lstm",
+  "auc": 0.8697,
+  "f1": 0.7704,
+  "accuracy": 0.7578,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "997": {
+  "max_seq_len": 5,
+  "hidden_units": 24,
+  "cell_type": "lstm",
+  "auc": 0.8941,
+  "f1": 0.7879,
+  "accuracy": 0.7888,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "998": {
+  "max_seq_len": 5,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8886,
+  "f1": 0.828,
+  "accuracy": 0.8329,
+  "train_n": 256,
+  "val_n": 64
+ },
+ "999": {
+  "max_seq_len": 6,
+  "hidden_units": 16,
+  "cell_type": "lstm",
+  "auc": 0.8951,
+  "f1": 0.8023,
+  "accuracy": 0.8179,
+  "train_n": 256,
+  "val_n": 64
+ }
+}
