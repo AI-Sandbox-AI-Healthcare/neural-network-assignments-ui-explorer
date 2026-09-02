@@ -315,6 +315,11 @@ input[type=range]{width:100%;accent-color:#4f46e5;cursor:pointer}
 #not-set-msg{align-items:center;justify-content:center}
 #metric-bars{flex:1 1 0;display:flex;flex-direction:column;justify-content:space-evenly;padding:12px 0 4px}
 .arena-layout .m-row{margin-bottom:0}
+.arena-msl-note{display:block;margin-top:10px;padding:8px 11px;border-radius:9px;
+  border:1.5px solid;font-size:.73rem;font-weight:700;line-height:1.45}
+.arena-msl-note code{background:rgba(255,255,255,.55);font-weight:700}
+.arena-msl-note.warn{background:#fff7ed;border-color:#f59e0b;color:#b45309}
+.arena-msl-note.ok{background:#eef2ff;border-color:#6366f1;color:#4338ca}
 .tgl{padding:5px 12px;border-radius:6px;border:1px solid #cbd5e1;background:#f8fafc;font-size:.76rem;cursor:pointer;font-weight:700;color:#475569}
 .tgl.on{background:#4f46e5;color:#fff;border-color:#4f46e5}
 .seg{display:flex;gap:6px}
@@ -612,7 +617,7 @@ code{background:#f1f5f9;padding:1px 4px;border-radius:4px;font-size:.9em}
         <div class="slider-row" style="margin-bottom:0">
           <label>max_seq_len (from Sequence Explorer) <span id="arena-msl">not set</span></label>
         </div>
-        <div id="arena-msl-warn" style="font-size:.7rem;margin-top:6px;line-height:1.4">
+        <div id="arena-msl-warn" class="arena-msl-note warn">
           Set this on the Sequence Explorer tab first.</div>
       </div>
       <div>
@@ -1023,11 +1028,12 @@ function switchTab(i){
 function setArenaMslNote(){
   const w=document.getElementById('arena-msl-warn'); if(!w) return;
   if(state.seqTouched){
-    w.style.color='#94a3b8';
-    w.textContent='Update in the Sequence Explorer tab if you want a different value.';
+    w.className='arena-msl-note ok';
+    w.innerHTML='&#9432; Want a different <code>max_seq_len</code>? Change it back on the '
+      +'<b>Sequence Explorer</b> tab &mdash; it updates here automatically.';
   }else{
-    w.style.color='#b45309';
-    w.textContent='Set this on the Sequence Explorer tab first.';
+    w.className='arena-msl-note warn';
+    w.innerHTML='&#9888; Pick a <code>max_seq_len</code> on the <b>Sequence Explorer</b> tab first.';
   }
 }
 

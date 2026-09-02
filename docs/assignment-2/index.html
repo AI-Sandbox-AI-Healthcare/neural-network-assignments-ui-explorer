@@ -38,7 +38,7 @@ body.has-completion-bar{padding-top:46px}
 body.has-completion-bar #sidebar{height:calc(100vh - 46px)}
 /* ---- Pipeline Stages (Overview tab) ---- */
 .pipeline{display:flex;align-items:center;flex-wrap:wrap;gap:6px;padding:14px 18px;background:white;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.pipe-step{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:82px}
+.pipe-step{flex:1 1 0;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:82px}
 .pipe-step .p-icon{font-size:1.9rem}
 .pipe-step .p-name{font-size:.68rem;font-weight:700;color:#334155;text-align:center}
 .pipe-step .p-sub{font-size:.6rem;color:#94a3b8;text-align:center}
@@ -198,8 +198,9 @@ input[type=range]{width:100%;accent-color:#4f46e5;cursor:pointer}
 .arena-lock-note{font-size:.76rem;color:#64748b;margin:2px 0 10px}
 .arena-run{background:#4f46e5;color:#fff;border:none;padding:6px 14px;border-radius:7px;font-weight:700;cursor:pointer;font-size:.78rem}
 .arena-run:disabled{background:#cbd5e1;cursor:not-allowed}
-#arena-best{margin-left:10px;font-size:.8rem;font-weight:700;color:#94a3b8}
-#arena-best.hit{color:#059669}
+#arena-best{margin-left:10px;font-size:.74rem;font-weight:800;display:inline-block;
+  padding:4px 11px;border-radius:999px;border:1.5px solid #f59e0b;background:#fff7ed;color:#b45309}
+#arena-best.hit{border-color:#10b981;background:#ecfdf5;color:#047857}
 .arena-caption{background:#faf5ff;border-left:3px solid #a78bfa;border-radius:0 6px 6px 0;padding:10px 12px;font-size:.8rem;color:#5b21b6;line-height:1.55;margin-top:12px;display:none}
 .arena-auc-bars{display:flex;gap:20px;justify-content:center;align-items:flex-end;height:120px;margin-top:12px}
 .arena-auc-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
@@ -515,10 +516,10 @@ input[type=range]{width:100%;accent-color:#4f46e5;cursor:pointer}
     </div>
 
     <div id="tryown">
-      <div class="card-title">🔧 Try your own pair
-        <span id="arena-best">Best F1 so far: --</span></div>
+      <div class="card-title" style="flex-wrap:wrap;row-gap:6px">🔧 Try your own pair
+        <span id="arena-best">Best F1 so far: -- (goal 0.787)</span></div>
       <p class="arena-lock-note">Pick any combination on Model A and Model B above, then
-      <strong>Train Both</strong>. Goal: reach validation <strong>F1 ≥ 0.787</strong>.</p>
+      <strong>Train Both</strong>. Goal: reach validation <strong>F1 ≥ 0.787</strong>  (on Model A or Model B).</p>
       <button class="arena-run" id="arena-run-btn" onclick="trainCustom()">Train Both</button>
     </div>
 
@@ -823,7 +824,8 @@ function copyParams(){
   const s=`return {\n  "student_id": "${sid}",\n  "n_estimators": ${document.getElementById('ne-sl').value},\n  "max_depth": ${document.getElementById('md-sl').value},\n  "oversample_ratio": ${parseFloat(document.getElementById('or-sl').value).toFixed(2)},\n  "val_fraction": 0.20,\n}`;
   navigator.clipboard?.writeText(s).then(()=>alert('Copied:\n\n'+s)).catch(()=>alert(s));
 }
-function arenaComplete(){ return state.presetsRun.size>=4 && state.customRuns>=1; }
+function arenaGoalMet(){ return state.customRuns>=1 && state.arenaBestF1>=ARENA_GOAL_F1; }
+function arenaComplete(){ return state.presetsRun.size>=4 && arenaGoalMet(); }
 function updateCompletion(){
   const done=state.isOptimal && state.explored.size>=CONCEPTS.length && arenaComplete();
   document.getElementById('top-complete-bar').style.display=done?'flex':'none';
@@ -861,7 +863,8 @@ const PRESET_PAIRS={
   earlystop:[{preset:'wide',activation:'tanh',dropout:false,early_stopping:false},{preset:'wide',activation:'tanh',dropout:false,early_stopping:true}],
 };
 function updateArenaProgress(){
-  const p=state.presetsRun.size, c=Math.min(state.customRuns,1), n=p+c;
+  // The 5th step only counts once the student's own pair BEATS the goal F1.
+  const p=state.presetsRun.size, c=arenaGoalMet()?1:0, n=p+c;
   const fill=document.getElementById('arena-prog-fill');
   fill.style.width=(n/5*100)+'%';
   fill.classList.toggle('full',n>=5);
@@ -875,8 +878,10 @@ function updateArenaProgress(){
   }
   let txt;
   if(p<4) txt=`${n} / 5 — run the four comparisons (${p}/4)`;
-  else if(c<1) txt='4 / 5 — now mix any options and hit Train Both';
-  else txt='5 / 5 — Architecture Arena complete ✓';
+  else if(c===1) txt='5 / 5 — Architecture Arena complete ✓';
+  else if(state.customRuns<1) txt='4 / 5 — now mix any options and hit Train Both';
+  else txt=`4 / 5 — reach validation F1 ≥ ${ARENA_GOAL_F1.toFixed(3)} with your own pair `
+           +`(best so far ${state.arenaBestF1.toFixed(3)})`;
   document.getElementById('arena-prog-txt').textContent=txt;
   updateCompletion();
 }
