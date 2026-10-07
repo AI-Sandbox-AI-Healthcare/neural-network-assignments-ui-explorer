@@ -24,7 +24,9 @@ Both .js files are copied into docs/assignment-1/ as-is, and a handful of
 one-line surgical replacements swap run_sandbox.py's `fetch('/api/...')`
 calls for calls into the shim -- everything else in the page (CSS, concept
 cards, charts, tables, modal) is copied verbatim, so the static site always
-matches the local UI exactly whenever this script is regenerated.
+matches the local UI exactly whenever this script is regenerated. The only
+addition is a <script src="../analytics.js" defer> tag in <head> for Google
+Analytics (see ANALYTICS.md at the repo root).
 
 If run_sandbox.py's JS changes shape (e.g. one of the replaced functions is
 rewritten), this script will raise a clear error rather than silently
@@ -46,6 +48,7 @@ RUN_SANDBOX_FILE = ROOT / "run_sandbox.py"
 CLIENT_PIPELINE_FILE = ROOT / "static_client_pipeline.js"
 API_SHIM_FILE = ROOT / "static_api_shim.js"
 OUT_DIR = REPO_ROOT / "docs" / "assignment-1"
+ANALYTICS_TAG = '<script src="../analytics.js" defer></script>'
 
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -154,6 +157,10 @@ def build_interactive_page():
         '<script>\n// ============================================================\n// State',
         "main <script> tag",
     )
+
+    # Google Analytics (docs/analytics.js, hand-maintained) -- GitHub Pages
+    # only; the local Flask UI never loads it.
+    html = _replace_once(html, "</head>", ANALYTICS_TAG + "\n</head>", "</head> tag")
 
     (OUT_DIR / "index.html").write_text(html, encoding="utf-8")
     print(f"Wrote interactive static explorer -> {OUT_DIR/'index.html'}")

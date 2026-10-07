@@ -24,6 +24,10 @@ client-side.
 Each `docs/assignment-N/` page is generated from that assignment's
 `run_sandbox.py` by `assignment-N-ui-explorer/generate_docs_site.py` — run it after changing a UI, then publish the `docs/` folder. 
 
+The published pages also load `docs/analytics.js` (Google Analytics 4
+interaction tracking — never loaded by the local Flask UIs). Setup, the event
+list and privacy notes are in [ANALYTICS.md](ANALYTICS.md).
+
 ---
 
 ## Assignment 1 — Chronic Pain Classifier (`assignment-1-ui-explorer/`)

@@ -11,6 +11,8 @@ but answers /api/* in the browser via static_api_shim.js:
   static_api_shim.js overrides window.fetch; /api/data and /api/assign are exact,
                      /api/evaluate is a modelled surface anchored to each seed's
                      precomputed oracle (a live PyTorch fit can't run in a browser).
+  index.html also gets <script src="../analytics.js" defer> for Google Analytics
+  (see ANALYTICS.md at the repo root).
 
 Run from anywhere:  python assignment-3-ui-explorer/generate_docs_site.py
 Then publish the ./docs/ folder with GitHub Pages.
@@ -30,6 +32,8 @@ SHIM = HERE / "static_api_shim.js"
 
 
 SHIM_TAG = '<script src="static_api_shim.js"></script>'
+# Google Analytics (docs/analytics.js, hand-maintained) -- GitHub Pages only.
+ANALYTICS_TAG = '<script src="../analytics.js" defer></script>'
 
 
 def _extract_template():
@@ -47,6 +51,9 @@ def build_index_html():
     if html.count(marker) != 1:
         sys.exit("generate_docs_site.py: main <script> tag not found / changed shape")
     html = html.replace(marker, "\n" + SHIM_TAG + marker, 1)
+    if html.count("</head>") != 1:
+        sys.exit("generate_docs_site.py: </head> not found / changed shape")
+    html = html.replace("</head>", ANALYTICS_TAG + "\n</head>", 1)
     # write LF exactly -- no platform newline translation
     (OUT / "index.html").write_bytes(html.encode("utf-8"))
     print("  index.html")
@@ -90,22 +97,25 @@ def build_data_json():
 
 
 def verify():
-    """The docs page must be run_sandbox.py's HTML_TEMPLATE verbatim, plus one
-    injected <script src> line, and the copied assets must be byte-identical."""
+    """The docs page must be run_sandbox.py's HTML_TEMPLATE verbatim, plus the
+    injected shim and analytics <script src> lines, and the copied assets must
+    be byte-identical."""
     tpl = _extract_template().encode("utf-8")
     inject = ("\n" + SHIM_TAG).encode("utf-8")
+    ga = (ANALYTICS_TAG + "\n").encode("utf-8")
     got = (OUT / "index.html").read_bytes()
     assert got == tpl.replace(b"\n<script>\nconst state=",
-                              inject + b"\n<script>\nconst state=", 1), \
-        "docs/index.html is not HTML_TEMPLATE + the single shim <script> line"
-    assert got.replace(inject, b"", 1) == tpl, \
-        "docs/index.html differs from the local page by more than the shim line"
+                              inject + b"\n<script>\nconst state=", 1) \
+                     .replace(b"</head>", ga + b"</head>", 1), \
+        "docs/index.html is not HTML_TEMPLATE + the shim and analytics <script> lines"
+    assert got.replace(inject, b"", 1).replace(ga, b"", 1) == tpl, \
+        "docs/index.html differs from the local page by more than the two injected lines"
     assert (OUT / "static_api_shim.js").read_bytes() == SHIM.read_bytes(), \
         "docs static_api_shim.js is not a verbatim copy of the local one"
     assert (OUT / "oracle_table.json").read_bytes() == ORACLE.read_bytes(), \
         "docs oracle_table.json is not a verbatim copy of the local one"
-    print("  verified: docs/assignment-3/ == run_sandbox.py's page + one line ("
-          + SHIM_TAG + ")")
+    print("  verified: docs/assignment-3/ == run_sandbox.py's page + two lines ("
+          + SHIM_TAG + ", " + ANALYTICS_TAG + ")")
 
 
 def main():

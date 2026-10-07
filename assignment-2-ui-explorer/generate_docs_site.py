@@ -12,6 +12,8 @@ but answers /api/* in the browser via static_api_shim.js:
   static_api_shim.js overrides window.fetch; /api/data, /api/assign and /api/arena
                      are exact, /api/evaluate is a modelled surface anchored to the
                      real oracle (a live sklearn fit can't run in a browser).
+  index.html also gets <script src="../analytics.js" defer> for Google Analytics
+  (see ANALYTICS.md at the repo root).
 
 Run from the repo root:  python assignment-2-ui-explorer/generate_docs_site.py
 Then publish the ./docs/ folder with GitHub Pages.
@@ -29,6 +31,7 @@ RUN_SANDBOX = HERE / "run_sandbox.py"
 ORACLE = HERE / "oracle_table.json"
 DATA_CSV = HERE / "data" / "patient_features.csv"
 SHIM = HERE / "static_api_shim.js"
+ANALYTICS_TAG = '<script src="../analytics.js" defer></script>'
 
 PAIN_KEYWORDS = [
     "chronic", "pain", "arthritis", "osteoarthritis", "rheumatoid",
@@ -51,6 +54,10 @@ def build_index_html():
     if html.count(marker) != 1:
         sys.exit("generate_docs_site.py: main <script> tag not found / changed shape")
     html = html.replace(marker, '\n<script src="static_api_shim.js"></script>' + marker, 1)
+    # Google Analytics (docs/analytics.js, hand-maintained) -- GitHub Pages only.
+    if html.count("</head>") != 1:
+        sys.exit("generate_docs_site.py: </head> not found / changed shape")
+    html = html.replace("</head>", ANALYTICS_TAG + "\n</head>", 1)
     (OUT / "index.html").write_text(html, encoding="utf-8")
     print("  index.html")
 
