@@ -107,7 +107,13 @@ student moved, clicked, typed or scrolled within the last 30 s.
 
 ## Getting the data out (BigQuery)
 
-One row per event, with the parameters as columns:
+[`analysis/explorer_report.sql`](analysis/explorer_report.sql) answers the
+common questions in one run: time per user, time per tab, every parameter
+change, every model trained, who reached optimal performance and completed the
+activity (per user and as a class summary), and concept-card use.
+
+For anything else, start from this query, which gives one row per event with
+the parameters as columns:
 
 ```sql
 CREATE TEMP FUNCTION p(params ANY TYPE, k STRING) AS ((
@@ -128,7 +134,7 @@ SELECT
   p(event_params, 'el_action')                AS el_action,
   SAFE_CAST(p(event_params, 'auc') AS FLOAT64) AS auc,
   p(event_params, 'is_optimal')               AS is_optimal
-FROM `YOUR_PROJECT.analytics_YOUR_PROPERTY_ID.events_*`
+FROM `nn-ui-analytics.analytics_557882182.events_*`
 WHERE _TABLE_SUFFIX BETWEEN '20261001' AND '20261231'
   AND p(event_params, 'debug_mode') IS NULL   -- drop your ?ga_debug=1 test visits
 ORDER BY user_pseudo_id, page_load_id, seq;

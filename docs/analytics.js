@@ -316,10 +316,12 @@ if (bar && window.MutationObserver) {
   new MutationObserver(() => {
     if (done || bar.style.display !== 'flex') return;
     done = true;
-    send('exploration_complete', {
+    // The bar is shown from inside logInteraction/logRow, before that hook has
+    // sent its model_eval -- wait for it so eval_count includes it.
+    setTimeout(() => send('exploration_complete', {
       eval_count: evals, concepts_opened: conceptsOpened.size, active_ms: activeMs,
       ms_since_seed: seedAt === null ? undefined : now() - seedAt,
-    });
+    }), 0);
   }).observe(bar, { attributes: true, attributeFilter: ['style'] });
 }
 
